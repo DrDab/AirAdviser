@@ -10,6 +10,9 @@ An affordable, open-source Wi-Fi enabled IoT air pollution detector. Reports lev
   - A 3.3V to 5V Logic Level Shifter
   - Solder (60/40 Rosin core preferred)
   - Jumper cables
+  - Hot glue + hot glue gun
+  - Epoxy sealant
+  - O-ring seal and lubricant
 2. Solder the 3V3 pin on the NodeMCU to the Level Shifter's 3V input, and the 5V output on the shifter to the PMS5003's 5V input.
 3. Solder the GND pin on the NodeMCU to the GND output on the level shifter, and solder the PMS5003's ground pin to the other end of the level shifter.
 4. Solder the PMS5003's data output (TX) pin to pin D2 on the NodeMCU.
