@@ -5,10 +5,11 @@ An affordable, open-source Wi-Fi enabled IoT air pollution detector. Reports lev
 1. Get the supplies:
   - A NodeMCU + ESP8266 Wi-Fi chip
   - A Plantower PMS5003 Optical Dust sensor
+  - A 3.3V to 5V Logic Level Shifter
   - Solder (60/40 Rosin core preferred)
   - Jumper cables
-2. Solder the VU pin on the NodeMCU to the PMS5003's 5V input.
-3. Solder the GND pin on the NodeMCU to the GND output on the PMS5003.
+2. Solder the 3V3 pin on the NodeMCU to the Level Shifter's 3V input, and the 5V output on the shifter to the PMS5003's 5V input.
+3. Solder the GND pin on the NodeMCU to the GND output on the level shifter, and solder the PMS5003's ground pin to the other end of the level shifter.
 4. Solder the PMS5003's data output (TX) pin to pin D2 on the NodeMCU.
 5. Attach a 5.1V 1A power supply to the NodeMCU's micro-USB port.
 6. Power the device on, and flash this code to the NodeMCU. (Remember to download the ESP8266 Arduino plug-ins at https://github.com/esp8266/Arduino/)
