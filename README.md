@@ -1,4 +1,6 @@
 # AirAdviser
+![alt text](https://raw.githubusercontent.com/DrDab/AirAdviser/master/logo.png)
+
 An affordable, open-source Wi-Fi enabled IoT air pollution detector. Reports levels of particulate matter in the air classified in to categories of particles with a diameter of 1mm, 2.5mm and 10mm. It can provide a warning if levels become dangerous.
 
 # Building
