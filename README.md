@@ -23,7 +23,10 @@ An affordable ($50), open-source Wi-Fi enabled IoT air pollution detector. It re
 9. To take a reading, open your browser (i.e. Google Chrome) and visit 192.168.4.1/read.
 
 # Usage
-AirAdviser is intended to be deployed in low-cost, low-space applications where non-industrial monitoring of air quality needs to be remotely monitored. For example, AirAdviser can be deployed in high-pollution living areas so tenants can easily and safely check the air pollution levels outside to stay safe and avoid breathing issues. In certain cities, such as Beijing, smog waves, combined with heat waves accelerated by global warming result in frequent storms of airborne particulate matter, which hurts many people. This project can help people adapt to such conditions accelerated by climate change. AirAdviser can detect foreign airborne particulate matter, such as mercury and lead particles, spores, etc. that can cause serious damage to the human body upon exposure.
+AirAdviser is intended to be deployed in low-cost, low-space applications where non-industrial monitoring of air quality needs to be remotely monitored. For example, AirAdviser can be deployed in high-pollution living areas so tenants can easily and safely check the air pollution levels outside to stay safe and avoid breathing issues. In certain cities, such as Beijing, smog waves, combined with heat waves accelerated by global warming result in frequent storms of airborne particulate matter, which hurts many people. This project can help people adapt to such conditions accelerated by climate change. AirAdviser can detect foreign airborne particulate matter, such as mercury and lead particles, spores, etc. that can cause serious damage to the human body upon exposure. 
+
+Ideas for usage include: 
+- Mounting AirAdvisor on a patio wall and attaching it to mains.
 
 # License
 MIT License
