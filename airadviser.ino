@@ -32,7 +32,7 @@ SoftwareSerial pmsSerial(2, 3);
 
 /**
  * Probe purchase link:
- * hhttps://www.newegg.com/Product/Product.aspx?Item=9SIAEC96HY0339&ignorebbr=1&nm_mc=KNC-GoogleMKP-PC&cm_mmc=KNC-GoogleMKP-PC-_-pla-_-Gadgets-_-9SIAEC96HY0339&gclid=Cj0KCQjw1-fVBRC3ARIsAIifYOOhSSKaupNA857jX3l2fpRjNlefpp9aKfTHRs_bb6JLetQBgNtP1PcaAi93EALw_wcB&gclsrc=aw.ds
+ * https://www.newegg.com/Product/Product.aspx?Item=9SIAEC96HY0339&ignorebbr=1&nm_mc=KNC-GoogleMKP-PC&cm_mmc=KNC-GoogleMKP-PC-_-pla-_-Gadgets-_-9SIAEC96HY0339&gclid=Cj0KCQjw1-fVBRC3ARIsAIifYOOhSSKaupNA857jX3l2fpRjNlefpp9aKfTHRs_bb6JLetQBgNtP1PcaAi93EALw_wcB&gclsrc=aw.ds
  * MCU + WiFi Chip purchase link:
  * https://www.amazon.com/HiLetgo-Internet-Development-Wireless-Micropython/dp/B010O1G1ES/
  * Solar powered battery pack:
@@ -126,7 +126,7 @@ void loop()
   {
     // reading data was successful!
     Serial.println();
-    if (data.pm25_standard >= 500)
+    if (data.pm25_env >= 500)
     {
      Serial.println("\nDANGER\n");
      Serial.println("Air pollution levels are unsafe! Do not go outdoors\n");
