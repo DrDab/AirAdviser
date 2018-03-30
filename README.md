@@ -1,7 +1,7 @@
 # AirAdviser
 ![alt text](https://raw.githubusercontent.com/DrDab/AirAdviser/master/logo.png)
 
-An affordable, open-source Wi-Fi enabled IoT air pollution detector. Reports levels of particulate matter in the air classified in to categories of particles with a diameter of 1mm, 2.5mm and 10mm. It can provide a warning if levels become dangerous.
+An affordable, open-source Wi-Fi enabled IoT air pollution detector. It reports levels of particulate matter in the air classified in to categories of particles with a diameter of 1mm, 2.5mm and 10mm. It can also provide a warning if levels become dangerous.
 
 # Building
 1. Get the supplies:
@@ -21,6 +21,9 @@ An affordable, open-source Wi-Fi enabled IoT air pollution detector. Reports lev
 7. Encase your survey device into a water-tight, o-ring sealed container. Cut a 4.5-centimeter by 2-centimeter square hole and mount the PMS5003's intake port flush with this hole. Seal it with hot glue and epoxy. Seal any gaps in the metal using Flex Tape. 
 8. Connect to the generated Wi-Fi AP called "AirAdviser-chan XXXX" where XXXX is the last four bytes of the ESP8266's MAC address. The password is "noticemesenpai" by default.
 9. To take a reading, open your browser (i.e. Google Chrome) and visit 192.168.4.1/read.
+
+# Usage
+AirAdviser is intended to be deployed in low-cost, low-space applications where non-industrial monitoring of air quality needs to be remotely monitored. For example, AirAdviser can be deployed in high-pollution living areas so tenants can easily and safely check the air pollution levels outside to stay safe and avoid breathing issues. In certain cities, such as Beijing, smog waves, combined with heat waves accelerated by global warming result in frequent storms of airborne particulate matter, which hurts many people. This project can help people adapt to such conditions accelerated by climate change. AirAdviser can detect foreign airborne particulate matter, such as mercury and lead particles, spores, etc.
 
 # License
 MIT License
