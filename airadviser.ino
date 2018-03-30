@@ -184,7 +184,7 @@ void loop()
   {
     s += "<title>About</title>";
     s += "<strong>About</strong><br> ";
-    s += "Victor's Air Pollution Monitor v0.1";
+    s += "AirAdviser Beta v0.1 by Victor, Leodis and Carter";
     s += "<br>";
     s += "<a href=\"192.168.1.4/read\">Read sensor data</a>";
   }
