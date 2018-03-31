@@ -271,6 +271,11 @@ void loop()
       s += "<br>";
     }
     s += "<br>";
+    s += "This page last updated at:";
+    s += "<p id="time"></p>";
+    s += "<script>";
+    s += "document.getElementById("time").innerHTML = Date();";
+    s += "</script>";
     s += "<a href=\"192.168.1.4/about\">About AirAdvisor</a>";
   }
   else
