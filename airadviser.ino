@@ -184,6 +184,7 @@ void loop()
   s += "<style>";
   s += "body {";
   s += "  background-color: skyblue;";
+  s += "  color: white;";
   s += "}";
   s += "</style>";
   s += "</head>";
