@@ -180,6 +180,13 @@ void loop()
   String s = "HTTP/1.1 200 OK\r\n";
   s += "Content-Type: text/html\r\n\r\n";
   s += "<!DOCTYPE HTML>\r\n<html>\r\n";
+  s += "<head>";
+  s += "<style>";
+  s += "body {";
+  s += "  background-color: skyblue;";
+  s += "}";
+  s += "</style>"
+  s += "</head>"
   if (val >= 0)
   {
     s += "<title>About</title>";
