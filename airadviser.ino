@@ -185,8 +185,8 @@ void loop()
   s += "body {";
   s += "  background-color: skyblue;";
   s += "}";
-  s += "</style>"
-  s += "</head>"
+  s += "</style>";
+  s += "</head>";
   if (val >= 0)
   {
     s += "<title>About</title>";
