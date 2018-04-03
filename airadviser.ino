@@ -289,7 +289,7 @@ void loop()
   // Send the response to the client
   client.print(s);
   delay(1);
-  Serial.println("Client disonnected");
+  Serial.println("Client disconnected");
 
   // The client will actually be disconnected 
   // when the function returns and 'client' object is detroyed
