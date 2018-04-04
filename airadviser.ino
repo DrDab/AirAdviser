@@ -192,7 +192,7 @@ void loop()
   {
     s += "<title>About</title>";
     s += "<strong>About</strong><br> ";
-    s += "AirAdviser Beta v0.1 by Victor, Leodis and Carter";
+    s += "AirAdviser Beta v0.11 by Victor, Leodis and Carter";
     s += "<br>";
     s += "<a href=\"192.168.1.4/read\">Read sensor data</a>";
   }
@@ -204,15 +204,15 @@ void loop()
     if (readPMSdata(&pmsSerial)) 
     {
       s += "PM1.0 (µg/m^3)";
-      s += String(data.pm10_env);
+      s += String(data.pm10_standard);
       s += "<br>";
       s += "PM2.5 (µg/m^3)";
-      s += String(data.pm25_env);
+      s += String(data.pm25_standard);
       s += "<br>";
       s += "PM10.0 (µg/m^3)";
-      s += String(data.pm100_env);
+      s += String(data.pm100_standard);
       s += "<br>";
-      if (data.pm25_env >= 500)
+      if (data.pm25_standard >= 500)
       {
         s += "<strong>DANGER: POLLUTION LEVELS HAZARDOUS!</strong>";
         s += "<br>";
@@ -224,7 +224,7 @@ void loop()
         s += "<br>";
         s += "<strong>- Serious risk of respiratory effects in general population. </strong>";
       } 
-      else if (data.pm25_env < 500 && data.pm25_env >= 250)
+      else if (data.pm25_standard < 500 && data.pm25_standard >= 250)
       {
         s += "<strong>CAUTION: POLLUTION LEVELS VERY UNHEALTHY</strong>";
         s += "<br>";
@@ -236,7 +236,7 @@ void loop()
         s += "<br>";
         s += "<strong>- Significant increase in respiratory effects in general population. </strong>";
       }
-      else if (data.pm25_env < 250 && data.pm25_env >= 150)
+      else if (data.pm25_standard < 250 && data.pm25_standard >= 150)
       {
         s += "<strong>CAUTION: POLLUTION LEVELS UNHEALTHY</strong>";
         s += "<br>";
@@ -248,7 +248,7 @@ void loop()
         s += "<br>";
         s += "<strong>- Increased respiratory effects in general population.</strong>";
       }
-      else if (data.pm25_env < 150 && data.pm25_env >= 55)
+      else if (data.pm25_standard < 150 && data.pm25_standard >= 55)
       {
         s += "<strong>CAUTION: POLLUTION LEVELS UNHEALTHY FOR SENSITIVE PEOPLE</strong>";
         s += "<br>";
