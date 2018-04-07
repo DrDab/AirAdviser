@@ -132,6 +132,8 @@ uint16_t p25 = 0;
 uint16_t p50 = 0;
 uint16_t p100 = 0;
 
+boolean writeSerial = true;
+
 void loop() 
 {
   runServer();
@@ -145,6 +147,7 @@ void runServer()
   {
     return;
   }
+  writeSerial = false;
   Serial.println("Ready");
   // Read the first line of the request
   String req = client.readStringUntil('\r');
@@ -263,6 +266,16 @@ void runServer()
       s += String(data.particles_100um);
       s += "<br>";
       s += "<br><br>";
+      s += "<table style=\"background-color: #000; border: 2px solid #000; padding: 1px;\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">";
+      s += "<tr>";
+      s += "<td style=\"padding:2px\">";
+      s += "<center>";
+      s += "<big>";
+      s += "<b>Warnings</b>";
+      s += "</big>";
+      s += "</center>";
+      s += "<br //>";
+      s += "<center>";
       if (data.pm25_standard >= 500)
       {
         s += "<strong>DANGER: POLLUTION LEVELS HAZARDOUS!</strong>";
@@ -358,6 +371,16 @@ void runServer()
       s += String(p100);
       s += "<br>";
       s += "<br><br>";
+      s += "<table style=\"background-color: #000; border: 2px solid #000; padding: 1px;\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">";
+      s += "<tr>";
+      s += "<td style=\"padding:2px\">";
+      s += "<center>";
+      s += "<big>";
+      s += "<b>Warnings</b>";
+      s += "</big>";
+      s += "</center>";
+      s += "<br //>";
+      s += "<center>";
       if (pm25 >= 500)
       {
         s += "<strong>DANGER: POLLUTION LEVELS HAZARDOUS!</strong>";
@@ -412,6 +435,8 @@ void runServer()
       }
       }
     }
+    s += "</center>";
+    s += "</td></tr></table>";
     s += "<br>";
     s += "This page last updated at:";
     s += "<p id=\"time\"></p>";
