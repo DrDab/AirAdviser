@@ -120,36 +120,20 @@ void setup()
   pmsSerial.begin(9600);
 }
 
+boolean hasReading = false;
+uint16_t pm10 = 0;
+uint16_t pm25 = 0;
+uint16_t pm100 = 0;
+
+uint16_t p03 = 0;
+uint16_t p05 = 0;
+uint16_t p10 = 0;
+uint16_t p25 = 0;
+uint16_t p50 = 0;
+uint16_t p100 = 0;
+
 void loop() 
 {
-  if (readPMSdata(&pmsSerial)) 
-  {
-    // reading data was successful!
-    Serial.println();
-    if (data.pm25_env >= 500)
-    {
-     Serial.println("\nDANGER\n");
-     Serial.println("Air pollution levels are unsafe! Do not go outdoors\n");
-    }
-    Serial.println("---------------------------------------");
-    Serial.println("Concentration Units (standard)");
-    Serial.print("PM 1.0: "); Serial.print(data.pm10_standard);
-    Serial.print("\t\tPM 2.5: "); Serial.print(data.pm25_standard);
-    Serial.print("\t\tPM 10: "); Serial.println(data.pm100_standard);
-    Serial.println("---------------------------------------");
-    Serial.println("Concentration Units (environmental)");
-    Serial.print("PM 1.0: "); Serial.print(data.pm10_env);
-    Serial.print("\t\tPM 2.5: "); Serial.print(data.pm25_env);
-    Serial.print("\t\tPM 10: "); Serial.println(data.pm100_env);
-    Serial.println("---------------------------------------");
-    Serial.print("Particles > 0.3um / 0.1L air:"); Serial.println(data.particles_03um);
-    Serial.print("Particles > 0.5um / 0.1L air:"); Serial.println(data.particles_05um);
-    Serial.print("Particles > 1.0um / 0.1L air:"); Serial.println(data.particles_10um);
-    Serial.print("Particles > 2.5um / 0.1L air:"); Serial.println(data.particles_25um);
-    Serial.print("Particles > 5.0um / 0.1L air:"); Serial.println(data.particles_50um);
-    Serial.print("Particles > 50 um / 0.1L air:"); Serial.println(data.particles_100um);
-    Serial.println("---------------------------------------");
-  }
   // Check if a client has connected
   WiFiClient client = server.available();
   if (!client)
@@ -190,6 +174,7 @@ void loop()
   s += "</head>";
   if (val >= 0)
   {
+    Serial.println("About page requested by client.");
     s += "<title>About</title>";
     s += "<strong>About</strong><br> ";
     s += "AirAdviser Beta v0.11 by Victor, Leodis and Carter";
@@ -198,25 +183,83 @@ void loop()
   }
   else if (val == -2)
   { 
+    Serial.println("Reading page requested by client.");
+    s += "<meta http-equiv=\"refresh\" content=\"5\" >";
     s += "<title>Sensor Reading</title>";
     s += "<strong>Pollution Sensor Data</strong>";
     s += "<br>";
     if (readPMSdata(&pmsSerial)) 
     {
-      s += "PM1.0 (µg/m^3)";
+      hasReading = true;
+      Serial.println();
+      if (data.pm25_env >= 500)
+      {
+        Serial.println("\nDANGER\n");
+        Serial.println("Air pollution levels are unsafe! Do not go outdoors\n");
+      }
+      Serial.println("---------------------------------------");
+      Serial.println("Concentration Units (standard)");
+      Serial.print("PM 1.0: "); Serial.print(data.pm10_standard);
+      Serial.print("\t\tPM 2.5: "); Serial.print(data.pm25_standard);
+      Serial.print("\t\tPM 10: "); Serial.println(data.pm100_standard);
+      Serial.println("---------------------------------------");
+      Serial.println("Concentration Units (environmental)");
+      Serial.print("PM 1.0: "); Serial.print(data.pm10_env);
+      Serial.print("\t\tPM 2.5: "); Serial.print(data.pm25_env);
+      Serial.print("\t\tPM 10: "); Serial.println(data.pm100_env);
+      Serial.println("---------------------------------------");
+      Serial.print("Particles > 0.3um / 0.1L air:"); Serial.println(data.particles_03um);
+      Serial.print("Particles > 0.5um / 0.1L air:"); Serial.println(data.particles_05um);
+      Serial.print("Particles > 1.0um / 0.1L air:"); Serial.println(data.particles_10um);
+      Serial.print("Particles > 2.5um / 0.1L air:"); Serial.println(data.particles_25um);
+      Serial.print("Particles > 5.0um / 0.1L air:"); Serial.println(data.particles_50um);
+      Serial.print("Particles > 50 um / 0.1L air:"); Serial.println(data.particles_100um);
+      Serial.println("---------------------------------------");
+      Serial.println("Data collection successful, sending to client.");
+      pm10 = data.pm10_standard;
+      pm25 = data.pm25_standard;
+      pm100 = data.pm100_standard;
+      p03 = data.particles_03um;
+      p05 = data.particles_05um;
+      p10 = data.particles_10um;
+      p25 = data.particles_25um;
+      p50 = data.particles_50um;
+      p100 = data.particles_100um;
+      s += "PM1.0 (ug/m^3) Level: ";
       s += String(data.pm10_standard);
       s += "<br>";
-      s += "PM2.5 (µg/m^3)";
+      s += "PM2.5 (ug/m^3) Level:";
       s += String(data.pm25_standard);
       s += "<br>";
-      s += "PM10.0 (µg/m^3)";
+      s += "PM10.0 (ug/m^3) Level: ";
       s += String(data.pm100_standard);
       s += "<br>";
+      s += "========================================";
+      s += "<br>";
+      s += "Particles > 0.3 um / 0.1L air: ";
+      s += String(data.particles_03um);
+      s += "<br>";
+      s += "Particles > 0.5 um / 0.1L air: ";
+      s += String(data.particles_05um);
+      s += "<br>";
+      s += "Particles > 1.0 um / 0.1L air: ";
+      s += String(data.particles_10um);
+      s += "<br>";
+      s += "Particles > 2.5 um / 0.1L air: ";
+      s += String(data.particles_25um);
+      s += "<br>";
+      s += "Particles > 5.0 um / 0.1L air: ";
+      s += String(data.particles_50um);
+      s += "<br>";
+      s += "Particles > 50 um / 0.1L air: ";
+      s += String(data.particles_100um);
+      s += "<br>";
+      s += "<br><br>";
       if (data.pm25_standard >= 500)
       {
         s += "<strong>DANGER: POLLUTION LEVELS HAZARDOUS!</strong>";
         s += "<br>";
-        s += "PM2.5 Levels are over 500.0 µg/m^3";
+        s += "PM2.5 Levels are over 500.0 ug/m^3";
         s += "<br>";
         s += "Do NOT go outdoors. If going outdoors, YOU risk:";
         s += "<br>";
@@ -228,7 +271,7 @@ void loop()
       {
         s += "<strong>CAUTION: POLLUTION LEVELS VERY UNHEALTHY</strong>";
         s += "<br>";
-        s += "PM2.5 Levels are over 250.0 µg/m^3";
+        s += "PM2.5 Levels are over 250.0 ug/m^3";
         s += "<br>";
         s += "Do NOT go outdoors. If going outdoors, YOU risk:";
         s += "<br>";
@@ -240,7 +283,7 @@ void loop()
       {
         s += "<strong>CAUTION: POLLUTION LEVELS UNHEALTHY</strong>";
         s += "<br>";
-        s += "PM2.5 Levels are over 150.0 µg/m^3";
+        s += "PM2.5 Levels are over 150.0 ug/m^3";
         s += "<br>";
         s += "AVOID prolonged exertion outdoors. YOU risk:";
         s += "<br>";
@@ -252,7 +295,7 @@ void loop()
       {
         s += "<strong>CAUTION: POLLUTION LEVELS UNHEALTHY FOR SENSITIVE PEOPLE</strong>";
         s += "<br>";
-        s += "PM2.5 Levels are over 55.0 µg/m^3";
+        s += "PM2.5 Levels are over 55.0 ug/m^3";
         s += "<br>";
         s += "AVOID prolonged exertion outdoors. YOU risk:";
         s += "<br>";
@@ -267,8 +310,96 @@ void loop()
     }
     else
     {
-      s += "No data yet";
+      if (!hasReading)
+      {
+        s += "No data yet";
+        s += "<br>";
+      }
+      else
+      {
+        s += "PM1.0 (ug/m^3) Level: ";
+      s += String(pm10);
       s += "<br>";
+      s += "PM2.5 (ug/m^3) Level:";
+      s += String(pm25);
+      s += "<br>";
+      s += "PM10.0 (ug/m^3) Level: ";
+      s += String(pm100);
+      s += "<br>";
+      s += "========================================";
+      s += "<br>";
+      s += "Particles > 0.3 um / 0.1L air: ";
+      s += String(p03);
+      s += "<br>";
+      s += "Particles > 0.5 um / 0.1L air: ";
+      s += String(p05);
+      s += "<br>";
+      s += "Particles > 1.0 um / 0.1L air: ";
+      s += String(p10);
+      s += "<br>";
+      s += "Particles > 2.5 um / 0.1L air: ";
+      s += String(p25);
+      s += "<br>";
+      s += "Particles > 5.0 um / 0.1L air: ";
+      s += String(p50);
+      s += "<br>";
+      s += "Particles > 50 um / 0.1L air: ";
+      s += String(p100);
+      s += "<br>";
+      s += "<br><br>";
+      if (pm25 >= 500)
+      {
+        s += "<strong>DANGER: POLLUTION LEVELS HAZARDOUS!</strong>";
+        s += "<br>";
+        s += "PM2.5 Levels are over 500.0 ug/m^3";
+        s += "<br>";
+        s += "Do NOT go outdoors. If going outdoors, YOU risk:";
+        s += "<br>";
+        s += "<strong>- Serious aggravation of heart or lung disease and premature mortality in persons with cardiopulmonary disease and the elderly</strong>";
+        s += "<br>";
+        s += "<strong>- Serious risk of respiratory effects in general population. </strong>";
+      } 
+      else if (pm25 < 500 && pm25 >= 250)
+      {
+        s += "<strong>CAUTION: POLLUTION LEVELS VERY UNHEALTHY</strong>";
+        s += "<br>";
+        s += "PM2.5 Levels are over 250.0 ug/m^3";
+        s += "<br>";
+        s += "Do NOT go outdoors. If going outdoors, YOU risk:";
+        s += "<br>";
+        s += "<strong>- Significant aggravation of heart or lung disease and premature mortality in persons with cardiopulmonary disease and the elderly</strong>";
+        s += "<br>";
+        s += "<strong>- Significant increase in respiratory effects in general population. </strong>";
+      }
+      else if (pm25 < 250 && pm25 >= 150)
+      {
+        s += "<strong>CAUTION: POLLUTION LEVELS UNHEALTHY</strong>";
+        s += "<br>";
+        s += "PM2.5 Levels are over 150.0 ug/m^3";
+        s += "<br>";
+        s += "AVOID prolonged exertion outdoors. YOU risk:";
+        s += "<br>";
+        s += "<strong>- Increased aggravation of heart or lung disease and premature mortality in persons with cardiopulmonary disease and the elderly</strong>";
+        s += "<br>";
+        s += "<strong>- Increased respiratory effects in general population.</strong>";
+      }
+      else if (pm25 < 150 && pm25 >= 55)
+      {
+        s += "<strong>CAUTION: POLLUTION LEVELS UNHEALTHY FOR SENSITIVE PEOPLE</strong>";
+        s += "<br>";
+        s += "PM2.5 Levels are over 55.0 ug/m^3";
+        s += "<br>";
+        s += "AVOID prolonged exertion outdoors. YOU risk:";
+        s += "<br>";
+        s += "<strong>- Increased aggravation of heart or lung disease and premature mortality in persons with cardiopulmonary disease and the elderly</strong>";
+        s += "<br>";
+        s += "<strong>- Increased respiratory effects in general population.</strong>";
+      }
+      else
+      {
+        s += "<strong>POLLUTION LEVELS ARE HEALTHY</strong>";
+      }
+      }
     }
     s += "<br>";
     s += "This page last updated at:";
@@ -280,6 +411,7 @@ void loop()
   }
   else
   {
+    Serial.println("404 page requested by client.");
     s += "ERROR 404 : Page Not Found.";
     s += "<br>";
     s += "<a href=\"192.168.1.4/read\">Read sensor data</a>";
