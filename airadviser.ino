@@ -184,7 +184,7 @@ void loop()
   else if (val == -2)
   { 
     Serial.println("Reading page requested by client.");
-    s += "<meta http-equiv=\"refresh\" content=\"5\" >";
+    s += "<meta http-equiv=\"refresh\" content=\"2\" >";
     s += "<title>Sensor Reading</title>";
     s += "<strong>Pollution Sensor Data</strong>";
     s += "<br>";
