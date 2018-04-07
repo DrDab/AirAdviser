@@ -134,7 +134,12 @@ uint16_t p100 = 0;
 
 void loop() 
 {
-  // Check if a client has connected
+  runServer();
+}
+
+void runServer()
+{
+    // Check if a client has connected
   WiFiClient client = server.available();
   if (!client)
   {
@@ -228,7 +233,7 @@ void loop()
       s += "PM1.0 (ug/m^3) Level: ";
       s += String(data.pm10_standard);
       s += "<br>";
-      s += "PM2.5 (ug/m^3) Level:";
+      s += "PM2.5 (ug/m^3) Level: ";
       s += String(data.pm25_standard);
       s += "<br>";
       s += "PM10.0 (ug/m^3) Level: ";
@@ -320,7 +325,7 @@ void loop()
         s += "PM1.0 (ug/m^3) Level: ";
       s += String(pm10);
       s += "<br>";
-      s += "PM2.5 (ug/m^3) Level:";
+      s += "PM2.5 (ug/m^3) Level: ";
       s += String(pm25);
       s += "<br>";
       s += "PM10.0 (ug/m^3) Level: ";
