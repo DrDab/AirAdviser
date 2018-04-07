@@ -167,8 +167,8 @@ void loop()
   s += "<head>";
   s += "<style>";
   s += "body {";
-  s += "  background-color: skyblue;";
-  s += "  color: white;";
+  s += "  background-color: black;";
+  s += "  color: lime;";
   s += "}";
   s += "</style>";
   s += "</head>";
