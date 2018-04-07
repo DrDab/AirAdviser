@@ -37,9 +37,7 @@ SoftwareSerial pmsSerial(2, 3);
  * https://www.amazon.com/HiLetgo-Internet-Development-Wireless-Micropython/dp/B010O1G1ES/
  * Solar powered battery pack:
  * https://www.amazon.com/Hiluckey-Waterproof-Shockproof-Travelling-Activities/dp/B075JGP36B/
- * Logic Level Converter (3.3V to 5V) :
- * https://www.sparkfun.com/products/12009
- * Total cost: $50
+ * Total cost: $40
  */
 
 struct pms5003data
@@ -278,7 +276,7 @@ void runServer()
       s += "<center>";
       if (data.pm25_standard >= 500)
       {
-        s += "<strong>DANGER: POLLUTION LEVELS HAZARDOUS!</strong>";
+        s += "<strong>&#9760;DANGER: POLLUTION LEVELS HAZARDOUS!</strong>";
         s += "<br>";
         s += "PM2.5 Levels are over 500.0 &mu;g/m^3";
         s += "<br>";
@@ -290,7 +288,7 @@ void runServer()
       } 
       else if (data.pm25_standard < 500 && data.pm25_standard >= 250)
       {
-        s += "<strong>CAUTION: POLLUTION LEVELS VERY UNHEALTHY</strong>";
+        s += "<strong>&#9763;CAUTION: POLLUTION LEVELS VERY UNHEALTHY</strong>";
         s += "<br>";
         s += "PM2.5 Levels are over 250.0 &mu;g/m^3";
         s += "<br>";
@@ -302,7 +300,7 @@ void runServer()
       }
       else if (data.pm25_standard < 250 && data.pm25_standard >= 150)
       {
-        s += "<strong>CAUTION: POLLUTION LEVELS UNHEALTHY</strong>";
+        s += "<strong>&#9888;CAUTION: POLLUTION LEVELS UNHEALTHY</strong>";
         s += "<br>";
         s += "PM2.5 Levels are over 150.0 &mu;g/m^3";
         s += "<br>";
@@ -314,7 +312,7 @@ void runServer()
       }
       else if (data.pm25_standard < 150 && data.pm25_standard >= 55)
       {
-        s += "<strong>CAUTION: POLLUTION LEVELS UNHEALTHY FOR SENSITIVE PEOPLE</strong>";
+        s += "<strong>&#9888;CAUTION: POLLUTION LEVELS UNHEALTHY FOR SENSITIVE PEOPLE</strong>";
         s += "<br>";
         s += "PM2.5 Levels are over 55.0 &mu;g/m^3";
         s += "<br>";
@@ -326,7 +324,7 @@ void runServer()
       }
       else
       {
-        s += "<strong>POLLUTION LEVELS ARE HEALTHY</strong>";
+        s += "<strong>&#128175;POLLUTION LEVELS ARE HEALTHY&#128175;</strong>";
       }
     }
     else
@@ -383,7 +381,7 @@ void runServer()
       s += "<center>";
       if (pm25 >= 500)
       {
-        s += "<strong>DANGER: POLLUTION LEVELS HAZARDOUS!</strong>";
+        s += "<strong>&#9760;DANGER: POLLUTION LEVELS HAZARDOUS!</strong>";
         s += "<br>";
         s += "PM2.5 Levels are over 500.0 &mu;g/m^3";
         s += "<br>";
@@ -395,7 +393,7 @@ void runServer()
       } 
       else if (pm25 < 500 && pm25 >= 250)
       {
-        s += "<strong>CAUTION: POLLUTION LEVELS VERY UNHEALTHY</strong>";
+        s += "<strong>&#9763;CAUTION: POLLUTION LEVELS VERY UNHEALTHY</strong>";
         s += "<br>";
         s += "PM2.5 Levels are over 250.0 &mu;g/m^3";
         s += "<br>";
@@ -407,7 +405,7 @@ void runServer()
       }
       else if (pm25 < 250 && pm25 >= 150)
       {
-        s += "<strong>CAUTION: POLLUTION LEVELS UNHEALTHY</strong>";
+        s += "<strong>&#9888;CAUTION: POLLUTION LEVELS UNHEALTHY</strong>";
         s += "<br>";
         s += "PM2.5 Levels are over 150.0 &mu;g/m^3";
         s += "<br>";
@@ -419,7 +417,7 @@ void runServer()
       }
       else if (pm25 < 150 && pm25 >= 55)
       {
-        s += "<strong>CAUTION: POLLUTION LEVELS UNHEALTHY FOR SENSITIVE PEOPLE</strong>";
+        s += "<strong>&#9888;CAUTION: POLLUTION LEVELS UNHEALTHY FOR SENSITIVE PEOPLE</strong>";
         s += "<br>";
         s += "PM2.5 Levels are over 55.0 &mu;g/m^3";
         s += "<br>";
@@ -431,7 +429,7 @@ void runServer()
       }
       else
       {
-        s += "<strong>POLLUTION LEVELS ARE HEALTHY</strong>";
+        s += "<strong>&#128175;POLLUTION LEVELS ARE HEALTHY&#128175;</strong>";
       }
       }
     }
