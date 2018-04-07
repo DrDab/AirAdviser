@@ -196,30 +196,30 @@ void runServer()
     if (readPMSdata(&pmsSerial)) 
     {
       hasReading = true;
-      Serial.println();
-      if (data.pm25_env >= 500)
-      {
-        Serial.println("\nDANGER\n");
-        Serial.println("Air pollution levels are unsafe! Do not go outdoors\n");
-      }
-      Serial.println("---------------------------------------");
-      Serial.println("Concentration Units (standard)");
-      Serial.print("PM 1.0: "); Serial.print(data.pm10_standard);
-      Serial.print("\t\tPM 2.5: "); Serial.print(data.pm25_standard);
-      Serial.print("\t\tPM 10: "); Serial.println(data.pm100_standard);
-      Serial.println("---------------------------------------");
-      Serial.println("Concentration Units (environmental)");
-      Serial.print("PM 1.0: "); Serial.print(data.pm10_env);
-      Serial.print("\t\tPM 2.5: "); Serial.print(data.pm25_env);
-      Serial.print("\t\tPM 10: "); Serial.println(data.pm100_env);
-      Serial.println("---------------------------------------");
-      Serial.print("Particles > 0.3um / 0.1L air:"); Serial.println(data.particles_03um);
-      Serial.print("Particles > 0.5um / 0.1L air:"); Serial.println(data.particles_05um);
-      Serial.print("Particles > 1.0um / 0.1L air:"); Serial.println(data.particles_10um);
-      Serial.print("Particles > 2.5um / 0.1L air:"); Serial.println(data.particles_25um);
-      Serial.print("Particles > 5.0um / 0.1L air:"); Serial.println(data.particles_50um);
-      Serial.print("Particles > 50 um / 0.1L air:"); Serial.println(data.particles_100um);
-      Serial.println("---------------------------------------");
+      //Serial.println();
+      //if (data.pm25_env >= 500)
+      //{
+      //  Serial.println("\nDANGER\n");
+      //  Serial.println("Air pollution levels are unsafe! Do not go outdoors\n");
+      //}
+      //Serial.println("---------------------------------------");
+      //Serial.println("Concentration Units (standard)");
+      //Serial.print("PM 1.0: "); Serial.print(data.pm10_standard);
+      //Serial.print("\t\tPM 2.5: "); Serial.print(data.pm25_standard);
+      //Serial.print("\t\tPM 10: "); Serial.println(data.pm100_standard);
+      //Serial.println("---------------------------------------");
+      //Serial.println("Concentration Units (environmental)");
+      //Serial.print("PM 1.0: "); Serial.print(data.pm10_env);
+      //Serial.print("\t\tPM 2.5: "); Serial.print(data.pm25_env);
+      //Serial.print("\t\tPM 10: "); Serial.println(data.pm100_env);
+      //Serial.println("---------------------------------------");
+      //Serial.print("Particles > 0.3um / 0.1L air:"); Serial.println(data.particles_03um);
+      //Serial.print("Particles > 0.5um / 0.1L air:"); Serial.println(data.particles_05um);
+      //Serial.print("Particles > 1.0um / 0.1L air:"); Serial.println(data.particles_10um);
+      //Serial.print("Particles > 2.5um / 0.1L air:"); Serial.println(data.particles_25um);
+      //Serial.print("Particles > 5.0um / 0.1L air:"); Serial.println(data.particles_50um);
+      //Serial.print("Particles > 50 um / 0.1L air:"); Serial.println(data.particles_100um);
+      //Serial.println("---------------------------------------");
       Serial.println("Data collection successful, sending to client.");
       pm10 = data.pm10_standard;
       pm25 = data.pm25_standard;
@@ -230,14 +230,17 @@ void runServer()
       p25 = data.particles_25um;
       p50 = data.particles_50um;
       p100 = data.particles_100um;
-      s += "PM1.0 (ug/m^3) Level: ";
+      s += "PM1.0 Level: ";
       s += String(data.pm10_standard);
+      s += " &mu;g/m^3";
       s += "<br>";
-      s += "PM2.5 (ug/m^3) Level: ";
+      s += "PM2.5 Level: ";
       s += String(data.pm25_standard);
+      s += " &mu;g/m^3";
       s += "<br>";
-      s += "PM10.0 (ug/m^3) Level: ";
+      s += "PM10.0 Level: ";
       s += String(data.pm100_standard);
+      s += " &mu;g/m^3";
       s += "<br>";
       s += "========================================";
       s += "<br>";
@@ -322,14 +325,17 @@ void runServer()
       }
       else
       {
-        s += "PM1.0 (ug/m^3) Level: ";
+        s += "PM1.0 Level: ";
       s += String(pm10);
+      s += " &mu;g/m^3";
       s += "<br>";
-      s += "PM2.5 (ug/m^3) Level: ";
+      s += "PM2.5 Level: ";
       s += String(pm25);
+      s += " &mu;g/m^3";
       s += "<br>";
-      s += "PM10.0 (ug/m^3) Level: ";
+      s += "PM10.0 Level: ";
       s += String(pm100);
+      s += " &mu;g/m^3";
       s += "<br>";
       s += "========================================";
       s += "<br>";
