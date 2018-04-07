@@ -324,7 +324,7 @@ void runServer()
       }
       else
       {
-        s += "<strong>&#128175;POLLUTION LEVELS ARE HEALTHY&#128175;</strong>";
+        s += "<strong>&#128175;&#128293;POLLUTION LEVELS ARE HEALTHY&#128175;&#128293;</strong>";
       }
     }
     else
@@ -429,7 +429,7 @@ void runServer()
       }
       else
       {
-        s += "<strong>&#128175;POLLUTION LEVELS ARE HEALTHY&#128175;</strong>";
+        s += "<strong>&#128175;&#128293;POLLUTION LEVELS ARE HEALTHY&#128175;&#128293;</strong>";
       }
       }
     }
