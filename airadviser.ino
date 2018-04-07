@@ -244,22 +244,22 @@ void runServer()
       s += "<br>";
       s += "========================================";
       s += "<br>";
-      s += "Particles > 0.3 um / 0.1L air: ";
+      s += "Particles > 0.3 &mu;m / 0.1L air: ";
       s += String(data.particles_03um);
       s += "<br>";
-      s += "Particles > 0.5 um / 0.1L air: ";
+      s += "Particles > 0.5 &mu;m / 0.1L air: ";
       s += String(data.particles_05um);
       s += "<br>";
-      s += "Particles > 1.0 um / 0.1L air: ";
+      s += "Particles > 1.0 &mu;m / 0.1L air: ";
       s += String(data.particles_10um);
       s += "<br>";
-      s += "Particles > 2.5 um / 0.1L air: ";
+      s += "Particles > 2.5 &mu;m / 0.1L air: ";
       s += String(data.particles_25um);
       s += "<br>";
-      s += "Particles > 5.0 um / 0.1L air: ";
+      s += "Particles > 5.0 &mu;m / 0.1L air: ";
       s += String(data.particles_50um);
       s += "<br>";
-      s += "Particles > 50 um / 0.1L air: ";
+      s += "Particles > 50 &mu;m / 0.1L air: ";
       s += String(data.particles_100um);
       s += "<br>";
       s += "<br><br>";
@@ -267,7 +267,7 @@ void runServer()
       {
         s += "<strong>DANGER: POLLUTION LEVELS HAZARDOUS!</strong>";
         s += "<br>";
-        s += "PM2.5 Levels are over 500.0 ug/m^3";
+        s += "PM2.5 Levels are over 500.0 &mu;g/m^3";
         s += "<br>";
         s += "Do NOT go outdoors. If going outdoors, YOU risk:";
         s += "<br>";
@@ -279,7 +279,7 @@ void runServer()
       {
         s += "<strong>CAUTION: POLLUTION LEVELS VERY UNHEALTHY</strong>";
         s += "<br>";
-        s += "PM2.5 Levels are over 250.0 ug/m^3";
+        s += "PM2.5 Levels are over 250.0 &mu;g/m^3";
         s += "<br>";
         s += "Do NOT go outdoors. If going outdoors, YOU risk:";
         s += "<br>";
@@ -291,7 +291,7 @@ void runServer()
       {
         s += "<strong>CAUTION: POLLUTION LEVELS UNHEALTHY</strong>";
         s += "<br>";
-        s += "PM2.5 Levels are over 150.0 ug/m^3";
+        s += "PM2.5 Levels are over 150.0 &mu;g/m^3";
         s += "<br>";
         s += "AVOID prolonged exertion outdoors. YOU risk:";
         s += "<br>";
@@ -303,7 +303,7 @@ void runServer()
       {
         s += "<strong>CAUTION: POLLUTION LEVELS UNHEALTHY FOR SENSITIVE PEOPLE</strong>";
         s += "<br>";
-        s += "PM2.5 Levels are over 55.0 ug/m^3";
+        s += "PM2.5 Levels are over 55.0 &mu;g/m^3";
         s += "<br>";
         s += "AVOID prolonged exertion outdoors. YOU risk:";
         s += "<br>";
@@ -339,22 +339,22 @@ void runServer()
       s += "<br>";
       s += "========================================";
       s += "<br>";
-      s += "Particles > 0.3 um / 0.1L air: ";
+      s += "Particles > 0.3 &mu;m / 0.1L air: ";
       s += String(p03);
       s += "<br>";
-      s += "Particles > 0.5 um / 0.1L air: ";
+      s += "Particles > 0.5 &mu;m / 0.1L air: ";
       s += String(p05);
       s += "<br>";
-      s += "Particles > 1.0 um / 0.1L air: ";
+      s += "Particles > 1.0 &mu;m / 0.1L air: ";
       s += String(p10);
       s += "<br>";
-      s += "Particles > 2.5 um / 0.1L air: ";
+      s += "Particles > 2.5 &mu;m / 0.1L air: ";
       s += String(p25);
       s += "<br>";
-      s += "Particles > 5.0 um / 0.1L air: ";
+      s += "Particles > 5.0 &mu;m / 0.1L air: ";
       s += String(p50);
       s += "<br>";
-      s += "Particles > 50 um / 0.1L air: ";
+      s += "Particles > 50 &mu;m / 0.1L air: ";
       s += String(p100);
       s += "<br>";
       s += "<br><br>";
@@ -362,7 +362,7 @@ void runServer()
       {
         s += "<strong>DANGER: POLLUTION LEVELS HAZARDOUS!</strong>";
         s += "<br>";
-        s += "PM2.5 Levels are over 500.0 ug/m^3";
+        s += "PM2.5 Levels are over 500.0 &mu;g/m^3";
         s += "<br>";
         s += "Do NOT go outdoors. If going outdoors, YOU risk:";
         s += "<br>";
@@ -374,7 +374,7 @@ void runServer()
       {
         s += "<strong>CAUTION: POLLUTION LEVELS VERY UNHEALTHY</strong>";
         s += "<br>";
-        s += "PM2.5 Levels are over 250.0 ug/m^3";
+        s += "PM2.5 Levels are over 250.0 &mu;g/m^3";
         s += "<br>";
         s += "Do NOT go outdoors. If going outdoors, YOU risk:";
         s += "<br>";
@@ -386,7 +386,7 @@ void runServer()
       {
         s += "<strong>CAUTION: POLLUTION LEVELS UNHEALTHY</strong>";
         s += "<br>";
-        s += "PM2.5 Levels are over 150.0 ug/m^3";
+        s += "PM2.5 Levels are over 150.0 &mu;g/m^3";
         s += "<br>";
         s += "AVOID prolonged exertion outdoors. YOU risk:";
         s += "<br>";
@@ -398,7 +398,7 @@ void runServer()
       {
         s += "<strong>CAUTION: POLLUTION LEVELS UNHEALTHY FOR SENSITIVE PEOPLE</strong>";
         s += "<br>";
-        s += "PM2.5 Levels are over 55.0 ug/m^3";
+        s += "PM2.5 Levels are over 55.0 &mu;g/m^3";
         s += "<br>";
         s += "AVOID prolonged exertion outdoors. YOU risk:";
         s += "<br>";
