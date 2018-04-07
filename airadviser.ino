@@ -266,7 +266,7 @@ void runServer()
       s += String(data.particles_100um);
       s += "<br>";
       s += "<br><br>";
-      s += "<table style=\"background-color: #000; border: 2px solid #000; padding: 1px;\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">";
+      s += "<table style=\"background-color: #000; border: 2px solid #00ff00; padding: 1px;\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">";
       s += "<tr>";
       s += "<td style=\"padding:2px\">";
       s += "<center>";
