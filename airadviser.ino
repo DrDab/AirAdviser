@@ -195,6 +195,9 @@ void runServer()
     s += "<title>Sensor Reading</title>";
     s += "<strong>Pollution Sensor Data</strong>";
     s += "<br>";
+    s += "========================================";
+    s += "<br>";
+    s += "<br>";
     if (readPMSdata(&pmsSerial)) 
     {
       hasReading = true;
@@ -261,7 +264,7 @@ void runServer()
       s += "Particles > 5.0 &mu;m / 0.1L air: ";
       s += String(data.particles_50um);
       s += "<br>";
-      s += "Particles > 50 &mu;m / 0.1L air: ";
+      s += "Particles > 50 &mu;m / 0.1L air : ";
       s += String(data.particles_100um);
       s += "<br>";
       s += "<br><br>";
@@ -366,7 +369,7 @@ void runServer()
       s += "Particles > 5.0 &mu;m / 0.1L air: ";
       s += String(p50);
       s += "<br>";
-      s += "Particles > 50 &mu;m / 0.1L air: ";
+      s += "Particles > 50 &mu;m / 0.1L air : ";
       s += String(p100);
       s += "<br>";
       s += "<br><br>";
