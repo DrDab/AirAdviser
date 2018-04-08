@@ -456,7 +456,7 @@ void runServer()
     s += "Trace program: running";
     s += "<br><br>";
     s += "Wake up, Neo...";
-    s += "<br>The Matrix has you.";
+    s += "<br>The Matrix has you.<br><br>";
     s += "ERROR 404 : Page Not Found.";
     s += "<br>";
     s += "<a href=\"192.168.4.1/read\">Read sensor data</a>";
