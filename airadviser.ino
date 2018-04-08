@@ -175,6 +175,7 @@ void runServer()
   s += "body {";
   s += "  background-color: black;";
   s += "  color: lime;";
+  s += "  font-family:monospace;";
   s += "}";
   s += "</style>";
   s += "</head>";
@@ -185,7 +186,7 @@ void runServer()
     s += "<strong>About</strong><br> ";
     s += "AirAdviser Beta v0.11 by Victor, Leodis and Carter";
     s += "<br>";
-    s += "<a href=\"192.168.1.4/read\">Read sensor data</a>";
+    s += "<a href=\"192.168.4.1/read\">Read sensor data</a>";
   }
   else if (val == -2)
   { 
@@ -441,14 +442,24 @@ void runServer()
     s += "<script>";
     s += "document.getElementById(\"time\").innerHTML = Date();";
     s += "</script>";
-    s += "<a href=\"192.168.1.4/about\">About AirAdvisor</a>";
+    s += "<a href=\"192.168.4.1/about\">About AirAdvisor</a>";
   }
   else
   {
     Serial.println("404 page requested by client.");
+    s += "Call trans opt received: ";
+    s += "<p id=\"time\"></p>";
+    s += "<script>";
+    s += "document.getElementById(\"time\").innerHTML = Date();";
+    s += "</script>";
+    s += "<br>";
+    s += "Trace program: running";
+    s += "<br><br>";
+    s += "Wake up, Neo...";
+    s += "<br>The Matrix has you.";
     s += "ERROR 404 : Page Not Found.";
     s += "<br>";
-    s += "<a href=\"192.168.1.4/read\">Read sensor data</a>";
+    s += "<a href=\"192.168.4.1/read\">Read sensor data</a>";
   }
   s += "</html>\n";
 
