@@ -187,6 +187,7 @@ void runServer()
     s += "AirAdviser Beta v0.11 by Victor, Leodis and Carter";
     s += "<br>";
     s += "<a href=\"192.168.4.1/read\">Read sensor data</a>";
+    s += "<br><br><br><br><br>Add me on FurAffinity: http://www.furaffinity.net/user/teslafox/";
   }
   else if (val == -2)
   { 
