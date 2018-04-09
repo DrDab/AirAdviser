@@ -7,15 +7,14 @@
 1. Get the supplies:
   - A NodeMCU + ESP8266 Wi-Fi chip
   - A Plantower PMS5003 Optical Dust sensor
-  - A 3.3V to 5V DC-DC Step-up Boost Module
   - Solder (60/40 Rosin core preferred)
   - Jumper cables
   - Hot glue + hot glue gun
   - Epoxy sealant
   - O-ring seal and lubricant
-2. Solder the 3V3 pin on the NodeMCU to the boost module's 3V input, and the 5V output on the module to the PMS5003's 5V input.
-3. Solder the GND pin on the NodeMCU to the GND output on the boost module, and solder the PMS5003's ground pin to the other end of the boost module.
-4. Attach a 5.1V 1A power supply to the NodeMCU's micro-USB port. When mounting, hook it up to a USB 5V1A charger or a solar-powered battery pack.
+2. Solder the Vin pin on the NodeMCU to the PMS5003's positive contact.
+3. Solder the GND pin on the NodeMCU to the PMS5003's ground contact.
+4. Solder pin D4 on the NodeMCU to the TX pin on the PMS5003.
 5. Power the device on, and flash this code to the NodeMCU. (Remember to download the ESP8266 Arduino plug-ins at https://github.com/esp8266/Arduino/)
 6. Encase your survey device into a water-tight, o-ring sealed container. Cut a 4.5-centimeter by 2-centimeter square hole and mount the PMS5003's intake port flush with this hole. Seal it with hot glue and epoxy. Seal any gaps in the metal using Flex Tape. 
 7. Connect to the generated Wi-Fi AP called "AirAdviser-chan XXXX" where XXXX is the last four bytes of the ESP8266's MAC address. The password is "noticemesenpai" by default.
