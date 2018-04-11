@@ -26,6 +26,9 @@
 // The Wi-Fi password for the hotspot
 const char WiFiAPPSK[] = "noticemesenpai";
 
+// Enable or disable serial debugging (will cause webserver slowdown)
+const bool USE_SERIAL_DEBUGGING = false;
+
 WiFiServer server(80);
 
 SoftwareSerial pmsSerial(2, 3);
@@ -134,6 +137,36 @@ boolean writeSerial = true;
 
 void loop() 
 {
+  if (readPMSdata(&pmsSerial))
+  {
+    if (USE_SERIAL_DEBUGGING)
+    {
+        Serial.println();
+        if (data.pm25_env >= 500)
+        {
+          Serial.println("\nDANGER\n");
+          Serial.println("Air pollution levels are unsafe! Do not go outdoors\n");
+        }
+        Serial.println("---------------------------------------");
+        Serial.println("Concentration Units (standard)");
+        Serial.print("PM 1.0: "); Serial.print(data.pm10_standard);
+        Serial.print("\t\tPM 2.5: "); Serial.print(data.pm25_standard);
+        Serial.print("\t\tPM 10: "); Serial.println(data.pm100_standard);
+        Serial.println("---------------------------------------");
+        Serial.println("Concentration Units (environmental)");
+        Serial.print("PM 1.0: "); Serial.print(data.pm10_env);
+        Serial.print("\t\tPM 2.5: "); Serial.print(data.pm25_env);
+        Serial.print("\t\tPM 10: "); Serial.println(data.pm100_env);
+        Serial.println("---------------------------------------");
+        Serial.print("Particles > 0.3um / 0.1L air:"); Serial.println(data.particles_03um);
+        Serial.print("Particles > 0.5um / 0.1L air:"); Serial.println(data.particles_05um);
+        Serial.print("Particles > 1.0um / 0.1L air:"); Serial.println(data.particles_10um);
+        Serial.print("Particles > 2.5um / 0.1L air:"); Serial.println(data.particles_25um);
+        Serial.print("Particles > 5.0um / 0.1L air:"); Serial.println(data.particles_50um);
+        Serial.print("Particles > 50 um / 0.1L air:"); Serial.println(data.particles_100um);
+        Serial.println("---------------------------------------");
+    }
+  }
   runServer();
 }
 
@@ -203,30 +236,6 @@ void runServer()
     if (readPMSdata(&pmsSerial)) 
     {
       hasReading = true;
-      //Serial.println();
-      //if (data.pm25_env >= 500)
-      //{
-      //  Serial.println("\nDANGER\n");
-      //  Serial.println("Air pollution levels are unsafe! Do not go outdoors\n");
-      //}
-      //Serial.println("---------------------------------------");
-      //Serial.println("Concentration Units (standard)");
-      //Serial.print("PM 1.0: "); Serial.print(data.pm10_standard);
-      //Serial.print("\t\tPM 2.5: "); Serial.print(data.pm25_standard);
-      //Serial.print("\t\tPM 10: "); Serial.println(data.pm100_standard);
-      //Serial.println("---------------------------------------");
-      //Serial.println("Concentration Units (environmental)");
-      //Serial.print("PM 1.0: "); Serial.print(data.pm10_env);
-      //Serial.print("\t\tPM 2.5: "); Serial.print(data.pm25_env);
-      //Serial.print("\t\tPM 10: "); Serial.println(data.pm100_env);
-      //Serial.println("---------------------------------------");
-      //Serial.print("Particles > 0.3um / 0.1L air:"); Serial.println(data.particles_03um);
-      //Serial.print("Particles > 0.5um / 0.1L air:"); Serial.println(data.particles_05um);
-      //Serial.print("Particles > 1.0um / 0.1L air:"); Serial.println(data.particles_10um);
-      //Serial.print("Particles > 2.5um / 0.1L air:"); Serial.println(data.particles_25um);
-      //Serial.print("Particles > 5.0um / 0.1L air:"); Serial.println(data.particles_50um);
-      //Serial.print("Particles > 50 um / 0.1L air:"); Serial.println(data.particles_100um);
-      //Serial.println("---------------------------------------");
       Serial.println("Data collection successful, sending to client.");
       pm10 = data.pm10_standard;
       pm25 = data.pm25_standard;
