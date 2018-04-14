@@ -29,6 +29,10 @@ const char WiFiAPPSK[] = "noticemesenpai";
 // Enable or disable serial debugging (will cause webserver slowdown)
 const bool USE_SERIAL_DEBUGGING = false;
 
+// Enable or disable warning LED
+const bool USE_WARNING_LED = true;
+const int WARNING_LED_PIN = 10; // GPIO10 corresponds to pin SD3 on NodeMCU
+
 WiFiServer server(80);
 
 SoftwareSerial pmsSerial(2, 3);
@@ -165,6 +169,10 @@ void loop()
         Serial.print("Particles > 5.0um / 0.1L air:"); Serial.println(data.particles_50um);
         Serial.print("Particles > 50 um / 0.1L air:"); Serial.println(data.particles_100um);
         Serial.println("---------------------------------------");
+    }
+    if (data.pm25_standard >= 55)
+    {
+      digitalWrite(WARNING_LED_PIN, HIGH);
     }
   }
   runServer();
@@ -513,6 +521,14 @@ void setupWiFi()
 void initHardware()
 {
   Serial.begin(115200);
+  Serial.println("Serial monitor is online, running at 115200 baud");
+  if (USE_WARNING_LED)
+  {
+    pinMode(WARNING_LED_PIN, OUTPUT);
+    Serial.print("Warning LED initialized on pin="); 
+    Serial.println(WARNING_LED_PIN);
+    digitalWrite(WARNING_LED_PIN, LOW); 
+  }
 }
 
 //,*(\*;""";/1Ie1*- -  `<r>,+i;^VMy\?tGb<>_>_>++}tYT1YyoJ#VFnaeFjV4FV3JJ2VJ4eanouF4Itv\=<(uXL:^  - 
