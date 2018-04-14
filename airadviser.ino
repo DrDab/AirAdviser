@@ -254,7 +254,7 @@ void runServer()
     s += "<a href=\"192.168.4.1/read\">Read sensor data</a>";
     s += "<br><p>Cloud Fox</p>";
     s += "<img src=\"";
-    o += "\"><br><br><br><br><br>Add me on FurAffinity: http://www.furaffinity.net/user/teslafox/";
+    o += "\">";
     client.print(s);
     client.print(cloud_fox);
     client.print(o);
