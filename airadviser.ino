@@ -174,6 +174,10 @@ void loop()
     {
       digitalWrite(WARNING_LED_PIN, HIGH);
     }
+    else
+    {
+      digitalWrite(WARNING_LED_PIN, LOW);
+    }
   }
   runServer();
 }
