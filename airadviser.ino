@@ -31,7 +31,7 @@ const bool USE_SERIAL_DEBUGGING = false;
 
 // Enable or disable warning LED
 const bool USE_WARNING_LED = true;
-const int WARNING_LED_PIN = 12; // GPIO12 corresponds to pin D6 on NodeMCU
+const int WARNING_LED_PIN = 10; // GPIO10 corresponds to pin SD3 on NodeMCU
 
 WiFiServer server(80);
 
@@ -245,7 +245,7 @@ void runServer()
     Serial.println("About page requested by client.");
     s += "<title>About</title>";
     s += "<strong>About</strong><br> ";
-    s += "AirAdviser Beta v0.11 by Victor, Leodis and Carter";
+    s += "AirAdviser Beta version 0.2-floof-fox by Victor, Leodis and Carter";
     s += "<br>";
     s += "<a href=\"192.168.4.1/read\">Read sensor data</a>";
     s += "<br><br><br><br><br>Add me on FurAffinity: http://www.furaffinity.net/user/teslafox/";
