@@ -31,7 +31,7 @@ const bool USE_SERIAL_DEBUGGING = false;
 
 // Enable or disable warning LED
 const bool USE_WARNING_LED = true;
-const int WARNING_LED_PIN = 10; // GPIO10 corresponds to pin SD3 on NodeMCU
+const int WARNING_LED_PIN = 12; // GPIO12 corresponds to pin D6 on NodeMCU
 
 WiFiServer server(80);
 
@@ -141,8 +141,25 @@ boolean writeSerial = true;
 
 void loop() 
 {
-  if (readPMSdata(&pmsSerial))
+  runServer();
+}
+
+void runServer()
+{
+  boolean haveCurrentReading = false;
+  if (readPMSdata(&pmsSerial)) 
   {
+    hasReading = true;
+    haveCurrentReading = true;
+    pm10 = data.pm10_standard;
+    pm25 = data.pm25_standard;
+    pm100 = data.pm100_standard;
+    p03 = data.particles_03um;
+    p05 = data.particles_05um;
+    p10 = data.particles_10um;
+    p25 = data.particles_25um;
+    p50 = data.particles_50um;
+    p100 = data.particles_100um;
     if (USE_SERIAL_DEBUGGING)
     {
         Serial.println();
@@ -179,12 +196,11 @@ void loop()
       digitalWrite(WARNING_LED_PIN, LOW);
     }
   }
-  runServer();
-}
-
-void runServer()
-{
-    // Check if a client has connected
+  else
+  {
+    haveCurrentReading = false;
+  }
+  // Check if a client has connected
   WiFiClient client = server.available();
   if (!client)
   {
@@ -245,50 +261,41 @@ void runServer()
     s += "<br>";
     s += "Particulate Matter Concentrations";
     s += "<br>";
-    if (readPMSdata(&pmsSerial)) 
+    if (haveCurrentReading) 
     {
       hasReading = true;
       Serial.println("Data collection successful, sending to client.");
-      pm10 = data.pm10_standard;
-      pm25 = data.pm25_standard;
-      pm100 = data.pm100_standard;
-      p03 = data.particles_03um;
-      p05 = data.particles_05um;
-      p10 = data.particles_10um;
-      p25 = data.particles_25um;
-      p50 = data.particles_50um;
-      p100 = data.particles_100um;
       s += "PM1.0 Level: ";
-      s += String(data.pm10_standard);
+      s += String(pm10);
       s += " &mu;g/m^3";
       s += "<br>";
       s += "PM2.5 Level: ";
-      s += String(data.pm25_standard);
+      s += String(pm25);
       s += " &mu;g/m^3";
       s += "<br>";
       s += "PM10.0 Level: ";
-      s += String(data.pm100_standard);
+      s += String(pm100);
       s += " &mu;g/m^3";
       s += "<br>";
       s += "========================================";
       s += "<br>";
       s += "Particles > 0.3 &mu;m / 0.1L air: ";
-      s += String(data.particles_03um);
+      s += String(p03);
       s += "<br>";
       s += "Particles > 0.5 &mu;m / 0.1L air: ";
-      s += String(data.particles_05um);
+      s += String(p05);
       s += "<br>";
       s += "Particles > 1.0 &mu;m / 0.1L air: ";
-      s += String(data.particles_10um);
+      s += String(p10);
       s += "<br>";
       s += "Particles > 2.5 &mu;m / 0.1L air: ";
-      s += String(data.particles_25um);
+      s += String(p25);
       s += "<br>";
       s += "Particles > 5.0 &mu;m / 0.1L air: ";
-      s += String(data.particles_50um);
+      s += String(p50);
       s += "<br>";
       s += "Particles > 50 &mu;m / 0.1L air : ";
-      s += String(data.particles_100um);
+      s += String(p100);
       s += "<br>";
       s += "<br><br>";
       s += "<table style=\"background-color: #000; border: 2px solid #00ff00; padding: 1px;\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">";
@@ -364,100 +371,100 @@ void runServer()
       else
       {
         s += "PM1.0 Level: ";
-      s += String(pm10);
-      s += " &mu;g/m^3";
-      s += "<br>";
-      s += "PM2.5 Level: ";
-      s += String(pm25);
-      s += " &mu;g/m^3";
-      s += "<br>";
-      s += "PM10.0 Level: ";
-      s += String(pm100);
-      s += " &mu;g/m^3";
-      s += "<br>";
-      s += "========================================";
-      s += "<br>";
-      s += "Particles > 0.3 &mu;m / 0.1L air: ";
-      s += String(p03);
-      s += "<br>";
-      s += "Particles > 0.5 &mu;m / 0.1L air: ";
-      s += String(p05);
-      s += "<br>";
-      s += "Particles > 1.0 &mu;m / 0.1L air: ";
-      s += String(p10);
-      s += "<br>";
-      s += "Particles > 2.5 &mu;m / 0.1L air: ";
-      s += String(p25);
-      s += "<br>";
-      s += "Particles > 5.0 &mu;m / 0.1L air: ";
-      s += String(p50);
-      s += "<br>";
-      s += "Particles > 50 &mu;m / 0.1L air : ";
-      s += String(p100);
-      s += "<br>";
-      s += "<br><br>";
-      s += "<table style=\"background-color: #000; border: 2px solid #000; padding: 1px;\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">";
-      s += "<tr>";
-      s += "<td style=\"padding:2px\">";
-      s += "<center>";
-      s += "<big>";
-      s += "<b>Warnings</b>";
-      s += "</big>";
-      s += "</center>";
-      s += "<br //>";
-      s += "<center>";
-      if (pm25 >= 500)
-      {
-        s += "<strong>&#9760;DANGER: POLLUTION LEVELS HAZARDOUS!</strong>";
+        s += String(pm10);
+        s += " &mu;g/m^3";
         s += "<br>";
-        s += "PM2.5 Levels are over 500.0 &mu;g/m^3";
+        s += "PM2.5 Level: ";
+        s += String(pm25);
+        s += " &mu;g/m^3";
         s += "<br>";
-        s += "Do NOT go outdoors. If going outdoors, YOU risk:";
+        s += "PM10.0 Level: ";
+        s += String(pm100);
+        s += " &mu;g/m^3";
         s += "<br>";
-        s += "<strong>- Serious aggravation of heart or lung disease and premature mortality in persons with cardiopulmonary disease and the elderly</strong>";
+        s += "========================================";
         s += "<br>";
-        s += "<strong>- Serious risk of respiratory effects in general population. </strong>";
-      } 
-      else if (pm25 < 500 && pm25 >= 250)
-      {
-        s += "<strong>&#9763;CAUTION: POLLUTION LEVELS VERY UNHEALTHY</strong>";
+        s += "Particles > 0.3 &mu;m / 0.1L air: ";
+        s += String(p03);
         s += "<br>";
-        s += "PM2.5 Levels are over 250.0 &mu;g/m^3";
+        s += "Particles > 0.5 &mu;m / 0.1L air: ";
+        s += String(p05);
         s += "<br>";
-        s += "Do NOT go outdoors. If going outdoors, YOU risk:";
+        s += "Particles > 1.0 &mu;m / 0.1L air: ";
+        s += String(p10);
         s += "<br>";
-        s += "<strong>- Significant aggravation of heart or lung disease and premature mortality in persons with cardiopulmonary disease and the elderly</strong>";
+        s += "Particles > 2.5 &mu;m / 0.1L air: ";
+        s += String(p25);
         s += "<br>";
-        s += "<strong>- Significant increase in respiratory effects in general population. </strong>";
-      }
-      else if (pm25 < 250 && pm25 >= 150)
-      {
-        s += "<strong>&#9888;CAUTION: POLLUTION LEVELS UNHEALTHY</strong>";
+        s += "Particles > 5.0 &mu;m / 0.1L air: ";
+        s += String(p50);
         s += "<br>";
-        s += "PM2.5 Levels are over 150.0 &mu;g/m^3";
+        s += "Particles > 50 &mu;m / 0.1L air : ";
+        s += String(p100);
         s += "<br>";
-        s += "AVOID prolonged exertion outdoors. YOU risk:";
-        s += "<br>";
-        s += "<strong>- Increased aggravation of heart or lung disease and premature mortality in persons with cardiopulmonary disease and the elderly</strong>";
-        s += "<br>";
-        s += "<strong>- Increased respiratory effects in general population.</strong>";
-      }
-      else if (pm25 < 150 && pm25 >= 55)
-      {
-        s += "<strong>&#9888;CAUTION: POLLUTION LEVELS UNHEALTHY FOR SENSITIVE PEOPLE</strong>";
-        s += "<br>";
-        s += "PM2.5 Levels are over 55.0 &mu;g/m^3";
-        s += "<br>";
-        s += "AVOID prolonged exertion outdoors. YOU risk:";
-        s += "<br>";
-        s += "<strong>- Increased aggravation of heart or lung disease and premature mortality in persons with cardiopulmonary disease and the elderly</strong>";
-        s += "<br>";
-        s += "<strong>- Increased respiratory effects in general population.</strong>";
-      }
-      else
-      {
-        s += "<strong>&#128175;&#128293;POLLUTION LEVELS ARE HEALTHY&#128175;&#128293;</strong>";
-      }
+        s += "<br><br>";
+        s += "<table style=\"background-color: #000; border: 2px solid #00ff00; padding: 1px;\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">";
+        s += "<tr>";
+        s += "<td style=\"padding:2px\">";
+        s += "<center>";
+        s += "<big>";
+        s += "<b>Warnings</b>";
+        s += "</big>";
+        s += "</center>";
+        s += "<br //>";
+        s += "<center>";
+        if (pm25 >= 500)
+        {
+          s += "<strong>&#9760;DANGER: POLLUTION LEVELS HAZARDOUS!</strong>";
+          s += "<br>";
+          s += "PM2.5 Levels are over 500.0 &mu;g/m^3";
+          s += "<br>";
+          s += "Do NOT go outdoors. If going outdoors, YOU risk:";
+          s += "<br>";
+          s += "<strong>- Serious aggravation of heart or lung disease and premature mortality in persons with cardiopulmonary disease and the elderly</strong>";
+          s += "<br>";
+          s += "<strong>- Serious risk of respiratory effects in general population. </strong>";
+        } 
+        else if (pm25 < 500 && pm25 >= 250)
+        {
+          s += "<strong>&#9763;CAUTION: POLLUTION LEVELS VERY UNHEALTHY</strong>";
+          s += "<br>";
+          s += "PM2.5 Levels are over 250.0 &mu;g/m^3";
+          s += "<br>";
+          s += "Do NOT go outdoors. If going outdoors, YOU risk:";
+          s += "<br>";
+          s += "<strong>- Significant aggravation of heart or lung disease and premature mortality in persons with cardiopulmonary disease and the elderly</strong>";
+          s += "<br>";
+          s += "<strong>- Significant increase in respiratory effects in general population. </strong>";
+        }
+        else if (pm25 < 250 && pm25 >= 150)
+        {
+          s += "<strong>&#9888;CAUTION: POLLUTION LEVELS UNHEALTHY</strong>";
+          s += "<br>";
+          s += "PM2.5 Levels are over 150.0 &mu;g/m^3";
+          s += "<br>";
+          s += "AVOID prolonged exertion outdoors. YOU risk:";
+          s += "<br>";
+          s += "<strong>- Increased aggravation of heart or lung disease and premature mortality in persons with cardiopulmonary disease and the elderly</strong>";
+          s += "<br>";
+          s += "<strong>- Increased respiratory effects in general population.</strong>";
+        }
+        else if (pm25 < 150 && pm25 >= 55)
+        {
+          s += "<strong>&#9888;CAUTION: POLLUTION LEVELS UNHEALTHY FOR SENSITIVE PEOPLE</strong>";
+          s += "<br>";
+          s += "PM2.5 Levels are over 55.0 &mu;g/m^3";
+          s += "<br>";
+          s += "AVOID prolonged exertion outdoors. YOU risk:";
+          s += "<br>";
+          s += "<strong>- Increased aggravation of heart or lung disease and premature mortality in persons with cardiopulmonary disease and the elderly</strong>";
+          s += "<br>";
+          s += "<strong>- Increased respiratory effects in general population.</strong>";
+        }
+        else
+        {
+          s += "<strong>&#128175;&#128293;POLLUTION LEVELS ARE HEALTHY&#128175;&#128293;</strong>";
+        }
       }
     }
     s += "</center>";
