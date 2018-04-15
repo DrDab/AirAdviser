@@ -206,7 +206,7 @@ void runServer()
         Serial.print("PM 1.0: "); Serial.print(data.pm10_standard);
         Serial.print("\t\tPM 2.5: "); Serial.print(data.pm25_standard);
         Serial.print("\t\tPM 10: "); Serial.print(data.pm100_standard);
-        Serial.print("PM 1.0 Delta: "); Serial.print(pm10_delta);
+        Serial.print("\nPM 1.0 Delta: "); Serial.print(pm10_delta);
         Serial.print("\t\tPM 2.5 Delta: "); Serial.print(pm25_delta);
         Serial.print("\t\tPM 10 Delta: "); Serial.println(pm100_delta);
         Serial.println("---------------------------------------");
