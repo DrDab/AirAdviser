@@ -156,6 +156,11 @@ uint16_t p25 = 0;
 uint16_t p50 = 0;
 uint16_t p100 = 0;
 
+// deltas cannot be unsigned because negatives will cause overflow
+int pm10_delta = 0;
+int pm25_delta = 0;
+int pm100_delta = 0;
+
 boolean writeSerial = true;
 
 // Cloud Fox encoded image
@@ -173,6 +178,12 @@ void runServer()
   {
     hasReading = true;
     haveCurrentReading = true;
+    
+    // calculate the delta values.
+    pm10_delta = (int)data.pm10_standard - (int)pm10;
+    pm25_delta = (int)data.pm25_standard - (int)pm25;
+    pm100_delta = (int)data.pm100_standard - (int)pm100;
+    
     pm10 = data.pm10_standard;
     pm25 = data.pm25_standard;
     pm100 = data.pm100_standard;
@@ -194,7 +205,10 @@ void runServer()
         Serial.println("Concentration Units (standard)");
         Serial.print("PM 1.0: "); Serial.print(data.pm10_standard);
         Serial.print("\t\tPM 2.5: "); Serial.print(data.pm25_standard);
-        Serial.print("\t\tPM 10: "); Serial.println(data.pm100_standard);
+        Serial.print("\t\tPM 10: "); Serial.print(data.pm100_standard);
+        Serial.print("PM 1.0 Delta: "); Serial.print(pm10_delta);
+        Serial.print("\t\tPM 2.5 Delta: "); Serial.print(pm25_delta);
+        Serial.print("\t\tPM 10 Delta: "); Serial.println(pm100_delta);
         Serial.println("---------------------------------------");
         Serial.println("Concentration Units (environmental)");
         Serial.print("PM 1.0: "); Serial.print(data.pm10_env);
@@ -300,14 +314,23 @@ void runServer()
       s += "PM1.0 Level: ";
       s += String(pm10);
       s += " &mu;g/m^3";
+      s += " (&Delta;= ";
+      s += String(pm10_delta);
+      s += ")";
       s += "<br>";
       s += "PM2.5 Level: ";
       s += String(pm25);
       s += " &mu;g/m^3";
+      s += " (&Delta;= ";
+      s += String(pm10_delta);
+      s += ")";
       s += "<br>";
       s += "PM10.0 Level: ";
       s += String(pm100);
       s += " &mu;g/m^3";
+      s += " (&Delta;= ";
+      s += String(pm10_delta);
+      s += ")";
       s += "<br>";
       s += "========================================";
       s += "<br>";
@@ -405,14 +428,23 @@ void runServer()
         s += "PM1.0 Level: ";
         s += String(pm10);
         s += " &mu;g/m^3";
+        s += " (&Delta;= ";
+        s += String(pm10_delta);
+        s += ")";
         s += "<br>";
         s += "PM2.5 Level: ";
         s += String(pm25);
         s += " &mu;g/m^3";
+        s += " (&Delta;= ";
+        s += String(pm10_delta);
+        s += ")";
         s += "<br>";
         s += "PM10.0 Level: ";
         s += String(pm100);
         s += " &mu;g/m^3";
+        s += " (&Delta;= ";
+        s += String(pm10_delta);
+        s += ")";
         s += "<br>";
         s += "========================================";
         s += "<br>";
