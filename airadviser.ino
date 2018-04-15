@@ -23,19 +23,38 @@
 #include <ESP8266WiFi.h>
 #include <SoftwareSerial.h>
 
+//////////////////////////////////////
+// USER CONFIGURABLE SETTINGS BELOW //
+//////////////////////////////////////
+
+// The Wi-Fi SSID for the hotspot
+const String WIFI_SSID = "AirAdviser-chan ";
+
+
 // The Wi-Fi password for the hotspot
 const char WiFiAPPSK[] = "noticemesenpai";
 
 // Enable or disable serial debugging (will cause webserver slowdown)
 const bool USE_SERIAL_DEBUGGING = false;
 
+// Set pins for PMS5003 I/O
+const int PMS_RX = 2;
+const int PMS_TX = 3;
+
 // Enable or disable warning LED
 const bool USE_WARNING_LED = true;
 const int WARNING_LED_PIN = 10; // GPIO10 corresponds to pin SD3 on NodeMCU
 
-WiFiServer server(80);
+// Set port for HTTP webserver
+const int HTTP_SERVER_PORT = 80;
 
-SoftwareSerial pmsSerial(2, 3);
+//////////////////////////////////////
+// END USER CONFIGURABLE SETTINGS   //
+//////////////////////////////////////
+
+WiFiServer server(HTTP_SERVER_PORT);
+
+SoftwareSerial pmsSerial(PMS_RX, PMS_TX);
 
 /**
  * Probe purchase link:
@@ -44,7 +63,7 @@ SoftwareSerial pmsSerial(2, 3);
  * https://www.amazon.com/HiLetgo-Internet-Development-Wireless-Micropython/dp/B010O1G1ES/
  * Solar powered battery pack:
  * https://www.amazon.com/Hiluckey-Waterproof-Shockproof-Travelling-Activities/dp/B075JGP36B/
- * Total cost: $40
+ * Total cost: $30 excluding case
  */
 
 struct pms5003data
@@ -529,7 +548,7 @@ void setupWiFi()
   String macID = String(mac[WL_MAC_ADDR_LENGTH - 2], HEX) +
                  String(mac[WL_MAC_ADDR_LENGTH - 1], HEX);
   macID.toUpperCase();
-  String AP_NameString = "AirAdviser-chan " + macID;
+  String AP_NameString = WIFI_SSID + macID;
 
   char AP_NameChar[AP_NameString.length() + 1];
   memset(AP_NameChar, 0, AP_NameString.length() + 1);
