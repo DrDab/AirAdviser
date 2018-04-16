@@ -166,7 +166,7 @@ uint32_t p10accum = 0;  uint32_t p10avg = 0;
 uint32_t p25accum = 0;  uint32_t p25avg = 0;
 uint32_t p100accum = 0; uint32_t p100avg = 0;
 
-int ptrial = 0;
+uint16_t ptrial = 0;
 
 boolean writeSerial = true;
 
@@ -200,9 +200,9 @@ void runServer()
     p25avg = p25accum / ptrial;
     p100avg = p100accum / ptrial;
 	  
-    if (ptrial == 65536)
+    if (ptrial == 0xFFFF)
     {
-    	// reset every 65536 trials to prevent integer overflow.
+    	// reset every 65535 trials to prevent integer overflow.
 	p10accum = 0;
 	p25accum = 0;
 	p100accum = 0;
