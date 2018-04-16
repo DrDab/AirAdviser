@@ -351,7 +351,7 @@ void runServer()
       s += " &mu;g/m^3";
       s += " (&Delta;= ";
       s += String(pm10_delta);
-      s += " &mu;= "
+      s += " &mu;= ";
       s += String(p10avg);
       s += " N= ";
       s += String(ptrial);
@@ -362,7 +362,7 @@ void runServer()
       s += " &mu;g/m^3";
       s += " (&Delta;= ";
       s += String(pm25_delta);
-      s += " &mu;= "
+      s += " &mu;= ";
       s += String(p25avg);
       s += " N= ";
       s += String(ptrial);
@@ -373,7 +373,7 @@ void runServer()
       s += " &mu;g/m^3";
       s += " (&Delta;= ";
       s += String(pm100_delta);
-      s += " &mu;= "
+      s += " &mu;= ";
       s += String(p100avg);
       s += " N= ";
       s += String(ptrial);
@@ -477,7 +477,7 @@ void runServer()
       	s += " &mu;g/m^3";
       	s += " (&Delta;= ";
       	s += String(pm10_delta);
-     	s += " &mu;= "
+     	  s += " &mu;= ";
       	s += String(p10avg);
       	s += " N= ";
       	s += String(ptrial);
@@ -488,7 +488,7 @@ void runServer()
       	s += " &mu;g/m^3";
       	s += " (&Delta;= ";
       	s += String(pm25_delta);
-      	s += " &mu;= "
+      	s += " &mu;= ";
       	s += String(p25avg);
       	s += " N= ";
       	s += String(ptrial);
@@ -499,7 +499,7 @@ void runServer()
       	s += " &mu;g/m^3";
       	s += " (&Delta;= ";
       	s += String(pm100_delta);
-      	s += " &mu;= "
+      	s += " &mu;= ";
       	s += String(p100avg);
       	s += " N= ";
       	s += String(ptrial);
