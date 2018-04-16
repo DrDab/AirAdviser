@@ -162,9 +162,9 @@ int pm25_delta = 0;
 int pm100_delta = 0;
 
 // values for average calculation
-uint16_t p10accum = 0;  uint16_t p10avg = 0;
-uint16_t p25accum = 0;  uint16_t p25avg = 0;
-uint16_t p100accum = 0; uint16_t p100avg = 0;
+uint32_t p10accum = 0;  uint32_t p10avg = 0;
+uint32_t p25accum = 0;  uint32_t p25avg = 0;
+uint32_t p100accum = 0; uint32_t p100avg = 0;
 
 int ptrial = 0;
 
@@ -200,9 +200,9 @@ void runServer()
     p25avg = p25accum / ptrial;
     p100avg = p100accum / ptrial;
 	  
-    if (ptrial == 500)
+    if (ptrial == 65536)
     {
-    	// reset every 500 trials to prevent integer overflow.
+    	// reset every 65536 trials to prevent integer overflow.
 	p10accum = 0;
 	p25accum = 0;
 	p100accum = 0;
