@@ -405,7 +405,7 @@ void runServer()
       s += "<td style=\"padding:2px\">";
       s += "<center>";
       s += "<big>";
-      s += "<b>Warnings</b>";
+      s += "<b>Instinct Advisory</b>";
       s += "</big>";
       s += "</center>";
       s += "<br //>";
@@ -531,7 +531,7 @@ void runServer()
         s += "<td style=\"padding:2px\">";
         s += "<center>";
         s += "<big>";
-        s += "<b>Warnings</b>";
+        s += "<b>Instinct Advisory</b>";
         s += "</big>";
         s += "</center>";
         s += "<br //>";
