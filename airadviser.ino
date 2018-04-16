@@ -244,6 +244,12 @@ void runServer()
         Serial.print("\t\tPM 2.5: "); Serial.print(data.pm25_env);
         Serial.print("\t\tPM 10: "); Serial.println(data.pm100_env);
         Serial.println("---------------------------------------");
+	Serial.println("Averages");
+        Serial.print("PM 1.0 avg: "); Serial.print(p10avg);
+        Serial.print("\t\tPM 2.5 avg: "); Serial.print(p25avg);
+        Serial.print("\t\tPM 10 avg: "); Serial.print(p100avg);
+	Serial.print("\t\tN= "); Serial.println(ptrial);
+        Serial.println("---------------------------------------");
         Serial.print("Particles > 0.3um / 0.1L air:"); Serial.println(data.particles_03um);
         Serial.print("Particles > 0.5um / 0.1L air:"); Serial.println(data.particles_05um);
         Serial.print("Particles > 1.0um / 0.1L air:"); Serial.println(data.particles_10um);
