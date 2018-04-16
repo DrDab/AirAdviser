@@ -608,7 +608,7 @@ void runServer()
     s += "air safety. With my instincts, I can<br>";
     s += "sniff out invisible dangers in the air<br>";
     s += "and keep you safe.<br>";
-    s += "\\<br> \\<br>  \\<br>";
+    s += "\\<br>&nbsp;\\<br>&nbsp;&nbsp;\\<br>";
     s += "<img src=\"";
     s += cloud_fox;
     s += "\">";
