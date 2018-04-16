@@ -38,15 +38,15 @@ const char WiFiAPPSK[] = "noticemesenpai";
 const bool USE_SERIAL_DEBUGGING = false;
 
 // Set pins for PMS5003 I/O
-const int PMS_RX = 2;
-const int PMS_TX = 3;
+const uint8_t PMS_RX = 2;
+const uint8_t PMS_TX = 3;
 
 // Enable or disable warning LED
 const bool USE_WARNING_LED = true;
-const int WARNING_LED_PIN = 10; // GPIO10 corresponds to pin SD3 on NodeMCU
+const uint8_t WARNING_LED_PIN = 10; // GPIO10 corresponds to pin SD3 on NodeMCU
 
 // Set port for HTTP webserver
-const int HTTP_SERVER_PORT = 80;
+const uint8_t HTTP_SERVER_PORT = 80;
 
 //////////////////////////////////////
 // END USER CONFIGURABLE SETTINGS   //
