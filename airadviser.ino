@@ -161,6 +161,13 @@ int pm10_delta = 0;
 int pm25_delta = 0;
 int pm100_delta = 0;
 
+// values for average calculation
+int p10accum = 0;  int p10avg = 0;
+int p25accum = 0;  int p25avg = 0;
+int p100accum = 0; int p100avg = 0;
+
+int ptrial = 0;
+
 boolean writeSerial = true;
 
 // Cloud Fox encoded image
@@ -184,6 +191,26 @@ void runServer()
     pm25_delta = (int)data.pm25_standard - (int)pm25;
     pm100_delta = (int)data.pm100_standard - (int)pm100;
     
+    // calculate the averages.
+    p10accum += (int)data.pm10_standard;
+	  p25accum += (int)data.pm25_standard;
+	  p100accum += (int)data.pm100_standard;
+	  ptrial++;
+	  p10avg = p10accum / ptrial;
+	  p25avg = p25accum / ptrial;
+	  p100avg = p100accum / ptrial;
+	  if (ptrial == 500)
+	  {
+		  // reset every 500 trials to prevent integer overflow.
+		  p10accum = 0;
+		  p25accum = 0;
+		  p100accum = 0;
+		  ptrial = 0;
+		  p10avg = 0;
+		  p25avg = 0;
+		  p100avg = 0;
+	  }
+    
     pm10 = data.pm10_standard;
     pm25 = data.pm25_standard;
     pm100 = data.pm100_standard;
@@ -193,6 +220,7 @@ void runServer()
     p25 = data.particles_25um;
     p50 = data.particles_50um;
     p100 = data.particles_100um;
+    
     if (USE_SERIAL_DEBUGGING)
     {
         Serial.println();
