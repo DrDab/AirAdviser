@@ -326,10 +326,10 @@ void runServer()
     client.print(s);
     client.print(cloud_fox);
     client.print(o);
-    client.flush();
-    delay(1);
-    Serial.println("Client disconnected");
-    return;
+    //client.flush();
+    //delay(1);
+    //Serial.println("Client disconnected");
+    //return;
   }
   else if (val == -2)
   { 
@@ -603,17 +603,17 @@ void runServer()
   else
   {
     Serial.println("404 page requested by client.");
-    s += "Call trans opt received: ";
-    s += "<p id=\"time\"></p>";
-    s += "<script>";
-    s += "document.getElementById(\"time\").innerHTML = Date();";
-    s += "</script>";
-    s += "<br>";
-    s += "Trace program: running";
-    s += "<br><br>";
-    s += "Wake up, Neo...";
-    s += "<br>The Matrix has you.<br><br>";
+    s += "  Hi!<br>";
+    s += "I'm Cloud, your personal safeguard for<br>";
+    s += "air safety. With my instincts, I can<br>";
+    s += "sniff out invisible dangers in the air<br>";
+    s += "and keep you safe.<br>";
+    s += "\\<br> \\<br>  \\<br>";
+    s += "<img src=\"";
+    s += cloud_fox;
+    s += "\">";
     s += "ERROR 404 : Page Not Found.";
+    s += "<br>";
     s += "<br>";
     s += "<a href=\"192.168.4.1/read\">Read sensor data</a>";
   }
