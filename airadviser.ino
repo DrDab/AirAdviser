@@ -193,23 +193,24 @@ void runServer()
     
     // calculate the averages.
     p10accum += (int)data.pm10_standard;
-	  p25accum += (int)data.pm25_standard;
-	  p100accum += (int)data.pm100_standard;
-	  ptrial++;
-	  p10avg = p10accum / ptrial;
-	  p25avg = p25accum / ptrial;
-	  p100avg = p100accum / ptrial;
-	  if (ptrial == 500)
-	  {
-		  // reset every 500 trials to prevent integer overflow.
-		  p10accum = 0;
-		  p25accum = 0;
-		  p100accum = 0;
-		  ptrial = 0;
-		  p10avg = 0;
-		  p25avg = 0;
-		  p100avg = 0;
-	  }
+    p25accum += (int)data.pm25_standard;
+    p100accum += (int)data.pm100_standard;
+    ptrial++;
+    p10avg = p10accum / ptrial;
+    p25avg = p25accum / ptrial;
+    p100avg = p100accum / ptrial;
+	  
+    if (ptrial == 500)
+    {
+    	// reset every 500 trials to prevent integer overflow.
+	p10accum = 0;
+	p25accum = 0;
+	p100accum = 0;
+	ptrial = 0;
+	p10avg = 0;
+	p25avg = 0;
+	p100avg = 0;
+    }
     
     pm10 = data.pm10_standard;
     pm25 = data.pm25_standard;
