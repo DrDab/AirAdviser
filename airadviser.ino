@@ -162,9 +162,9 @@ int pm25_delta = 0;
 int pm100_delta = 0;
 
 // values for average calculation
-int p10accum = 0;  int p10avg = 0;
-int p25accum = 0;  int p25avg = 0;
-int p100accum = 0; int p100avg = 0;
+uint16_t p10accum = 0;  uint16_t p10avg = 0;
+uint16_t p25accum = 0;  uint16_t p25avg = 0;
+uint16_t p100accum = 0; uint16_t p100avg = 0;
 
 int ptrial = 0;
 
@@ -192,9 +192,9 @@ void runServer()
     pm100_delta = (int)data.pm100_standard - (int)pm100;
     
     // calculate the averages.
-    p10accum += (int)data.pm10_standard;
-    p25accum += (int)data.pm25_standard;
-    p100accum += (int)data.pm100_standard;
+    p10accum += data.pm10_standard;
+    p25accum += data.pm25_standard;
+    p100accum += data.pm100_standard;
     ptrial++;
     p10avg = p10accum / ptrial;
     p25avg = p25accum / ptrial;
