@@ -343,6 +343,7 @@ void runServer()
     Serial.println("CSV Log requested.");
     client.print(tmpStr);
     client.flush();
+    delay(1);
     return;
   }
 
@@ -375,10 +376,10 @@ void runServer()
     client.print(s);
     client.print(cloud_fox);
     client.print(o);
-    //client.flush();
-    //delay(1);
-    //Serial.println("Client disconnected");
-    //return;
+    client.flush();
+    delay(1);
+    Serial.println("Client disconnected");
+    return;
   }
   else if (val == -2)
   { 
