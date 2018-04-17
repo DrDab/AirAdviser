@@ -166,6 +166,15 @@ uint32_t p10accum = 0;  uint32_t p10avg = 0;
 uint32_t p25accum = 0;  uint32_t p25avg = 0;
 uint32_t p100accum = 0; uint32_t p100avg = 0;
 
+// array of samples taken each 15 minutes, stored for 7 days.
+uint16_t trials_pm10[672];
+uint16_t trials_pm25[672];
+uint16_t trials_pm100[672];
+
+// sample count (take a reading every 15 minutes, and (15 min * 60 sec) / 0.5 seconds per reading = add a reading every 1800 readings)
+uint16_t numsamples = 0;
+
+// number of trials (increase by 1 each time we get 1800 readings. also the position to write to in the array.
 uint16_t ptrial = 0;
 
 boolean writeSerial = true;
@@ -183,6 +192,9 @@ void runServer()
   boolean haveCurrentReading = false;
   if (readPMSdata(&pmsSerial)) 
   {
+    // increment the number of samples by one.
+    numsamples++;
+    
     hasReading = true;
     haveCurrentReading = true;
     
@@ -192,17 +204,24 @@ void runServer()
     pm100_delta = (int)data.pm100_standard - (int)pm100;
     
     // calculate the averages.
-    p10accum += data.pm10_standard;
-    p25accum += data.pm25_standard;
-    p100accum += data.pm100_standard;
-    ptrial++;
-    p10avg = p10accum / ptrial;
-    p25avg = p25accum / ptrial;
-    p100avg = p100accum / ptrial;
-	  
-    if (ptrial == 0xFFFF)
+    if (numsamples % 1800 == 0)
     {
-    	// reset every 65535 trials to prevent integer overflow.
+      trials_pm10[ptrial] = data.pm10_standard;
+      trials_pm25[ptrial] = data.pm25_standard;
+      trials_pm100[ptrial] = data.pm100_standard;
+      p10accum += data.pm10_standard;
+      p25accum += data.pm25_standard;
+      p100accum += data.pm100_standard;
+      ptrial++;
+      p10avg = p10accum / ptrial;
+      p25avg = p25accum / ptrial;
+      p100avg = p100accum / ptrial; 
+    }
+	  
+    if (ptrial == 672)
+    {
+    	// reset every 672 trials to prevent integer overflow and array fillup.
+      numsamples = 0;
 	    p10accum = 0;
 	    p25accum = 0;
 	    p100accum = 0;
@@ -210,6 +229,10 @@ void runServer()
 	    p10avg = 0;
 	    p25avg = 0;
 	    p100avg = 0;
+      // clear the array of trials.
+      memset(trials_pm10, 0, sizeof(trials_pm10));
+      memset(trials_pm25, 0, sizeof(trials_pm25));
+      memset(trials_pm100, 0, sizeof(trials_pm100));
     }
     
     pm10 = data.pm10_standard;
@@ -244,11 +267,11 @@ void runServer()
         Serial.print("\t\tPM 2.5: "); Serial.print(data.pm25_env);
         Serial.print("\t\tPM 10: "); Serial.println(data.pm100_env);
         Serial.println("---------------------------------------");
-	Serial.println("Averages");
+	      Serial.println("Averages");
         Serial.print("PM 1.0 avg: "); Serial.print(p10avg);
         Serial.print("\t\tPM 2.5 avg: "); Serial.print(p25avg);
         Serial.print("\t\tPM 10 avg: "); Serial.print(p100avg);
-	Serial.print("\t\tN= "); Serial.println(ptrial);
+	      Serial.print("\t\tN= "); Serial.println(ptrial);
         Serial.println("---------------------------------------");
         Serial.print("Particles > 0.3um / 0.1L air:"); Serial.println(data.particles_03um);
         Serial.print("Particles > 0.5um / 0.1L air:"); Serial.println(data.particles_05um);
@@ -295,8 +318,34 @@ void runServer()
   {
     val = -2; // read page
   }
+  else if (req.indexOf("/results.csv") != -1)
+  {
+    val = -5;
+  }
 
-  client.flush();
+  String tmpStr = "";
+  if (val == -5)
+  {
+    // read the array
+    tmpStr += "Sample #, PM1.0, PM2.5, PM10.0";
+    for(uint16_t i = 0; i < ptrial; i++)
+    {
+      tmpStr += i;
+      tmpStr += ","; 
+      tmpStr += trials_pm10[i];
+      tmpStr += ",";
+      tmpStr += trials_pm25[i];
+      tmpStr += ",";
+      tmpStr += trials_pm100[i];
+      tmpStr += "\n";
+    }
+    tmpStr += "\nEND OF LOG";
+    Serial.println("CSV Log requested.");
+    client.print(tmpStr);
+    client.flush();
+    return;
+  }
+
 
   // Prepare the response. Start with the common header:
   String o = "";
