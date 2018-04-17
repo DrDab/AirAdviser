@@ -372,14 +372,15 @@ void runServer()
     s += "<a href=\"192.168.4.1/read\">Read sensor data</a>";
     s += "<br><p>Cloud Fox</p>";
     s += "<img src=\"";
-    o += "\">";
-    client.print(s);
-    client.print(cloud_fox);
-    client.print(o);
-    client.flush();
-    delay(1);
-    Serial.println("Client disconnected");
-    return;
+    s += cloud_fox;
+    s += "\">";
+    //client.print(s);
+    //client.print(cloud_fox);
+    //client.print(o);
+    //client.flush();
+    //delay(1);
+    //Serial.println("Client disconnected");
+    //return;
   }
   else if (val == -2)
   { 
@@ -671,7 +672,7 @@ void runServer()
 
   // Send the response to the client
   client.print(s);
-  delay(1);
+  delay(3);
   Serial.println("Client disconnected");
 
   // The client will actually be disconnected 
