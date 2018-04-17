@@ -171,7 +171,7 @@ uint16_t trials_pm10[672];
 uint16_t trials_pm25[672];
 uint16_t trials_pm100[672];
 
-// sample count (take a reading every 15 minutes, and (15 min * 60 sec) / 1.2 seconds per reading = add a reading every 750 readings)
+// sample count (take a reading every 15 minutes, and (15 min * 60 sec) / 0.8 seconds per reading = add a reading every 1080 readings)
 uint16_t numsamples = 0;
 
 // number of trials (increase by 1 each time we get 1800 readings. also the position to write to in the array.
@@ -221,7 +221,7 @@ void runServer()
     }
     
     // calculate the averages.
-    if (numsamples % 750 == 0)
+    if (numsamples % 1080 == 0)
     {
       trials_pm10[ptrial] = data.pm10_standard;
       trials_pm25[ptrial] = data.pm25_standard;
