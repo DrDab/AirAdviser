@@ -203,13 +203,13 @@ void runServer()
     if (ptrial == 0xFFFF)
     {
     	// reset every 65535 trials to prevent integer overflow.
-	p10accum = 0;
-	p25accum = 0;
-	p100accum = 0;
-	ptrial = 0;
-	p10avg = 0;
-	p25avg = 0;
-	p100avg = 0;
+	    p10accum = 0;
+	    p25accum = 0;
+	    p100accum = 0;
+	    ptrial = 0;
+	    p10avg = 0;
+	    p25avg = 0;
+	    p100avg = 0;
     }
     
     pm10 = data.pm10_standard;
