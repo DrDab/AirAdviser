@@ -171,14 +171,14 @@ uint16_t trials_pm10[672];
 uint16_t trials_pm25[672];
 uint16_t trials_pm100[672];
 
-// sample count (take a reading every 15 minutes, and (15 min * 60 sec) / 0.8 seconds per reading = add a reading every 1080 readings)
+// sample count (take a reading every 15 minutes, and 1 second = 1 reading (appox), so we take 900 readings.
 uint16_t numsamples = 0;
-uint16_t numremaining = 1080;
+uint16_t numremaining = 900;
 
 // number of minutes left to next sample.
 uint8_t minutes_left = 15;
 
-// number of trials (increase by 1 each time we get 1080 readings. also the position to write to in the array.
+// number of trials (increase by 1 each time we get 900 readings. also the position to write to in the array.
 uint16_t ptrial = 0;
 
 boolean writeSerial = true;
@@ -225,11 +225,11 @@ void runServer()
     }
 
     // calculate the time to the next sample.
-    uint16_t numremaining = 1080 - numsamples;
-    minutes_left = (uint8_t)(((float)numremaining / 1080.0) * 15.0);
+    uint16_t numremaining = 900 - numsamples;
+    minutes_left = (uint8_t)(((float)numremaining / 900.0) * 15.0);
     
     // calculate the averages.
-    if (numsamples % 1080 == 0)
+    if (numsamples % 900 == 0)
     {
       trials_pm10[ptrial] = data.pm10_standard;
       trials_pm25[ptrial] = data.pm25_standard;
