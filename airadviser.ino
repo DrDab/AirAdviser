@@ -241,6 +241,8 @@ void runServer()
     // calculate the averages.
     if (numsamples % samplesperinterval == 0)
     {
+      numsamples = 0;
+      numremaining = samplesperinterval;
       trials_pm10[ptrial] = data.pm10_standard;
       trials_pm25[ptrial] = data.pm25_standard;
       trials_pm100[ptrial] = data.pm100_standard;
