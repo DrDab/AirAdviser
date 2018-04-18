@@ -418,7 +418,7 @@ void runServer()
       s += "PM1.0 Level: ";
       s += String(pm10);
       s += " &mu;g/m^3";
-      s += " (&Delta;&mu;= ";
+      s += " (&Delta;(&mu;,c)= ";
       s += String(pm10_delta);
       s += " &mu;= ";
       s += String(p10avg);
@@ -429,7 +429,7 @@ void runServer()
       s += "PM2.5 Level: ";
       s += String(pm25);
       s += " &mu;g/m^3";
-      s += " (&Delta;&mu;= ";
+      s += " (&Delta;(&mu;,c)= ";
       s += String(pm25_delta);
       s += " &mu;= ";
       s += String(p25avg);
@@ -440,7 +440,7 @@ void runServer()
       s += "PM10.0 Level: ";
       s += String(pm100);
       s += " &mu;g/m^3";
-      s += " (&Delta;&mu;= ";
+      s += " (&Delta;(&mu;,c)= ";
       s += String(pm100_delta);
       s += " &mu;= ";
       s += String(p100avg);
@@ -544,7 +544,7 @@ void runServer()
         s += "PM1.0 Level: ";
       	s += String(pm10);
       	s += " &mu;g/m^3";
-      	s += " (&Delta;&mu;= ";
+      	s += " (&Delta;(&mu;,c)= ";
       	s += String(pm10_delta);
      	  s += " &mu;= ";
       	s += String(p10avg);
@@ -555,7 +555,7 @@ void runServer()
       	s += "PM2.5 Level: ";
       	s += String(pm25);
       	s += " &mu;g/m^3";
-      	s += " (&Delta;&mu;= ";
+      	s += " (&Delta;(&mu;,c)= ";
       	s += String(pm25_delta);
       	s += " &mu;= ";
       	s += String(p25avg);
@@ -566,7 +566,7 @@ void runServer()
       	s += "PM10.0 Level: ";
       	s += String(pm100);
       	s += " &mu;g/m^3";
-      	s += " (&Delta;&mu;= ";
+      	s += " (&Delta;(&mu;,c)= ";
       	s += String(pm100_delta);
       	s += " &mu;= ";
       	s += String(p100avg);
