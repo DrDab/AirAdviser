@@ -156,15 +156,15 @@ uint16_t p25 = 0;
 uint16_t p50 = 0;
 uint16_t p100 = 0;
 
-// deltas cannot be unsigned because negatives will cause overflow
-int pm10_delta = 0;
-int pm25_delta = 0;
-int pm100_delta = 0;
+// deltas cannot be unsigned int because negatives will cause overflow
+float pm10_delta = 0.0;
+float pm25_delta = 0.0;
+float pm100_delta = 0.0;
 
 // values for average calculation
-uint32_t p10accum = 0;  uint32_t p10avg = 0;
-uint32_t p25accum = 0;  uint32_t p25avg = 0;
-uint32_t p100accum = 0; uint32_t p100avg = 0;
+uint32_t p10accum = 0;  float p10avg = 0.0;
+uint32_t p25accum = 0;  float p25avg = 0.0;
+uint32_t p100accum = 0; float p100avg = 0.0;
 
 // array of samples taken each 15 minutes, stored for 7 days.
 uint16_t trials_pm10[672];
@@ -173,8 +173,12 @@ uint16_t trials_pm100[672];
 
 // sample count (take a reading every 15 minutes, and (15 min * 60 sec) / 0.8 seconds per reading = add a reading every 1080 readings)
 uint16_t numsamples = 0;
+uint16_t numremaining = 1080;
 
-// number of trials (increase by 1 each time we get 1800 readings. also the position to write to in the array.
+// number of minutes left to next sample.
+uint8_t minutes_left = 15;
+
+// number of trials (increase by 1 each time we get 1080 readings. also the position to write to in the array.
 uint16_t ptrial = 0;
 
 boolean writeSerial = true;
@@ -199,9 +203,9 @@ void runServer()
     haveCurrentReading = true;
     
     // calculate the delta values.
-    pm10_delta = (int)data.pm10_standard - (int)pm10;
-    pm25_delta = (int)data.pm25_standard - (int)pm25;
-    pm100_delta = (int)data.pm100_standard - (int)pm100;
+    pm10_delta = (float)data.pm10_standard - p10avg;
+    pm25_delta = (float)data.pm25_standard - p25avg;
+    pm100_delta = (float)data.pm100_standard - p100avg;
 
     if (ptrial == 672)
     {
@@ -211,14 +215,18 @@ void runServer()
       p25accum = 0;
       p100accum = 0;
       ptrial = 0;
-      p10avg = 0;
-      p25avg = 0;
-      p100avg = 0;
+      p10avg = 0.0;
+      p25avg = 0.0;
+      p100avg = 0.0;
       // clear the array of trials.
       memset(trials_pm10, 0, sizeof(trials_pm10));
       memset(trials_pm25, 0, sizeof(trials_pm25));
       memset(trials_pm100, 0, sizeof(trials_pm100));
     }
+
+    // calculate the time to the next sample.
+    uint16_t numremaining = 1080 - numsamples;
+    minutes_left = (uint8_t)(((float)numremaining / 1080.0) * 15.0);
     
     // calculate the averages.
     if (numsamples % 1080 == 0)
@@ -230,9 +238,9 @@ void runServer()
       p25accum += data.pm25_standard;
       p100accum += data.pm100_standard;
       ptrial++;
-      p10avg = p10accum / ptrial;
-      p25avg = p25accum / ptrial;
-      p100avg = p100accum / ptrial; 
+      p10avg = (float)p10accum / (float)ptrial;
+      p25avg = (float)p25accum / (float)ptrial;
+      p100avg = (float)p100accum / (float)ptrial; 
     }
     
     pm10 = data.pm10_standard;
@@ -400,7 +408,7 @@ void runServer()
       s += "PM1.0 Level: ";
       s += String(pm10);
       s += " &mu;g/m^3";
-      s += " (&Delta;= ";
+      s += " (&Delta;&mu;= ";
       s += String(pm10_delta);
       s += " &mu;= ";
       s += String(p10avg);
@@ -411,7 +419,7 @@ void runServer()
       s += "PM2.5 Level: ";
       s += String(pm25);
       s += " &mu;g/m^3";
-      s += " (&Delta;= ";
+      s += " (&Delta;&mu;= ";
       s += String(pm25_delta);
       s += " &mu;= ";
       s += String(p25avg);
@@ -422,7 +430,7 @@ void runServer()
       s += "PM10.0 Level: ";
       s += String(pm100);
       s += " &mu;g/m^3";
-      s += " (&Delta;= ";
+      s += " (&Delta;&mu;= ";
       s += String(pm100_delta);
       s += " &mu;= ";
       s += String(p100avg);
@@ -526,7 +534,7 @@ void runServer()
         s += "PM1.0 Level: ";
       	s += String(pm10);
       	s += " &mu;g/m^3";
-      	s += " (&Delta;= ";
+      	s += " (&Delta;&mu;= ";
       	s += String(pm10_delta);
      	  s += " &mu;= ";
       	s += String(p10avg);
@@ -537,7 +545,7 @@ void runServer()
       	s += "PM2.5 Level: ";
       	s += String(pm25);
       	s += " &mu;g/m^3";
-      	s += " (&Delta;= ";
+      	s += " (&Delta;&mu;= ";
       	s += String(pm25_delta);
       	s += " &mu;= ";
       	s += String(p25avg);
@@ -548,7 +556,7 @@ void runServer()
       	s += "PM10.0 Level: ";
       	s += String(pm100);
       	s += " &mu;g/m^3";
-      	s += " (&Delta;= ";
+      	s += " (&Delta;&mu;= ";
       	s += String(pm100_delta);
       	s += " &mu;= ";
       	s += String(p100avg);
@@ -644,7 +652,12 @@ void runServer()
     s += "</center>";
     s += "</td></tr></table>";
     s += "<br>";
-    s += "This page last updated at:";
+    s += "Estimated time to next log entry:<br>";
+    s += String(minutes_left);
+    s += " minutes (";
+    s += numsamples;
+    s += " samples)";
+    s += "<br><br>This page last updated at:";
     s += "<p id=\"time\"></p>";
     s += "<script>";
     s += "document.getElementById(\"time\").innerHTML = Date();";
