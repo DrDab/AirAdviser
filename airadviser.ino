@@ -585,6 +585,8 @@ void runServer()
         {
           s += "<strong>&#128175;&#128293;POLLUTION LEVELS ARE HEALTHY&#128175;&#128293;</strong>";
         }
+        s += "</center>";
+        s += "</td></tr></table>";
     }
     else
     {
@@ -713,10 +715,10 @@ void runServer()
         {
           s += "<strong>&#128175;&#128293;POLLUTION LEVELS ARE HEALTHY&#128175;&#128293;</strong>";
         }
+        s += "</center>";
+        s += "</td></tr></table>";
       }
     }
-    s += "</center>";
-    s += "</td></tr></table>";
     s += "<br>";
     s += "Estimated time to next log entry:<br>";
     s += String(minutes_left);
