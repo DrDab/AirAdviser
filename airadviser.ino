@@ -270,6 +270,7 @@ void runServer()
       trials_pm10[ptrial] = data.pm10_standard;
       trials_pm25[ptrial] = data.pm25_standard;
       trials_pm100[ptrial] = data.pm100_standard;
+      trials_temp[ptrial] = temp_c;
       p10accum += data.pm10_standard;
       p25accum += data.pm25_standard;
       p100accum += data.pm100_standard;
@@ -378,11 +379,13 @@ void runServer()
   if (val == -5)
   {
     // read the array
-    tmpStr += "Sample #, PM1.0, PM2.5, PM10.0\n";
+    tmpStr += "Sample #, Temperature, PM1.0, PM2.5, PM10.0\n";
     for(uint16_t i = 0; i < ptrial; i++)
     {
       tmpStr += i;
       tmpStr += ","; 
+      tmpStr += trials_temp[i];
+      tmpStr += ",";
       tmpStr += trials_pm10[i];
       tmpStr += ",";
       tmpStr += trials_pm25[i];
