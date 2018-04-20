@@ -37,9 +37,12 @@ const char WiFiAPPSK[] = "noticemesenpai";
 // Enable or disable serial debugging (will cause webserver slowdown)
 const bool USE_SERIAL_DEBUGGING = false;
 
-// Set pins for PMS5003 I/O
+// Set pins for PMS5003 I/O (Pollution Probe)
 const uint8_t PMS_RX = 2;
 const uint8_t PMS_TX = 3;
+
+// Set pins for LM35 I/O (Temperature Probe)
+const uint8_t LM35_PIN = A0;
 
 // Enable or disable warning LED
 const bool USE_WARNING_LED = true;
@@ -145,6 +148,8 @@ void setup()
 }
 
 boolean hasReading = false;
+
+// pollution sensor readings.
 uint16_t pm10 = 0;
 uint16_t pm25 = 0;
 uint16_t pm100 = 0;
@@ -156,20 +161,31 @@ uint16_t p25 = 0;
 uint16_t p50 = 0;
 uint16_t p100 = 0;
 
+// lm35 temperature sensor readings.
+uint8_t lm35_reading = 0.0;
+float lm35_mv = 0.0;
+float temp_c = 0.0;
+bool heatstroke_risk = false;
+
 // deltas cannot be unsigned int because negatives will cause overflow
 float pm10_delta = 0.0;
 float pm25_delta = 0.0;
 float pm100_delta = 0.0;
+float temp_delta = 0.0;
 
 // values for average calculation
 uint32_t p10accum = 0;  float p10avg = 0.0;
 uint32_t p25accum = 0;  float p25avg = 0.0;
 uint32_t p100accum = 0; float p100avg = 0.0;
 
+float temp_accum = 0.0; float temp_avg = 0.0;
+
 // array of samples taken each 15 minutes, stored for 7 days.
 uint16_t trials_pm10[672];
 uint16_t trials_pm25[672];
 uint16_t trials_pm100[672];
+
+float trials_temp[672];
 
 // sample count (take a reading every 15 minutes, and get estimate based on calibration table below
 // samples | delta (to 1 minute)
@@ -217,6 +233,11 @@ void runServer()
     pm25_delta = (float)data.pm25_standard - p25avg;
     pm100_delta = (float)data.pm100_standard - p100avg;
 
+    // calculate the temperature.
+    lm35_reading = analogRead(LM35_PIN);
+    lm35_mv = (lm35_reading / 1024.0) * 5000.0; 
+    temp_c = lm35_mv / 10.0;
+
     if (ptrial == 672)
     {
       // reset every 672 trials to prevent integer overflow and array fillup.
@@ -228,10 +249,13 @@ void runServer()
       p10avg = 0.0;
       p25avg = 0.0;
       p100avg = 0.0;
+      temp_accum = 0.0;
+      temp_avg = 0.0;
       // clear the array of trials.
       memset(trials_pm10, 0, sizeof(trials_pm10));
       memset(trials_pm25, 0, sizeof(trials_pm25));
       memset(trials_pm100, 0, sizeof(trials_pm100));
+      memset(trials_temp, 0, sizeof(trials_temp));
     }
 
     // calculate the time to the next sample.
@@ -249,10 +273,12 @@ void runServer()
       p10accum += data.pm10_standard;
       p25accum += data.pm25_standard;
       p100accum += data.pm100_standard;
+      temp_accum += temp_c;
       ptrial++;
       p10avg = (float)p10accum / (float)ptrial;
       p25avg = (float)p25accum / (float)ptrial;
       p100avg = (float)p100accum / (float)ptrial; 
+      temp_avg = temp_accum / (float)ptrial;
     }
     
     pm10 = data.pm10_standard;
@@ -273,6 +299,11 @@ void runServer()
           Serial.println("\nDANGER\n");
           Serial.println("Air pollution levels are unsafe! Do not go outdoors\n");
         }
+        Serial.println("---------------------------------------");
+        Serial.println("Temperature Readings");
+        Serial.print("Degrees (C) "); Serial.print(temp_c);
+        Serial.print("\t\tDelta (C): "); Serial.print(temp_delta);
+        Serial.print("\t\tAverage (C): "); Serial.print(temp_avg);
         Serial.println("---------------------------------------");
         Serial.println("Concentration Units (standard)");
         Serial.print("PM 1.0: "); Serial.print(data.pm10_standard);
@@ -407,7 +438,23 @@ void runServer()
     Serial.println("Reading page requested by client.");
     s += "<meta http-equiv=\"refresh\" content=\"2\" >";
     s += "<title>Sensor Reading</title>";
-    s += "<strong>Pollution Sensor Data</strong>";
+    s += "<strong>Sensor Data</strong>";
+
+    s += "<br>";
+    s += "========================================";
+    s += "<br>";
+    s += "Temperature Information";
+    s += "<br>";
+    s += "Current Temperature: ";
+    s += String(temp_c);
+    s += " &deg;C";
+    s += " (&Delta;(&mu;,c)= ";
+    s += String(temp_delta);
+    s += " &mu;= ";
+    s += String(temp_avg);
+    s += " N= ";
+    s += String(ptrial);
+    s += ")";
     s += "<br>";
     s += "========================================";
     s += "<br>";
@@ -470,13 +517,15 @@ void runServer()
       s += "Particles > 50 &mu;m / 0.1L air : ";
       s += String(p100);
       s += "<br>";
+      // begin warnings
+      
       s += "<br><br>";
       s += "<table style=\"background-color: #000; border: 2px solid #00ff00; padding: 1px;\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">";
       s += "<tr>";
       s += "<td style=\"padding:2px\">";
       s += "<center>";
       s += "<big>";
-      s += "<b>Instinct Advisory</b>";
+      s += "<b>Pollution Advisory</b>";
       s += "</big>";
       s += "</center>";
       s += "<br //>";
@@ -596,13 +645,15 @@ void runServer()
         s += "Particles > 50 &mu;m / 0.1L air : ";
         s += String(p100);
         s += "<br>";
+
+        // begin warnings
         s += "<br><br>";
         s += "<table style=\"background-color: #000; border: 2px solid #00ff00; padding: 1px;\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">";
         s += "<tr>";
         s += "<td style=\"padding:2px\">";
         s += "<center>";
         s += "<big>";
-        s += "<b>Instinct Advisory</b>";
+        s += "<b>Pollution Advisory</b>";
         s += "</big>";
         s += "</center>";
         s += "<br //>";
