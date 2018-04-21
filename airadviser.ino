@@ -293,11 +293,23 @@ String getValue(String data, char separator, int index)
     return found > index ? data.substring(strIndex[0], strIndex[1]) : "";
 }
 
+double stringToDouble(String& str)
+{
+  return atof(str.c_str());
+}
+
 void loop() 
 {
   readTemps();
   runServer();
 }
+
+float tmp_threshold = 9999.0;
+float rh_threshold = 9999.0;
+float hi_threshold = 9999.0;
+float dp_threshold = 9999.0;
+float pm25_threshold = 9999.0;
+bool logic = true;
 
 void runServer()
 {
@@ -454,13 +466,29 @@ void runServer()
         Serial.print("Particles > 50 um / 0.1L air:"); Serial.println(data.particles_100um);
         Serial.println("---------------------------------------");
     }
-    if (data.pm25_standard >= 55)
+    if (logic)
     {
-      digitalWrite(WARNING_LED_PIN, HIGH);
+      // AND logic
+      if (temp_c >= tmp_threshold && humidity >= rh_threshold && heat_index >= hi_threshold && dew_point >= dp_threshold && pm25 >= pm25_threshold)
+      {
+        digitalWrite(WARNING_LED_PIN, HIGH);
+      }
+      else
+      {
+        digitalWrite(WARNING_LED_PIN, LOW);
+      }
     }
     else
     {
-      digitalWrite(WARNING_LED_PIN, LOW);
+      // OR logic
+      if (temp_c >= tmp_threshold || humidity >= rh_threshold || heat_index >= hi_threshold || dew_point >= dp_threshold || pm25 >= pm25_threshold)
+      {
+        digitalWrite(WARNING_LED_PIN, HIGH);
+      }
+      else
+      {
+        digitalWrite(WARNING_LED_PIN, LOW);
+      }
     }
   }
   else
@@ -1050,14 +1078,28 @@ void runServer()
     String part4 = getValue(eq, '&', 3);
     String part5 = getValue(eq, '&', 4);
     String part6 = getValue(eq, '&', 5);
-    Serial.println("MGMT REQUEST");
-    Serial.println(part1);
-    Serial.println(part2);
-    Serial.println(part3);
-    Serial.println(part4);
-    Serial.println(part5);
-    Serial.println(part6);
-    Serial.println("END MGMT REQUEST");
+
+    String part_filtered1 = getValue(part1, '=', 1);
+    String part_filtered2 = getValue(part2, '=', 1);
+    String part_filtered3 = getValue(part3, '=', 1);
+    String part_filtered4 = getValue(part4, '=', 1);
+    String part_filtered5 = getValue(part5, '=', 1);
+    String part_filtered6 = getValue(getValue(part6, '=', 1), 'H', 0);
+
+    tmp_threshold = (float)stringToDouble(part_filtered1);
+    rh_threshold = (float)stringToDouble(part_filtered2);
+    hi_threshold = (float)stringToDouble(part_filtered3);
+    dp_threshold = (float)stringToDouble(part_filtered4);
+    pm25_threshold = (float)stringToDouble(part_filtered5);
+    logic = (float)part_filtered6.toInt();
+
+    Serial.println(tmp_threshold);
+    Serial.println(rh_threshold);
+    Serial.println(hi_threshold);
+    Serial.println(dp_threshold);
+    Serial.println(pm25_threshold);
+    Serial.println(logic);
+    
   }
   else
   {
