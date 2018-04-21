@@ -235,7 +235,8 @@ float tofahrenheit(float temp)
 // auxiliary function to calculate the heatstroke index based on RH% and temperature (Fahrenheit).
 float heatstroke_index(float temp_f, float rh)
 {
-  return -42.379 + 2.04901523*temp_f + 10.14333127*rh - .22475541*temp_f*rh - .00683783*temp_f*temp_f - .05481717*rh*rh + .00122874*temp_f*temp_f*rh + .00085282*temp_f*rh*rh - .00000199*temp_f*temp_f*rh*rh;
+  float hi_f = -42.379 + 2.04901523*temp_f + 10.14333127*rh - .22475541*temp_f*rh - .00683783*temp_f*temp_f - .05481717*rh*rh + .00122874*temp_f*temp_f*rh + .00085282*temp_f*rh*rh - .00000199*temp_f*temp_f*rh*rh;
+  return (hi_f - 32.0) * 0.55555556;
 }
 
 // auxiliary function to calculate the dew point based on RH% and temperature (Celsius)
