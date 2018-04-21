@@ -472,10 +472,12 @@ void runServer()
       if (temp_c >= tmp_threshold && humidity >= rh_threshold && heat_index >= hi_threshold && dew_point >= dp_threshold && pm25 >= pm25_threshold)
       {
         digitalWrite(WARNING_LED_PIN, HIGH);
+        digitalWrite(IOT_CONTROL_PORT, HIGH);
       }
       else
       {
         digitalWrite(WARNING_LED_PIN, LOW);
+        digitalWrite(IOT_CONTROL_PORT, LOW);
       }
     }
     else
@@ -484,10 +486,12 @@ void runServer()
       if (temp_c >= tmp_threshold || humidity >= rh_threshold || heat_index >= hi_threshold || dew_point >= dp_threshold || pm25 >= pm25_threshold)
       {
         digitalWrite(WARNING_LED_PIN, HIGH);
+        digitalWrite(IOT_CONTROL_PORT, HIGH);
       }
       else
       {
         digitalWrite(WARNING_LED_PIN, LOW);
+        digitalWrite(IOT_CONTROL_PORT, LOW);
       }
     }
   }
@@ -1186,6 +1190,8 @@ void initHardware()
     Serial.println(WARNING_LED_PIN);
     digitalWrite(WARNING_LED_PIN, LOW); 
   }
+  pinMode(IOT_CONTROL_PORT, OUTPUT);
+  digitalWrite(IOT_CONTROL_PORT, LOW);
 }
 
 //,*(\*;""";/1Ie1*- -  `<r>,+i;^VMy\?tGb<>_>_>++}tYT1YyoJ#VFnaeFjV4FV3JJ2VJ4eanouF4Itv\=<(uXL:^  - 
