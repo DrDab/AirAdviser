@@ -1043,7 +1043,7 @@ void runServer()
   {
     // parse the management page information.
     String eq = req;
-    String yiff = getValue(eq, '&', 0);
+    String yiff = getValue(eq, '&', 1);
     String part1 = getValue(yiff, '?', 0);
     String part2 = getValue(eq, '&', 1);
     String part3 = getValue(eq, '&', 2);
