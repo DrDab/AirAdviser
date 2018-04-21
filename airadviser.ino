@@ -1066,6 +1066,26 @@ void runServer()
     s += "</select>";
     s += "<input type=\"submit\" value=\"Set Triggers\">";
     s += "</form>";
+    s += "<br><br>Temp Threshold: ";
+    s += String(tmp_threshold);
+    s += "<br>RH Threshold: ";
+    s += String(rh_threshold);
+    s += "<br>HI Threshold: ";
+    s += String(hi_threshold);
+    s += "<br>DP Threshold: ";
+    s += String(dp_threshold);
+    s += "<br>PM 2.5 Threshold: ";
+    s += String(pm25_threshold);
+    s += "<br>Logic: ";
+    if (logic)
+    {
+      s += " AND";
+    }
+    else
+    {
+      s += " OR";
+    }
+    s += "<br>";
   }
   else if (val == -9)
   {
@@ -1093,6 +1113,7 @@ void runServer()
     pm25_threshold = (float)stringToDouble(part_filtered5);
     logic = (float)part_filtered6.toInt();
 
+    s += "Settings confirmed. <br><br><br><a href=\"192.168.4.1/read\">Read sensor data</a> ";
     Serial.println(tmp_threshold);
     Serial.println(rh_threshold);
     Serial.println(hi_threshold);
