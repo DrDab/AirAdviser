@@ -989,6 +989,7 @@ void runServer()
   {
     // offer a management page.
     Serial.println("Management page requested by client.");
+    s += "<title>Management</title>";
     s += "<strong>AirAdviser Manager</strong><br>";
     s += "OUTPUT ";
     s += String(IOT_CONTROL_PORT);
