@@ -242,14 +242,13 @@ bool dhtREAD = false;
 void runServer()
 {
   dhtREAD = true;
-  bool haveCurrentReading = false;
+  bool haveCurrentReading = true;
   if (readPMSdata(&pmsSerial)) 
   {
     // increment the number of samples by one.
     numsamples++;
     
     hasReading = true;
-    haveCurrentReading = true;
     
     // calculate the delta values.
     pm10_delta = (float)data.pm10_standard - p10avg;
