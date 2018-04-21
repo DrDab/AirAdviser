@@ -586,6 +586,7 @@ void runServer()
     s += "<br>";
     s += "Heat Index: ";
     s += String(heat_index);
+    s += " &deg;C";
     s += " (&Delta;(&mu;,c)= ";
     s += String(heat_index_delta);
     s += " &mu;= ";
