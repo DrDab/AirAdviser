@@ -1,5 +1,4 @@
 # AirAdviser
-<!-- ![alt text](https://raw.githubusercontent.com/DrDab/AirAdviser/master/logo1.png) --!>
 
 AirAdviser
 
