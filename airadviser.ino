@@ -275,23 +275,24 @@ void runServer()
 
     // calculate the temperature.
     chk = DHT11.read(DHT11_PIN);
-    switch (chk)
+    if (chk == DHTLIB_OK)
     {
-      case DHTLIB_OK: 
         Serial.println("DHT11: OK"); 
-        break;
-      case DHTLIB_ERROR_CHECKSUM: 
+    }
+    else if (chk == DHTLIB_ERROR_CHECKSUM)
+    {
         Serial.println("DHT11: Checksum error"); 
         dhtREAD = false;
-        break;
-      case DHTLIB_ERROR_TIMEOUT: 
+    }
+    else if (chk == DHTLIB_ERROR_TIMEOUT)
+    {
         Serial.println("DHT11: Time out error"); 
         dhtREAD = false;
-        break;
-      default: 
+    }
+    else
+    {
         Serial.println("DHT11: Unknown error"); 
         dhtREAD = false;
-        break;
     }
 
     if (dhtREAD)
