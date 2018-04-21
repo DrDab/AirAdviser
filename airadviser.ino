@@ -168,6 +168,7 @@ uint16_t p100 = 0;
 uint16_t temp_c = 0;
 uint16_t humidity = 0;
 float heat_index = 0.0;
+float dew_point = 0.0;
 
 // deltas cannot be unsigned int because negatives will cause overflow
 float pm10_delta = 0.0;
@@ -176,6 +177,7 @@ float pm100_delta = 0.0;
 float temp_delta = 0.0;
 float humidity_delta = 0.0;
 float heat_index_delta = 0.0;
+float dew_point_delta = 0.0;
 
 // values for average calculation
 uint32_t p10accum = 0;  float p10avg = 0.0;
@@ -185,6 +187,7 @@ uint32_t p100accum = 0; float p100avg = 0.0;
 uint32_t temp_accum = 0;     float temp_avg = 0.0;
 uint32_t humidity_accum = 0; float humidity_avg = 0.0;
 float heat_index_accum = 0.0;  float heat_index_avg = 0.0;
+float dew_point_accum = 0.0; float dew_point_avg = 0.0;
 
 // array of samples taken each 15 minutes, stored for 7 days.
 uint16_t trials_pm10[672];
@@ -194,6 +197,7 @@ uint16_t trials_pm100[672];
 uint16_t trials_temp[672];
 uint16_t trials_humidity[672];
 float trials_heat_index[672];
+float trials_dew_point[672];
 
 // sample count (take a reading every 15 minutes, and get estimate based on calibration table below
 // samples | delta (to 1 minute)
@@ -232,7 +236,7 @@ float heatstroke_index(float temp_f, float rh)
 }
 
 // auxiliary function to calculate the dew point based on RH% and temperature (Celsius)
-float dew_point(float temp_c, float rh)
+float dew_point_get(float temp_c, float rh)
 {
   float a = 17.271;
   float b = 237.7;
@@ -299,6 +303,10 @@ void runServer()
     heat_index = heatstroke_index(tofahrenheit(temp_c), humidity);
     heat_index_delta = heat_index - heat_index_avg;
 
+    // calculate the dew point.
+    dew_point = dew_point_get(temp_c, humidity);
+    dew_point_delta = dew_point - dew_point_avg;
+
     if (ptrial == 672)
     {
       // reset every 672 trials to prevent integer overflow and array fillup.
@@ -316,6 +324,8 @@ void runServer()
       humidity_avg = 0.0;
       heat_index_accum = 0.0;
       heat_index_avg = 0.0;
+      dew_point_accum = 0.0;
+      dew_point_delta = 0.0;
       // clear the array of trials.
       memset(trials_pm10, 0, sizeof(trials_pm10));
       memset(trials_pm25, 0, sizeof(trials_pm25));
@@ -340,12 +350,14 @@ void runServer()
       trials_temp[ptrial] = temp_c;
       trials_humidity[ptrial] = humidity;
       trials_heat_index[ptrial] = heat_index;
+      trials_dew_point[ptrial] = dew_point_delta;
       p10accum += data.pm10_standard;
       p25accum += data.pm25_standard;
       p100accum += data.pm100_standard;
       temp_accum += temp_c;
       humidity_accum += humidity;
       heat_index_accum += heat_index;
+      dew_point_accum += dew_point;
       ptrial++;
       p10avg = (float)p10accum / (float)ptrial;
       p25avg = (float)p25accum / (float)ptrial;
@@ -353,6 +365,7 @@ void runServer()
       temp_avg = temp_accum / (float)ptrial;
       humidity_avg = humidity_accum / (float)ptrial; 
       heat_index_avg = heat_index_accum / (float)ptrial;
+      dew_point_avg = dew_point_accum / (float)ptrial;
     }
     
     pm10 = data.pm10_standard;
@@ -383,6 +396,8 @@ void runServer()
         Serial.print("%RH "); Serial.print(humidity);
         Serial.print("\t\tDelta: "); Serial.print(humidity_delta);
         Serial.print("\t\tAverage: "); Serial.print(humidity_avg);
+        Serial.println("Calculated Info");
+        Serial.print("Heat Index: "); Serial.print(heat_index);
         Serial.println();
         Serial.println("---------------------------------------");
         Serial.println("Concentration Units (standard)");
