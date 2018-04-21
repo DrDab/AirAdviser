@@ -52,6 +52,9 @@ const uint8_t WARNING_LED_PIN = 10; // GPIO10 corresponds to pin SD3 on NodeMCU
 // Set port for HTTP webserver
 const uint8_t HTTP_SERVER_PORT = 80;
 
+// Set port for appliance control output (D4)
+const uint8_t IOT_CONTROL_PORT = 12;
+
 //////////////////////////////////////
 // END USER CONFIGURABLE SETTINGS   //
 //////////////////////////////////////
@@ -469,6 +472,10 @@ void runServer()
   else if (req.indexOf("/results.csv") != -1)
   {
     val = -5;
+  }
+  else if (req.indexOf("/manage") != -1)
+  {
+    val = -8;
   }
 
   String tmpStr = "";
@@ -977,6 +984,32 @@ void runServer()
     s += "document.getElementById(\"time\").innerHTML = Date();";
     s += "</script>";
     s += "<a href=\"192.168.4.1/about\">About AirAdvisor</a>";
+  }
+  else if (val == -8)
+  {
+    // offer a management page.
+    Serial.println("Management page requested by client.");
+    s += "<strong>AirAdviser Manager</strong><br>";
+    s += "OUTPUT ";
+    s += String(IOT_CONTROL_PORT);
+    s += "<br>Turn ON if:<br>";
+    s += "<form action=\"/manage_control.red\">";
+    s += "Temp >=:<br>";
+    s += "<input type=\"text\" name=\"tmp\"><br>";
+    s += "RH >=: <br>";
+    s += "<input type=\"text\" name=\"rh\"><br>";
+    s += "HI >=: <br>";
+    s += "<input type=\"text\" name=\"hi\"><br>";
+    s += "DP >=: <br>";
+    s += "<input type=\"text\" name=\"dp\"><br>";
+    s += "PM 2.5 >=: <br>";
+    s += "<input type=\"text\" name=\"pm\"><br>";
+    s += "<select name=\"logic\">";
+    s += "<option value=\"1\">AND</option>";
+    s += "<option value=\"0\">OR</option>";
+    s += "</select>";
+    s += "<input type=\"submit\" value=\"Set Triggers\">";
+    s += "</form>";
   }
   else
   {
