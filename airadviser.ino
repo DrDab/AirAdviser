@@ -262,17 +262,17 @@ void readTemps()
     }
     else if (chk == DHTLIB_ERROR_CHECKSUM)
     {
-        Serial.println("DHT11: Checksum error"); 
+    //    Serial.println("DHT11: Checksum error"); 
         dhtREAD = false;
     }
     else if (chk == DHTLIB_ERROR_TIMEOUT)
     {
-        Serial.println("DHT11: Time out error"); 
+    //    Serial.println("DHT11: Time out error"); 
         dhtREAD = false;
     }
     else
     {
-        Serial.println("DHT11: Unknown error"); 
+    //    Serial.println("DHT11: Unknown error"); 
         dhtREAD = false;
     }
 }
