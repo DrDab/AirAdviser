@@ -167,7 +167,7 @@ uint16_t p100 = 0;
 // dht11 temperature sensor readings.
 uint16_t temp_c = 0;
 uint16_t humidity = 0;
-bool heatstroke_risk = false;
+float heat_index = 0.0;
 
 // deltas cannot be unsigned int because negatives will cause overflow
 float pm10_delta = 0.0;
@@ -175,6 +175,7 @@ float pm25_delta = 0.0;
 float pm100_delta = 0.0;
 float temp_delta = 0.0;
 float humidity_delta = 0.0;
+float heat_index_delta = 0.0;
 
 // values for average calculation
 uint32_t p10accum = 0;  float p10avg = 0.0;
@@ -183,6 +184,7 @@ uint32_t p100accum = 0; float p100avg = 0.0;
 
 uint32_t temp_accum = 0;     float temp_avg = 0.0;
 uint32_t humidity_accum = 0; float humidity_avg = 0.0;
+float heat_index_accum = 0.0;  float heat_index_avg = 0.0;
 
 // array of samples taken each 15 minutes, stored for 7 days.
 uint16_t trials_pm10[672];
@@ -191,6 +193,7 @@ uint16_t trials_pm100[672];
 
 uint16_t trials_temp[672];
 uint16_t trials_humidity[672];
+float trials_heat_index[672];
 
 // sample count (take a reading every 15 minutes, and get estimate based on calibration table below
 // samples | delta (to 1 minute)
@@ -292,6 +295,10 @@ void runServer()
       humidity_delta = (float) humidity - humidity_avg;
     }
 
+    // calculate the heat index.
+    heat_index = heatstroke_index(tofahrenheit(temp_c), humidity);
+    heat_index_delta = heat_index - heat_index_avg;
+
     if (ptrial == 672)
     {
       // reset every 672 trials to prevent integer overflow and array fillup.
@@ -307,12 +314,15 @@ void runServer()
       temp_avg = 0.0;
       humidity_accum = 0;
       humidity_avg = 0.0;
+      heat_index_accum = 0.0;
+      heat_index_avg = 0.0;
       // clear the array of trials.
       memset(trials_pm10, 0, sizeof(trials_pm10));
       memset(trials_pm25, 0, sizeof(trials_pm25));
       memset(trials_pm100, 0, sizeof(trials_pm100));
       memset(trials_temp, 0, sizeof(trials_temp));
       memset(trials_humidity, 0, sizeof(trials_humidity));
+      memset(trials_heat_index, 0, sizeof(trials_heat_index));
     }
 
     // calculate the time to the next sample.
@@ -329,17 +339,20 @@ void runServer()
       trials_pm100[ptrial] = data.pm100_standard;
       trials_temp[ptrial] = temp_c;
       trials_humidity[ptrial] = humidity;
+      trials_heat_index[ptrial] = heat_index;
       p10accum += data.pm10_standard;
       p25accum += data.pm25_standard;
       p100accum += data.pm100_standard;
       temp_accum += temp_c;
       humidity_accum += humidity;
+      heat_index_accum += heat_index;
       ptrial++;
       p10avg = (float)p10accum / (float)ptrial;
       p25avg = (float)p25accum / (float)ptrial;
       p100avg = (float)p100accum / (float)ptrial; 
       temp_avg = temp_accum / (float)ptrial;
       humidity_avg = humidity_accum / (float)ptrial; 
+      heat_index_avg = heat_index_accum / (float)ptrial;
     }
     
     pm10 = data.pm10_standard;
@@ -365,6 +378,11 @@ void runServer()
         Serial.print("Degrees (C) "); Serial.print(temp_c);
         Serial.print("\t\tDelta (C): "); Serial.print(temp_delta);
         Serial.print("\t\tAverage (C): "); Serial.print(temp_avg);
+        Serial.println();
+        Serial.println("Humidity Readings");
+        Serial.print("%RH "); Serial.print(humidity);
+        Serial.print("\t\tDelta: "); Serial.print(humidity_delta);
+        Serial.print("\t\tAverage: "); Serial.print(humidity_avg);
         Serial.println("---------------------------------------");
         Serial.println("Concentration Units (standard)");
         Serial.print("PM 1.0: "); Serial.print(data.pm10_standard);
@@ -439,12 +457,16 @@ void runServer()
   if (val == -5)
   {
     // read the array
-    tmpStr += "Sample #, Temperature, PM1.0, PM2.5, PM10.0\n";
+    tmpStr += "Sample #, Temperature, %RH, Heat Index, PM1.0, PM2.5, PM10.0\n";
     for(uint16_t i = 0; i < ptrial; i++)
     {
       tmpStr += i;
       tmpStr += ","; 
       tmpStr += trials_temp[i];
+      tmpStr += ",";
+      tmpStr += trials_humidity[i];
+      tmpStr += ",";
+      tmpStr += trials_heat_index[i];
       tmpStr += ",";
       tmpStr += trials_pm10[i];
       tmpStr += ",";
