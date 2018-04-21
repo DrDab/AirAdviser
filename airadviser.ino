@@ -227,6 +227,9 @@ boolean writeSerial = true;
 // Cloud Fox encoded image
 const char* cloud_fox = "data:image/png;base64,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";
 
+bool dhtREAD = true;
+int chk;
+
 float tofahrenheit(float temp)
 {
   return (1.8 * temp) + 32.0;
@@ -249,30 +252,8 @@ float dew_point_get(float temp_c, float rh)
   return Td;
 }
 
-void loop() 
+void readTemps()
 {
-  runServer();
-}
-
-int chk;
-bool dhtREAD = false;
-
-void runServer()
-{
-  dhtREAD = true;
-  bool haveCurrentReading = true;
-  if (readPMSdata(&pmsSerial)) 
-  {
-    // increment the number of samples by one.
-    numsamples++;
-    
-    hasReading = true;
-    
-    // calculate the delta values.
-    pm10_delta = (float)data.pm10_standard - p10avg;
-    pm25_delta = (float)data.pm25_standard - p25avg;
-    pm100_delta = (float)data.pm100_standard - p100avg;
-
     // calculate the temperature.
     chk = DHT11.read(DHT11_PIN);
     if (chk == DHTLIB_OK)
@@ -294,6 +275,24 @@ void runServer()
         Serial.println("DHT11: Unknown error"); 
         dhtREAD = false;
     }
+}
+
+void loop() 
+{
+  readTemps();
+  runServer();
+}
+
+void runServer()
+{
+  dhtREAD = true;
+  bool haveCurrentReading = true;
+  if (readPMSdata(&pmsSerial)) 
+  {
+    // increment the number of samples by one.
+    numsamples++;
+    
+    hasReading = true;
 
     if (dhtREAD)
     {
@@ -303,6 +302,11 @@ void runServer()
       humidity = DHT11.humidity;
       humidity_delta = (float) humidity - humidity_avg;
     }
+    
+    // calculate the delta values.
+    pm10_delta = (float)data.pm10_standard - p10avg;
+    pm25_delta = (float)data.pm25_standard - p25avg;
+    pm100_delta = (float)data.pm100_standard - p100avg;
 
     // calculate the heat index.
     heat_index = heatstroke_index(tofahrenheit(temp_c), humidity);
