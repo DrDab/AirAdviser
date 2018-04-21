@@ -682,6 +682,44 @@ void runServer()
         }
         s += "</center>";
         s += "</td></tr></table>";
+
+        // begin heatstroke warnings
+        s += "<br><br>";
+        s += "<table style=\"background-color: #000; border: 2px solid #00ff00; padding: 1px;\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">";
+        s += "<tr>";
+        s += "<td style=\"padding:2px\">";
+        s += "<center>";
+        s += "<big>";
+        s += "<b>Heatstroke Advisory</b>";
+        s += "</big>";
+        s += "</center>";
+        s += "<br //>";
+        s += "<center>";
+        if(heat_index >= 126.0)
+        {
+          // extreme danger
+          
+        }
+        else if (heat_index < 126.0 && heat_index >= 104.0)
+        {
+          // danger
+          
+        }
+        else if (heat_index < 104.0 && heat_index >= 91.0)
+        {
+          // extreme caution
+        }
+        else if (heat_index < 91.0 && heat_index >= 80.0)
+        {
+          // caution
+        }
+        else
+        {
+          // no warnings
+        }
+        
+        s += "</center>";
+        s += "</td></tr></table>";
     }
     else
     {
@@ -746,9 +784,9 @@ void runServer()
         s += String(p100);
         s += "<br>";
 
-        // begin warnings
+        // begin pollution warnings
         s += "<br><br>";
-        s += "<table style=\"background-color: #000; border: 2px solid #00ff00; padding: 1px;\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">";
+        s += "<table style=\"background-color: #000; border: 2px solid #000000; padding: 1px;\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">";
         s += "<tr>";
         s += "<td style=\"padding:2px\">";
         s += "<center>";
@@ -812,6 +850,45 @@ void runServer()
         }
         s += "</center>";
         s += "</td></tr></table>";
+
+        // begin heatstroke warnings
+        s += "<br><br>";
+        s += "<table style=\"background-color: #000; border: 2px solid #000000; padding: 1px;\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">";
+        s += "<tr>";
+        s += "<td style=\"padding:2px\">";
+        s += "<center>";
+        s += "<big>";
+        s += "<b>Heatstroke Advisory</b>";
+        s += "</big>";
+        s += "</center>";
+        s += "<br //>";
+        s += "<center>";
+        if(heat_index >= 126.0)
+        {
+          // extreme danger
+          
+        }
+        else if (heat_index < 126.0 && heat_index >= 104.0)
+        {
+          // danger
+          
+        }
+        else if (heat_index < 104.0 && heat_index >= 91.0)
+        {
+          // extreme caution
+        }
+        else if (heat_index < 91.0 && heat_index >= 80.0)
+        {
+          // caution
+        }
+        else
+        {
+          // no warnings
+        }
+        
+        s += "</center>";
+        s += "</td></tr></table>";
+        
       }
     }
     s += "<br>";
