@@ -325,7 +325,7 @@ void runServer()
       heat_index_accum = 0.0;
       heat_index_avg = 0.0;
       dew_point_accum = 0.0;
-      dew_point_delta = 0.0;
+      dew_point_avg = 0.0;
       // clear the array of trials.
       memset(trials_pm10, 0, sizeof(trials_pm10));
       memset(trials_pm25, 0, sizeof(trials_pm25));
@@ -333,6 +333,7 @@ void runServer()
       memset(trials_temp, 0, sizeof(trials_temp));
       memset(trials_humidity, 0, sizeof(trials_humidity));
       memset(trials_heat_index, 0, sizeof(trials_heat_index));
+      memset(trials_dew_point, 0, sizeof(trials_dew_point));
     }
 
     // calculate the time to the next sample.
