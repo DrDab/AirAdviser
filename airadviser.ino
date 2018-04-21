@@ -745,7 +745,7 @@ void runServer()
         s += "</center>";
         s += "<br //>";
         s += "<center>";
-        if(heat_index >= 126.0)
+        if(heat_index >= 52.2222)
         {
           // extreme danger
           s += "<strong>&#9888;SEVERE DANGER</strong>";
@@ -754,7 +754,7 @@ void runServer()
           s += "<br>";
           s += "Seek shelter <strong>IMMEDIATELY.</strong> Take sips of cold water, and turn on air conditioning. If indoors, <strong>REMAIN INDOORS.</strong>";
         }
-        else if (heat_index < 126.0 && heat_index >= 104.0)
+        else if (heat_index < 52.2222 && heat_index >= 40)
         {
           // danger
           s += "<strong>&#9888;DANGER</strong>";
@@ -763,7 +763,7 @@ void runServer()
           s += "<br>";
           s += "Seek shelter as soon as possible. Take sips of cold water, and turn on air conditioning.";
         }
-        else if (heat_index < 104.0 && heat_index >= 91.0)
+        else if (heat_index < 40.0 && heat_index >= 32.7778)
         {
           // extreme caution
           s += "<strong>&#9888;EXTREME CAUTION</strong>";
@@ -772,7 +772,7 @@ void runServer()
           s += "<br>";
           s += "Seek shelter within 2-3 hours. Take sips of cold water, and turn on air conditioning.";
         }
-        else if (heat_index < 91.0 && heat_index >= 80.0)
+        else if (heat_index < 32.7778 && heat_index >= 26.6667)
         {
           // caution
           s += "<strong>&#9888;CAUTION</strong>";
@@ -931,7 +931,7 @@ void runServer()
         s += "</center>";
         s += "<br //>";
         s += "<center>";
-        if(heat_index >= 126.0)
+        if(heat_index >= 52.2222)
         {
           // extreme danger
           s += "<strong>&#9888;SEVERE DANGER</strong>";
@@ -940,7 +940,7 @@ void runServer()
           s += "<br>";
           s += "Seek shelter <strong>IMMEDIATELY.</strong> Take sips of cold water, and turn on air conditioning. If indoors, <strong>REMAIN INDOORS.</strong>";
         }
-        else if (heat_index < 126.0 && heat_index >= 104.0)
+        else if (heat_index < 52.2222 && heat_index >= 40)
         {
           // danger
           s += "<strong>&#9888;DANGER</strong>";
@@ -949,7 +949,7 @@ void runServer()
           s += "<br>";
           s += "Seek shelter as soon as possible. Take sips of cold water, and turn on air conditioning.";
         }
-        else if (heat_index < 104.0 && heat_index >= 91.0)
+        else if (heat_index < 40.0 && heat_index >= 32.7778)
         {
           // extreme caution
           s += "<strong>&#9888;EXTREME CAUTION</strong>";
@@ -958,7 +958,7 @@ void runServer()
           s += "<br>";
           s += "Seek shelter within 2-3 hours. Take sips of cold water, and turn on air conditioning.";
         }
-        else if (heat_index < 91.0 && heat_index >= 80.0)
+        else if (heat_index < 32.7778 && heat_index >= 26.6667)
         {
           // caution
           s += "<strong>&#9888;CAUTION</strong>";
