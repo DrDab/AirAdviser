@@ -165,8 +165,8 @@ uint16_t p50 = 0;
 uint16_t p100 = 0;
 
 // dht11 temperature sensor readings.
-float temp_c = 0.0;
-float humidity = 0.0;
+uint16_t temp_c = 0;
+uint16_t humidity = 0;
 bool heatstroke_risk = false;
 
 // deltas cannot be unsigned int because negatives will cause overflow
@@ -181,16 +181,16 @@ uint32_t p10accum = 0;  float p10avg = 0.0;
 uint32_t p25accum = 0;  float p25avg = 0.0;
 uint32_t p100accum = 0; float p100avg = 0.0;
 
-float temp_accum = 0.0; float temp_avg = 0.0;
-float humidity_accum = 0.0; float humidity_avg = 0.0;
+uint32_t temp_accum = 0;     float temp_avg = 0.0;
+uint32_t humidity_accum = 0; float humidity_avg = 0.0;
 
 // array of samples taken each 15 minutes, stored for 7 days.
 uint16_t trials_pm10[672];
 uint16_t trials_pm25[672];
 uint16_t trials_pm100[672];
 
-float trials_temp[672];
-float trials_humidity[672];
+uint16_t trials_temp[672];
+uint16_t trials_humidity[672];
 
 // sample count (take a reading every 15 minutes, and get estimate based on calibration table below
 // samples | delta (to 1 minute)
@@ -286,8 +286,8 @@ void runServer()
     if (dhtREAD)
     {
       // read the value from the DHT11.
-      temp_c = (float)DHT11.temperature;
-      humidity = (float)DHT11.humidity;
+      temp_c = DHT11.temperature;
+      humidity = DHT11.humidity;
     }
 
     if (ptrial == 672)
@@ -301,9 +301,9 @@ void runServer()
       p10avg = 0.0;
       p25avg = 0.0;
       p100avg = 0.0;
-      temp_accum = 0.0;
+      temp_accum = 0;
       temp_avg = 0.0;
-      humidity_accum = 0.0;
+      humidity_accum = 0;
       humidity_avg = 0.0;
       // clear the array of trials.
       memset(trials_pm10, 0, sizeof(trials_pm10));
