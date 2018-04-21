@@ -553,6 +553,17 @@ void runServer()
     s += String(ptrial);
     s += ")";
     s += "<br>";
+    s += "Heat Index: ";
+    s += String(heat_index);
+    s += "%";
+    s += " (&Delta;(&mu;,c)= ";
+    s += String(heat_index_delta);
+    s += " &mu;= ";
+    s += String(heat_index_avg);
+    s += " N= ";
+    s += String(ptrial);
+    s += ")";
+    s += "<br>";
     s += "========================================";
     s += "<br>";
     s += "Particulate Matter Concentrations";
