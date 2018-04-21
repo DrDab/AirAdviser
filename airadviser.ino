@@ -228,16 +228,7 @@ float tofahrenheit(float temp)
 // auxiliary function to calculate the heatstroke index based on RH% and temperature (Fahrenheit).
 float heatstroke_index(float temp_f, float rh)
 {
-  float c1 = -42.379;
-  float c2 = 2.049;
-  float c3 = 10.143;
-  float c4 = -0.225;
-  float c5 = -6.838;
-  float c6 = -5.482;
-  float c7 = 1.229;
-  float c8 = 8.528;
-  float c9 = -0.00000199;
-  return c1 + (c2 * temp_f) + (c3 * rh) + (c4 * temp_f * rh) + (c5 * (temp_f * temp_f)) + (c6 * (rh * rh)) + (c7 * (temp_f * temp_f) * rh) + (c8 * temp_f * (rh * rh)) + (c9 * (temp_f * temp_f) * (rh * rh)); 
+  return -42.379 + 2.04901523*temp_f + 10.14333127*rh - .22475541*temp_f*rh - .00683783*temp_f*temp_f - .05481717*rh*rh + .00122874*temp_f*temp_f*rh + .00085282*temp_f*rh*rh - .00000199*temp_f*temp_f*rh*rh;
 }
 
 void loop() 
