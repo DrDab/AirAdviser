@@ -287,7 +287,9 @@ void runServer()
     {
       // read the value from the DHT11.
       temp_c = DHT11.temperature;
+      temp_delta = (float) temp_c - temp_avg;
       humidity = DHT11.humidity;
+      humidity_delta = (float) humidity - humidity_avg;
     }
 
     if (ptrial == 672)
@@ -504,7 +506,7 @@ void runServer()
     s += "<br>";
     s += "========================================";
     s += "<br>";
-    s += "Temperature Information";
+    s += "Weather Information";
     s += "<br>";
     s += "Current Temperature: ";
     s += String(temp_c);
@@ -513,6 +515,17 @@ void runServer()
     s += String(temp_delta);
     s += " &mu;= ";
     s += String(temp_avg);
+    s += " N= ";
+    s += String(ptrial);
+    s += ")";
+    s += "<br>";
+    s += "% Relative Humidity: ";
+    s += String(humidity);
+    s += "%";
+    s += " (&Delta;(&mu;,c)= ";
+    s += String(humidity_delta);
+    s += " &mu;= ";
+    s += String(humidity_avg);
     s += " N= ";
     s += String(ptrial);
     s += ")";
