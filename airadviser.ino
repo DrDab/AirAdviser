@@ -1038,7 +1038,8 @@ void runServer()
     s += "<script>";
     s += "document.getElementById(\"time\").innerHTML = Date();";
     s += "</script>";
-    s += "<a href=\"192.168.4.1/about\">About AirAdvisor</a>";
+    s += "<a href=\"192.168.4.1/about\">About AirAdvisor</a><br>";
+    s += "<a href=\"192.168.4.1/manage\">Appliance Control Settings</a>";
   }
   else if (val == -8)
   {
