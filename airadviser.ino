@@ -1043,16 +1043,21 @@ void runServer()
   {
     // parse the management page information.
     String eq = req;
-    String yiff = getValue(eq, '&', 1);
-    String part1 = getValue(yiff, '?', 0);
+    String yiff = getValue(eq, '?', 1);
+    String part1 = getValue(yiff, '&', 0);
     String part2 = getValue(eq, '&', 1);
     String part3 = getValue(eq, '&', 2);
     String part4 = getValue(eq, '&', 3);
+    String part5 = getValue(eq, '&', 4);
+    String part6 = getValue(eq, '&', 5);
     Serial.println("MGMT REQUEST");
     Serial.println(part1);
     Serial.println(part2);
     Serial.println(part3);
     Serial.println(part4);
+    Serial.println(part5);
+    Serial.println(part6);
+    Serial.println("END MGMT REQUEST");
   }
   else
   {
