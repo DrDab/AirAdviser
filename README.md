@@ -1,12 +1,13 @@
 # AirAdviser
 ![alt text](https://raw.githubusercontent.com/DrDab/AirAdviser/master/logo1.png)
 
-「AirAdviser」 is the world's first affordable ($50), open-source air pollution and temperature-triggered home automaton controller. It reports levels of particulate matter in the air classified in to categories of particles with a diameter of 1mm, 2.5mm and 10mm. It can also provide a warning if levels become dangerous. This is intended as a form of adaptation to global warming.
+AirAdviser
 
 # Building
 1. Get the supplies:
   - A NodeMCU + ESP8266 Wi-Fi chip
   - A Plantower PMS5003 Optical Dust sensor
+  - A DHT11 temperature/humidity probe
   - Solder (60/40 Rosin core preferred)
   - Jumper cables
   - Hot glue + hot glue gun
@@ -15,16 +16,14 @@
 2. Solder the Vin pin on the NodeMCU to the PMS5003's positive contact.
 3. Solder the GND pin on the NodeMCU to the PMS5003's ground contact.
 4. Solder pin D4 on the NodeMCU to the TX pin on the PMS5003.
-5. Power the device on, and flash this code to the NodeMCU. (Remember to download the ESP8266 Arduino plug-ins at https://github.com/esp8266/Arduino/)
-6. Encase your survey device into a water-tight, o-ring sealed container. Cut a 4.5-centimeter by 2-centimeter square hole and mount the PMS5003's intake port flush with this hole. Seal it with hot glue and epoxy. Seal any gaps in the metal using Flex Tape. 
-7. Connect to the generated Wi-Fi AP called "AirAdviser-chan XXXX" where XXXX is the last four bytes of the ESP8266's MAC address. The password is "noticemesenpai" by default.
-8. To take a reading, open your browser (i.e. Google Chrome) and visit 192.168.4.1/read.
+5. Solder the 3V3 pin on the NodeMCU to the DHT11's VCC pin and the GND pin on the NodeMCU to the DHT11's GND pin. Solder pin D0 on the NodeMCU to the DATA pin on the DHT11 probe.
+6. Power the device on, and flash this code to the NodeMCU. (Remember to download the ESP8266 Arduino plug-ins at https://github.com/esp8266/Arduino/ and DHT11Lib for dht11.h)
+7. Encase your survey device into a water-tight, o-ring sealed container. Cut a 4.5-centimeter by 2-centimeter square hole and mount the PMS5003's intake port flush with this hole. Drill a 1cm hole in diameter and mount the DHT11 on it with some tape.
+8. Connect to the generated Wi-Fi AP called "AirAdviser-chan XXXX" where XXXX is the last four bytes of the ESP8266's MAC address. The password is "noticemesenpai" by default.
+9. To take a reading, open your browser (i.e. Google Chrome) and visit 192.168.4.1/read.
 
 # Usage
-AirAdviser is intended to be deployed in low-cost, low-space applications where non-industrial monitoring of air quality needs to be remotely monitored. For example, AirAdviser can be deployed in high-pollution living areas so tenants can easily and safely check the air pollution levels outside to stay safe and avoid breathing issues. In certain cities, such as Beijing, smog waves, combined with heat waves accelerated by global warming result in frequent storms of airborne particulate matter, which hurts many people. This project can help people adapt to such conditions accelerated by climate change. AirAdviser can detect foreign airborne particulate matter, such as mercury and lead particles, spores, etc. that can cause serious damage to the human body upon exposure. 
-
-Ideas for usage include: 
-- Mounting AirAdvisor on a patio wall and attaching it to mains.
+AirAdviser is intended to be deployed in low-cost, low-space applications where there are high risks of heatstroke due to low humidity/high temperature and high risks of respiratory harm from air pollution spread accelerated by temperature (such as car exhaust and smoke from chimneys). For example, in cities like Beijing, China this device may have some use. Due to close proximity to the equator, Beijing is known for high temperatures and low relative humidity levels, which contribute to hundreds of thousands of deaths ech year due to conditions such as heatstroke. Adding to that, in lots of areas close to the equator, particulate matter is known to spread faster due to higher temperatures. Global warming has been shown to increase temperatures in equator-locked areas on the globe, which accelerates both phenomenas above. As a result, devices such as AirAdviser allow for quick safety monitoring of living conditions.  
 
 # License
 MIT License
