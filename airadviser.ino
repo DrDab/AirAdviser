@@ -231,6 +231,16 @@ float heatstroke_index(float temp_f, float rh)
   return -42.379 + 2.04901523*temp_f + 10.14333127*rh - .22475541*temp_f*rh - .00683783*temp_f*temp_f - .05481717*rh*rh + .00122874*temp_f*temp_f*rh + .00085282*temp_f*rh*rh - .00000199*temp_f*temp_f*rh*rh;
 }
 
+// auxiliary function to calculate the dew point based on RH% and temperature (Celsius)
+float dew_point(float temp_c, float rh)
+{
+  float a = 17.271;
+  float b = 237.7;
+  float temp = (a * temp_c) / (b + temp_c) + log(rh*0.01);
+  float Td = (b * temp) / (a - temp);
+  return Td;
+}
+
 void loop() 
 {
   runServer();
