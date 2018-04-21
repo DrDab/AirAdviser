@@ -399,6 +399,7 @@ void runServer()
         Serial.print("\t\tAverage: "); Serial.print(humidity_avg);
         Serial.println("Calculated Info");
         Serial.print("Heat Index: "); Serial.print(heat_index);
+         Serial.print("\t\tDew Point (C): "); Serial.print(dew_point);
         Serial.println();
         Serial.println("---------------------------------------");
         Serial.println("Concentration Units (standard)");
@@ -579,9 +580,19 @@ void runServer()
     s += String(ptrial);
     s += ")";
     s += "<br>";
+    s += "Dew Point: ";
+    s += String(dew_point);
+    s += " &deg;C (&Delta;(&mu;,c)= ";
+    s += String(dew_point_delta);
+    s += " &mu;= ";
+    s += String(dew_point_avg);
+    s += " N= ";
+    s += String(ptrial);
+    s += ")";
+    s += "<br>";
     s += "========================================";
     s += "<br>";
-    s += "Particulate Matter Concentrations";
+    s += "Air Quality Information";
     s += "<br>";
     if (haveCurrentReading) 
     {
