@@ -697,23 +697,41 @@ void runServer()
         if(heat_index >= 126.0)
         {
           // extreme danger
-          
+          s += "<strong>&#9888;SEVERE DANGER</strong>";
+          s += "<br>";
+          s += "Heatstroke or sunstroke likely.";
+          s += "<br>";
+          s += "Seek shelter <strong>IMMEDIATELY.</strong> Take sips of cold water, and turn on air conditioning. If indoors, <strong>REMAIN INDOORS.</strong>";
         }
         else if (heat_index < 126.0 && heat_index >= 104.0)
         {
           // danger
-          
+          s += "<strong>&#9888;DANGER</strong>";
+          s += "<br>";
+          s += "Heat exhaustion, sunstroke and muscle cramps likely.";
+          s += "<br>";
+          s += "Seek shelter as soon as possible. Take sips of cold water, and turn on air conditioning.";
         }
         else if (heat_index < 104.0 && heat_index >= 91.0)
         {
           // extreme caution
+          s += "<strong>&#9888;EXTREME CAUTION</strong>";
+          s += "<br>";
+          s += "Sunstroke, muscle cramps and heat exhaustion possible.";
+          s += "<br>";
+          s += "Seek shelter within 2-3 hours. Take sips of cold water, and turn on air conditioning.";
         }
         else if (heat_index < 91.0 && heat_index >= 80.0)
         {
           // caution
+          s += "<strong>&#9888;CAUTION</strong>";
+          s += "<br>";
+          s += "Fatigue possible.";
+          s += "<br>";
         }
         else
         {
+          s += "<strong>&#128175;&#128293;HEAT LEVELS ARE HEALTHY&#128175;&#128293;</strong>";
           // no warnings
         }
         
@@ -785,7 +803,7 @@ void runServer()
 
         // begin pollution warnings
         s += "<br><br>";
-        s += "<table style=\"background-color: #000; border: 2px solid #000000; padding: 1px;\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">";
+        s += "<table style=\"background-color: #000; border: 2px solid #00ff00; padding: 1px;\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">";
         s += "<tr>";
         s += "<td style=\"padding:2px\">";
         s += "<center>";
@@ -852,7 +870,7 @@ void runServer()
 
         // begin heatstroke warnings
         s += "<br><br>";
-        s += "<table style=\"background-color: #000; border: 2px solid #000000; padding: 1px;\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">";
+        s += "<table style=\"background-color: #000; border: 2px solid #00ff00; padding: 1px;\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">";
         s += "<tr>";
         s += "<td style=\"padding:2px\">";
         s += "<center>";
@@ -865,23 +883,41 @@ void runServer()
         if(heat_index >= 126.0)
         {
           // extreme danger
-          
+          s += "<strong>&#9888;SEVERE DANGER</strong>";
+          s += "<br>";
+          s += "Heatstroke or sunstroke likely.";
+          s += "<br>";
+          s += "Seek shelter <strong>IMMEDIATELY.</strong> Take sips of cold water, and turn on air conditioning. If indoors, <strong>REMAIN INDOORS.</strong>";
         }
         else if (heat_index < 126.0 && heat_index >= 104.0)
         {
           // danger
-          
+          s += "<strong>&#9888;DANGER</strong>";
+          s += "<br>";
+          s += "Heat exhaustion, sunstroke and muscle cramps likely.";
+          s += "<br>";
+          s += "Seek shelter as soon as possible. Take sips of cold water, and turn on air conditioning.";
         }
         else if (heat_index < 104.0 && heat_index >= 91.0)
         {
           // extreme caution
+          s += "<strong>&#9888;EXTREME CAUTION</strong>";
+          s += "<br>";
+          s += "Sunstroke, muscle cramps and heat exhaustion possible.";
+          s += "<br>";
+          s += "Seek shelter within 2-3 hours. Take sips of cold water, and turn on air conditioning.";
         }
         else if (heat_index < 91.0 && heat_index >= 80.0)
         {
           // caution
+          s += "<strong>&#9888;CAUTION</strong>";
+          s += "<br>";
+          s += "Fatigue possible.";
+          s += "<br>";
         }
         else
         {
+          s += "<strong>&#128175;&#128293;HEAT LEVELS ARE HEALTHY&#128175;&#128293;</strong>";
           // no warnings
         }
         
