@@ -242,7 +242,7 @@ bool dhtREAD = false;
 void runServer()
 {
   dhtREAD = true;
-  boolean haveCurrentReading = false;
+  bool haveCurrentReading = false;
   if (readPMSdata(&pmsSerial)) 
   {
     // increment the number of samples by one.
