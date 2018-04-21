@@ -383,6 +383,7 @@ void runServer()
         Serial.print("%RH "); Serial.print(humidity);
         Serial.print("\t\tDelta: "); Serial.print(humidity_delta);
         Serial.print("\t\tAverage: "); Serial.print(humidity_avg);
+        Serial.println();
         Serial.println("---------------------------------------");
         Serial.println("Concentration Units (standard)");
         Serial.print("PM 1.0: "); Serial.print(data.pm10_standard);
