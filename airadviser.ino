@@ -477,6 +477,10 @@ void runServer()
   {
     val = -8;
   }
+  else if (req.indexOf("/control.red") != -1)
+  {
+    val = -9;
+  }
 
   String tmpStr = "";
   if (val == -5)
@@ -994,7 +998,7 @@ void runServer()
     s += "OUTPUT ";
     s += String(IOT_CONTROL_PORT);
     s += "<br>Turn ON if:<br>";
-    s += "<form action=\"/manage_control.red\">";
+    s += "<form action=\"/control.red\">";
     s += "Temp >=:<br>";
     s += "<input type=\"text\" name=\"tmp\"><br>";
     s += "RH >=: <br>";
@@ -1011,6 +1015,11 @@ void runServer()
     s += "</select>";
     s += "<input type=\"submit\" value=\"Set Triggers\">";
     s += "</form>";
+  }
+  else if (val == -9)
+  {
+    // parse the management page information.
+    
   }
   else
   {
