@@ -475,7 +475,7 @@ void runServer()
   if (val == -5)
   {
     // read the array
-    tmpStr += "Sample #, Temperature, %RH, Heat Index, PM1.0, PM2.5, PM10.0\n";
+    tmpStr += "Sample #, Temperature, %RH, Heat Index, Dew Point, PM1.0, PM2.5, PM10.0\n";
     for(uint16_t i = 0; i < ptrial; i++)
     {
       tmpStr += i;
@@ -485,6 +485,8 @@ void runServer()
       tmpStr += trials_humidity[i];
       tmpStr += ",";
       tmpStr += trials_heat_index[i];
+      tmpStr += ",";
+      tmpStr += trials_dew_point[i];
       tmpStr += ",";
       tmpStr += trials_pm10[i];
       tmpStr += ",";
