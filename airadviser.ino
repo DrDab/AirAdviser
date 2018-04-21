@@ -22,6 +22,7 @@
 
 #include <ESP8266WiFi.h>
 #include <SoftwareSerial.h>
+#include <dht11.h>
 
 //////////////////////////////////////
 // USER CONFIGURABLE SETTINGS BELOW //
@@ -41,8 +42,8 @@ const bool USE_SERIAL_DEBUGGING = false;
 const uint8_t PMS_RX = 2;
 const uint8_t PMS_TX = 3;
 
-// Set pins for LM35 I/O (Temperature Probe)
-const uint8_t LM35_PIN = A0;
+// Set pins for DHT11 I/O (Temperature Probe)
+const uint8_t DHT11_PIN = 16;
 
 // Enable or disable warning LED
 const bool USE_WARNING_LED = true;
@@ -58,6 +59,8 @@ const uint8_t HTTP_SERVER_PORT = 80;
 WiFiServer server(HTTP_SERVER_PORT);
 
 SoftwareSerial pmsSerial(PMS_RX, PMS_TX);
+
+dht11 DHT11;
 
 /**
  * Probe purchase link:
@@ -161,10 +164,9 @@ uint16_t p25 = 0;
 uint16_t p50 = 0;
 uint16_t p100 = 0;
 
-// lm35 temperature sensor readings.
-uint8_t lm35_reading = 0.0;
-float lm35_mv = 0.0;
+// dht11 temperature sensor readings.
 float temp_c = 0.0;
+float humidity = 0.0;
 bool heatstroke_risk = false;
 
 // deltas cannot be unsigned int because negatives will cause overflow
@@ -172,6 +174,7 @@ float pm10_delta = 0.0;
 float pm25_delta = 0.0;
 float pm100_delta = 0.0;
 float temp_delta = 0.0;
+float humidity_delta = 0.0;
 
 // values for average calculation
 uint32_t p10accum = 0;  float p10avg = 0.0;
@@ -179,6 +182,7 @@ uint32_t p25accum = 0;  float p25avg = 0.0;
 uint32_t p100accum = 0; float p100avg = 0.0;
 
 float temp_accum = 0.0; float temp_avg = 0.0;
+float humidity_accum = 0.0; float humidity_avg = 0.0;
 
 // array of samples taken each 15 minutes, stored for 7 days.
 uint16_t trials_pm10[672];
@@ -186,6 +190,7 @@ uint16_t trials_pm25[672];
 uint16_t trials_pm100[672];
 
 float trials_temp[672];
+float trials_humidity[672];
 
 // sample count (take a reading every 15 minutes, and get estimate based on calibration table below
 // samples | delta (to 1 minute)
@@ -212,13 +217,37 @@ boolean writeSerial = true;
 // Cloud Fox encoded image
 const char* cloud_fox = "data:image/png;base64,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";
 
+float tofahrenheit(float temp)
+{
+  return (1.8 * temp) + 32.0;
+}
+
+// auxiliary function to calculate the heatstroke index based on RH% and temperature (Fahrenheit).
+float heatstroke_index(float temp_f, float rh)
+{
+  float c1 = -42.379;
+  float c2 = 2.049;
+  float c3 = 10.143;
+  float c4 = -0.225;
+  float c5 = -6.838;
+  float c6 = -5.482;
+  float c7 = 1.229;
+  float c8 = 8.528;
+  float c9 = -0.00000199;
+  return c1 + (c2 * temp_f) + (c3 * rh) + (c4 * temp_f * rh) + (c5 * (temp_f * temp_f)) + (c6 * (rh * rh)) + (c7 * (temp_f * temp_f) * rh) + (c8 * temp_f * (rh * rh)) + (c9 * (temp_f * temp_f) * (rh * rh)); 
+}
+
 void loop() 
 {
   runServer();
 }
 
+int chk;
+bool dhtREAD = false;
+
 void runServer()
 {
+  dhtREAD = true;
   boolean haveCurrentReading = false;
   if (readPMSdata(&pmsSerial)) 
   {
@@ -234,9 +263,32 @@ void runServer()
     pm100_delta = (float)data.pm100_standard - p100avg;
 
     // calculate the temperature.
-    lm35_reading = analogRead(LM35_PIN);
-    lm35_mv = (lm35_reading / 1024.0) * 5000.0; 
-    temp_c = lm35_mv / 10.0;
+    chk = DHT11.read(DHT11_PIN);
+    switch (chk)
+    {
+      case DHTLIB_OK: 
+        Serial.println("DHT11: OK"); 
+        break;
+      case DHTLIB_ERROR_CHECKSUM: 
+        Serial.println("DHT11: Checksum error"); 
+        dhtREAD = false;
+        break;
+      case DHTLIB_ERROR_TIMEOUT: 
+        Serial.println("DHT11: Time out error"); 
+        dhtREAD = false;
+        break;
+      default: 
+        Serial.println("DHT11: Unknown error"); 
+        dhtREAD = false;
+        break;
+    }
+
+    if (dhtREAD)
+    {
+      // read the value from the DHT11.
+      temp_c = (float)DHT11.temperature;
+      humidity = (float)DHT11.humidity;
+    }
 
     if (ptrial == 672)
     {
@@ -251,11 +303,14 @@ void runServer()
       p100avg = 0.0;
       temp_accum = 0.0;
       temp_avg = 0.0;
+      humidity_accum = 0.0;
+      humidity_avg = 0.0;
       // clear the array of trials.
       memset(trials_pm10, 0, sizeof(trials_pm10));
       memset(trials_pm25, 0, sizeof(trials_pm25));
       memset(trials_pm100, 0, sizeof(trials_pm100));
       memset(trials_temp, 0, sizeof(trials_temp));
+      memset(trials_humidity, 0, sizeof(trials_humidity));
     }
 
     // calculate the time to the next sample.
@@ -271,15 +326,18 @@ void runServer()
       trials_pm25[ptrial] = data.pm25_standard;
       trials_pm100[ptrial] = data.pm100_standard;
       trials_temp[ptrial] = temp_c;
+      trials_humidity[ptrial] = humidity;
       p10accum += data.pm10_standard;
       p25accum += data.pm25_standard;
       p100accum += data.pm100_standard;
       temp_accum += temp_c;
+      humidity_accum += humidity;
       ptrial++;
       p10avg = (float)p10accum / (float)ptrial;
       p25avg = (float)p25accum / (float)ptrial;
       p100avg = (float)p100accum / (float)ptrial; 
       temp_avg = temp_accum / (float)ptrial;
+      humidity_avg = humidity_accum / (float)ptrial; 
     }
     
     pm10 = data.pm10_standard;
