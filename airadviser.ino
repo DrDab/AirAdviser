@@ -388,7 +388,7 @@ void runServer()
       trials_temp[ptrial] = temp_c;
       trials_humidity[ptrial] = humidity;
       trials_heat_index[ptrial] = heat_index;
-      trials_dew_point[ptrial] = dew_point_delta;
+      trials_dew_point[ptrial] = dew_point;
       p10accum += data.pm10_standard;
       p25accum += data.pm25_standard;
       p100accum += data.pm100_standard;
