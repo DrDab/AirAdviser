@@ -278,32 +278,7 @@ void readTemps()
     }
 }
 
-String getValue(String data, char separator, int index)
-{
-    int found = 0;
-    int strIndex[] = { 0, -1 };
-    int maxIndex = data.length() - 1;
-
-    for (int i = 0; i <= maxIndex && found <= index; i++) {
-        if (data.charAt(i) == separator || i == maxIndex) {
-            found++;
-            strIndex[0] = strIndex[1] + 1;
-            strIndex[1] = (i == maxIndex) ? i+1 : i;
-        }
-    }
-    return found > index ? data.substring(strIndex[0], strIndex[1]) : "";
-}
-
-double stringToDouble(String& str)
-{
-  return atof(str.c_str());
-}
-
-void loop() 
-{
-  readTemps();
-  runServer();
-}
+bool haveCurrentReading = true;
 
 float tmp_threshold = 9999.0;
 float rh_threshold = 9999.0;
@@ -312,10 +287,10 @@ float dp_threshold = 9999.0;
 float pm25_threshold = 9999.0;
 bool logic = true;
 
-void runServer()
+void readAir()
 {
   dhtREAD = true;
-  bool haveCurrentReading = true;
+  haveCurrentReading = true;
   if (readPMSdata(&pmsSerial)) 
   {
     // increment the number of samples by one.
@@ -453,11 +428,11 @@ void runServer()
         Serial.print("\t\tPM 2.5: "); Serial.print(data.pm25_env);
         Serial.print("\t\tPM 10: "); Serial.println(data.pm100_env);
         Serial.println("---------------------------------------");
-	      Serial.println("Averages");
+        Serial.println("Averages");
         Serial.print("PM 1.0 avg: "); Serial.print(p10avg);
         Serial.print("\t\tPM 2.5 avg: "); Serial.print(p25avg);
         Serial.print("\t\tPM 10 avg: "); Serial.print(p100avg);
-	      Serial.print("\t\tN= "); Serial.println(ptrial);
+        Serial.print("\t\tN= "); Serial.println(ptrial);
         Serial.println("---------------------------------------");
         Serial.print("Particles > 0.3um / 0.1L air:"); Serial.println(data.particles_03um);
         Serial.print("Particles > 0.5um / 0.1L air:"); Serial.println(data.particles_05um);
@@ -500,6 +475,40 @@ void runServer()
   {
     haveCurrentReading = false;
   }
+}
+
+String getValue(String data, char separator, int index)
+{
+    int found = 0;
+    int strIndex[] = { 0, -1 };
+    int maxIndex = data.length() - 1;
+
+    for (int i = 0; i <= maxIndex && found <= index; i++) 
+    {
+        if (data.charAt(i) == separator || i == maxIndex) 
+        {
+            found++;
+            strIndex[0] = strIndex[1] + 1;
+            strIndex[1] = (i == maxIndex) ? i+1 : i;
+        }
+    }
+    return found > index ? data.substring(strIndex[0], strIndex[1]) : "";
+}
+
+double stringToDouble(String& str)
+{
+  return atof(str.c_str());
+}
+
+void loop() 
+{
+  readTemps();
+  readAir();
+  runServer();
+}
+
+void runServer()
+{
   // Check if a client has connected
   WiFiClient client = server.available();
   if (!client)
