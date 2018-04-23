@@ -22,7 +22,7 @@ AirAdviser
 8. Encase your survey device into a water-tight, o-ring sealed container. Cut a 4.5-centimeter by 2-centimeter square hole and mount the PMS5003's intake port flush with this hole. Drill a 1cm hole in diameter and mount the DHT11 on it with some tape.
 9. Connect to the generated Wi-Fi AP called "AirAdviser-chan XXXX" where XXXX is the last four bytes of the ESP8266's MAC address. The password is "noticemesenpai" by default.
 10. To take a reading, open your browser (i.e. Google Chrome) and visit 192.168.4.1/read.
-11 (OPTIONAL). To use AirAdviser as a home automaton controller, solder a wire to pin D4 and another wire to GND. Attach these wires to a AC power relay (Digital Loggers sells them) and screw in the Phoenix connectors. Plug in your appliance of choice. Have fun and happy hacking!
+11 (OPTIONAL). To use AirAdviser as a home automaton controller, solder a wire to pin D6 and another wire to GND. Attach these wires to a AC power relay (Digital Loggers sells them) and screw in the Phoenix connectors. Plug in your appliance of choice. Have fun and happy hacking!
 
 # Mascot
 The mascot for AirAdviser is Cloud Fox. He is a helpful buddy that keeps you safe from risks of heatstroke, heat exhaustion and respiratory problems. A bit shy at times, but he remains loyal to you. The art can be found in cloud_fox.png. 

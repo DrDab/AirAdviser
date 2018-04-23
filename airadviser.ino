@@ -53,7 +53,7 @@ const uint8_t WARNING_LED_PIN = 10; // GPIO10 corresponds to pin SD3 on NodeMCU
 // Set port for HTTP webserver
 const uint8_t HTTP_SERVER_PORT = 80;
 
-// Set port for appliance control output (D4)
+// Set port for appliance control output (D6)
 const uint8_t IOT_CONTROL_PORT = 12;
 
 //////////////////////////////////////
