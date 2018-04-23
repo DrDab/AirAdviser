@@ -22,6 +22,7 @@
 
 #include <ESP8266WiFi.h>
 #include <SoftwareSerial.h>
+#include <EEPROM.h>
 #include <dht11.h>
 
 //////////////////////////////////////
@@ -1118,6 +1119,13 @@ void runServer()
     pm25_threshold = (float)stringToDouble(part_filtered5);
     logic = (float)part_filtered6.toInt();
 
+    writeEEPROM(0, (int)tmp_threshold);
+    writeEEPROM(1, (int)rh_threshold);
+    writeEEPROM(2, (int)hi_threshold);
+    writeEEPROM(3, (int)dp_threshold);
+    writeEEPROM(4, (int)pm25_threshold);
+    writeEEPROM(5, logic);
+
     s += "Settings confirmed. <br><br><br><a href=\"192.168.4.1/read\">Read sensor data</a> ";
     Serial.println(tmp_threshold);
     Serial.println(rh_threshold);
@@ -1183,6 +1191,15 @@ void initHardware()
 {
   Serial.begin(115200);
   Serial.println("Serial monitor is online, running at 115200 baud");
+  
+  initEEPROM();
+  tmp_threshold = (float)readEEPROM(0);
+  rh_threshold = (float)readEEPROM(1);
+  hi_threshold = (float)readEEPROM(2);
+  dp_threshold = (float)readEEPROM(3);
+  pm25_threshold = (float)readEEPROM(4);
+  logic = readEEPROM(5);
+  
   if (USE_WARNING_LED)
   {
     pinMode(WARNING_LED_PIN, OUTPUT);
@@ -1193,6 +1210,29 @@ void initHardware()
   pinMode(IOT_CONTROL_PORT, OUTPUT);
   digitalWrite(IOT_CONTROL_PORT, LOW);
 }
+
+void writeEEPROM(int pos, int val)
+{
+  int actualpos = pos * 2;
+  EEPROM.write(actualpos, highByte((int)val));
+  EEPROM.write(actualpos + 1, lowByte((int)val));
+  EEPROM.commit();
+}
+int readEEPROM(int pos)
+{
+  int actualpos = pos * 2;
+  int ad;
+  byte h = EEPROM.read(actualpos);
+  byte l = EEPROM.read(actualpos + 1);
+  ad = (h << 8) + l;
+  return ad;
+}
+void initEEPROM()
+{
+  Serial.println("EEPROM initialized.");
+  EEPROM.begin(0x200);
+}
+
 
 //,*(\*;""";/1Ie1*- -  `<r>,+i;^VMy\?tGb<>_>_>++}tYT1YyoJ#VFnaeFjV4FV3JJ2VJ4eanouF4Itv\=<(uXL:^  - 
 //'>>>;"||YZei,` .. ."vr! `.'.v3i>,,_~>);;?><>ijc"v]CVI1}YztoIV#3aeeo4J33n3I24a#VeCaIVIY?;;"Ya?  --
