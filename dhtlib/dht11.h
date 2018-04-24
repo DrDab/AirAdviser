@@ -30,10 +30,10 @@
 
 class dht11
 {
-public:
-    int read(int pin);
-	int humidity;
-	int temperature;
+	public:
+    		int read(int pin);
+		int humidity;
+		int temperature;
 };
 #endif
 //
