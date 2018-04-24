@@ -1081,7 +1081,7 @@ void runServer()
     s += "</select>";
     s += "<input type=\"submit\" value=\"Set Triggers\">";
     s += "</form>";
-    s += "<br><br>Temp Threshold: ";
+    s += "<br><br>CURRENT SETTINGS<br>==========================<br>Temp Threshold: ";
     s += String(tmp_threshold);
     s += "<br>RH Threshold: ";
     s += String(rh_threshold);
@@ -1100,7 +1100,24 @@ void runServer()
     {
       s += " OR";
     }
-    s += "<br>";
+    s += "<br><br>";
+    s += "====[HEAT INDEX SAFETY GUIDE]====";
+    s += "<br><font color=\"red\"> >= 52.2 &deg;C: EXTREME DANGER (heatstroke/sunstroke likely)</font>";
+    s += "<br><font color=\"orange\"> 40 - 52.2 &deg;C: DANGER (sunstroke, muscle cramps, heat exhaustion likely)</font>";
+    s += "<br><font color=\"yellow\"> 32.7 - 40 &deg;C: EXTREME CAUTION (sunstroke, muscle cramps, heat exhaustion possible)</font>";
+    s += "<br><font color=\"yellow\"> 26.6 - 32.7 &deg;C: CAUTION (fatigue possible)</font>";
+    s += "<br><font color=\"lime\"> < 26.6 &deg;C: SAFE</font>";
+    s += "<br><br>";
+    s += "====[DEW POINT COMFORT/SAFETY GUIDE]====";
+    s += "<br><font color=\"red\"> >26 &deg;C: Severely high. Even deadly for asthma patients.</font>";
+    s += "<br><font color=\"orange\"> 24 - 26 &deg;C: Extremely uncomfortable, fairly oppressive</font>";
+    s += "<br><font color=\"orange\"> 21 - 24 &deg;C: Very humid, quite uncomfortable</font>";
+    s += "<br><font color=\"yellow\"> 18 - 21 &deg;C: Somewhat uncomfortable for most people at upper edge</font>";
+    s += "<br><font color=\"yellow\"> 16 - 18 &deg;C: OK for most, but all perceive the humidity at upper edge</font>";
+    s += "<br><font color=\"lime\"> 13 - 16 &deg;C: Comfortable</font>";
+    s += "<br><font color=\"lime\"> 10 - 12 &deg;C: Very comfortable</font>";
+    s += "<br><font color=\"red\"> <10 &deg;C: Sorta dry</font>";
+    s += "<br><br>";
   }
   else if (val == -9)
   {
