@@ -598,8 +598,11 @@ void runServer()
     Serial.println("About page requested by client.");
     s += "<title>About</title>";
     s += "<strong>About</strong><br> ";
-    s += "AirAdviser Beta version 0.2-floof-fox by Victor, Leodis and Carter";
-    s += "<br>";
+    s += "AirAdviser Beta version 0.3-tide-pod by Victor, Leodis and Carter";
+    s += "<br><br>";
+    s += "AirAdviser is open source and freely redistributable under the MIT License.";
+    s += "<br><br>NOTE: AirAdviser uses George Hadjikyriacou's DHT11Lib for interacting with sensors.<br>";
+    s += "DHT11Lib is licensed under version 3 of the GNU General Public License.<br>";
     s += "<a href=\"192.168.4.1/read\">Read sensor data</a>";
     s += "<br><p>Cloud Fox</p>";
     s += "<img src=\"";
@@ -1166,9 +1169,9 @@ void runServer()
     Serial.println("404 page requested by client.");
     s += "  Hi!<br>";
     s += "I'm Cloud, your personal safeguard for<br>";
-    s += "air safety. With my instincts, I can<br>";
-    s += "sniff out invisible dangers in the air<br>";
-    s += "and keep you safe.<br>";
+    s += "environmental safety. With my instincts,<br>";
+    s += "I can sniff out invisible dangers in the<br>";
+    s += "air, such as heatstroke and keep you safe.<br>";
     s += "\\<br>&nbsp;\\<br>&nbsp;&nbsp;\\<br>";
     s += "<img src=\"";
     s += cloud_fox;
