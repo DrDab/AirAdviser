@@ -53,8 +53,9 @@ const uint8_t WARNING_LED_PIN = 10; // GPIO10 corresponds to pin SD3 on NodeMCU
 // Set port for HTTP webserver
 const uint8_t HTTP_SERVER_PORT = 80;
 
-// Set port for appliance control output (D6)
-const uint8_t IOT_CONTROL_PORT = 12;
+// Set port for appliance control output
+const uint8_t IOT_CONTROL_PORT = 12;  // D6
+const uint8_t IOT_CONTROL_PORT_2 = 0; // D3
 
 //////////////////////////////////////
 // END USER CONFIGURABLE SETTINGS   //
@@ -287,6 +288,13 @@ float dp_threshold = 9999.0;
 float pm25_threshold = 9999.0;
 bool logic = true;
 
+float tmp_threshold2 = 9999.0;
+float rh_threshold2 = 9999.0;
+float hi_threshold2 = 9999.0;
+float dp_threshold2 = 9999.0;
+float pm25_threshold2 = 9999.0;
+bool logic2 = true;
+
 void readAir()
 {
   dhtREAD = true;
@@ -468,6 +476,32 @@ void readAir()
       {
         digitalWrite(WARNING_LED_PIN, LOW);
         digitalWrite(IOT_CONTROL_PORT, LOW);
+      }
+    }
+    if (logic2)
+    {
+      if (temp_c >= tmp_threshold2 && humidity >= rh_threshold2 && heat_index >= hi_threshold2 && dew_point >= dp_threshold2 && pm25 >= pm25_threshold2)
+      {
+        digitalWrite(WARNING_LED_PIN, HIGH);
+        digitalWrite(IOT_CONTROL_PORT_2, HIGH);
+      }
+      else
+      {
+        digitalWrite(WARNING_LED_PIN, LOW);
+        digitalWrite(IOT_CONTROL_PORT_2, LOW);
+      }
+    }
+    else
+    {
+      if (temp_c >= tmp_threshold2 || humidity >= rh_threshold2 || heat_index >= hi_threshold2 || dew_point >= dp_threshold2 || pm25 >= pm25_threshold2)
+      {
+        digitalWrite(WARNING_LED_PIN, HIGH);
+        digitalWrite(IOT_CONTROL_PORT_2, HIGH);
+      }
+      else
+      {
+        digitalWrite(WARNING_LED_PIN, LOW);
+        digitalWrite(IOT_CONTROL_PORT_2, LOW);
       }
     }
   }
@@ -1064,6 +1098,7 @@ void runServer()
     Serial.println("Management page requested by client.");
     s += "<title>Management</title>";
     s += "<strong>AirAdviser Manager</strong><br>";
+    // D6
     s += "OUTPUT ";
     s += String(IOT_CONTROL_PORT);
     s += "<br>Turn ON if:<br>";
@@ -1082,9 +1117,32 @@ void runServer()
     s += "<option value=\"1\">AND</option>";
     s += "<option value=\"0\">OR</option>";
     s += "</select>";
+    // D3
+    s += "<br>";
+    s += "OUTPUT ";
+    s += String(IOT_CONTROL_PORT_2);
+    s += "<br>Turn ON if:<br>";
+    s += "Temp >=:<br>";
+    s += "<input type=\"text\" name=\"tmp2\"><br>";
+    s += "RH >=: <br>";
+    s += "<input type=\"text\" name=\"rh2\"><br>";
+    s += "HI >=: <br>";
+    s += "<input type=\"text\" name=\"hi2\"><br>";
+    s += "DP >=: <br>";
+    s += "<input type=\"text\" name=\"dp2\"><br>";
+    s += "PM 2.5 >=: <br>";
+    s += "<input type=\"text\" name=\"pm2\"><br>";
+    s += "<select name=\"logic2\">";
+    s += "<option value=\"1\">AND</option>";
+    s += "<option value=\"0\">OR</option>";
+    s += "</select>";
+    // submit
     s += "<input type=\"submit\" value=\"Set Triggers\">";
     s += "</form>";
-    s += "<br><br>CURRENT SETTINGS<br>==========================<br>Temp Threshold: ";
+    s += "<br><br>CURRENT SETTINGS (";
+    s += String(IOT_CONTROL_PORT);
+    s += ")";
+    s += "<br>==========================<br>Temp Threshold: ";
     s += String(tmp_threshold);
     s += "<br>RH Threshold: ";
     s += String(rh_threshold);
@@ -1096,6 +1154,28 @@ void runServer()
     s += String(pm25_threshold);
     s += "<br>Logic: ";
     if (logic)
+    {
+      s += " AND";
+    }
+    else
+    {
+      s += " OR";
+    }
+    s += "<br><br>CURRENT SETTINGS (";
+    s += String(IOT_CONTROL_PORT_2);
+    s += ")";
+    s += "<br>==========================<br>Temp Threshold: ";
+    s += String(tmp_threshold2);
+    s += "<br>RH Threshold: ";
+    s += String(rh_threshold2);
+    s += "<br>HI Threshold: ";
+    s += String(hi_threshold2);
+    s += "<br>DP Threshold: ";
+    s += String(dp_threshold2);
+    s += "<br>PM 2.5 Threshold: ";
+    s += String(pm25_threshold2);
+    s += "<br>Logic: ";
+    if (logic2)
     {
       s += " AND";
     }
@@ -1133,13 +1213,29 @@ void runServer()
     String part4 = getValue(eq, '&', 3);
     String part5 = getValue(eq, '&', 4);
     String part6 = getValue(eq, '&', 5);
+    String part7 = getValue(eq, '&', 6);
+    String part8 = getValue(eq, '&', 7);
+    String part9 = getValue(eq, '&', 8);
+    String part10 = getValue(eq, '&', 9);
+    String part11= getValue(eq, '&', 10);
+    String part12 = getValue(eq, '&', 11);
+
+
+    //Serial.println(part6);
 
     String part_filtered1 = getValue(part1, '=', 1);
     String part_filtered2 = getValue(part2, '=', 1);
     String part_filtered3 = getValue(part3, '=', 1);
     String part_filtered4 = getValue(part4, '=', 1);
     String part_filtered5 = getValue(part5, '=', 1);
-    String part_filtered6 = getValue(getValue(part6, '=', 1), 'H', 0);
+    String part_filtered6 = getValue(part6, '=', 1);
+
+    String part_filtered7 = getValue(part7, '=', 1);
+    String part_filtered8 = getValue(part8, '=', 1);
+    String part_filtered9 = getValue(part9, '=', 1);
+    String part_filtered10 = getValue(part10, '=', 1);
+    String part_filtered11 = getValue(part11, '=', 1);
+    String part_filtered12 = getValue(getValue(part12, '=', 1), 'H', 0);
 
     tmp_threshold = (float)stringToDouble(part_filtered1);
     rh_threshold = (float)stringToDouble(part_filtered2);
@@ -1148,12 +1244,26 @@ void runServer()
     pm25_threshold = (float)stringToDouble(part_filtered5);
     logic = (float)part_filtered6.toInt();
 
+    tmp_threshold2 = (float)stringToDouble(part_filtered7);
+    rh_threshold2 = (float)stringToDouble(part_filtered8);
+    hi_threshold2 = (float)stringToDouble(part_filtered9);
+    dp_threshold2 = (float)stringToDouble(part_filtered10);
+    pm25_threshold2 = (float)stringToDouble(part_filtered11);
+    logic2 = (float)part_filtered12.toInt();
+
     writeEEPROM(0, (int)tmp_threshold);
     writeEEPROM(1, (int)rh_threshold);
     writeEEPROM(2, (int)hi_threshold);
     writeEEPROM(3, (int)dp_threshold);
     writeEEPROM(4, (int)pm25_threshold);
     writeEEPROM(5, logic);
+
+    writeEEPROM(6, (int)tmp_threshold2);
+    writeEEPROM(7, (int)rh_threshold2);
+    writeEEPROM(8, (int)hi_threshold2);
+    writeEEPROM(9, (int)dp_threshold2);
+    writeEEPROM(10, (int)pm25_threshold2);
+    writeEEPROM(11, logic2);
 
     s += "Settings confirmed. <br><br><br><a href=\"192.168.4.1/read\">Read sensor data</a> ";
     Serial.println(tmp_threshold);
@@ -1162,6 +1272,13 @@ void runServer()
     Serial.println(dp_threshold);
     Serial.println(pm25_threshold);
     Serial.println(logic);
+    Serial.println();
+    Serial.println(tmp_threshold2);
+    Serial.println(rh_threshold2);
+    Serial.println(hi_threshold2);
+    Serial.println(dp_threshold2);
+    Serial.println(pm25_threshold2);
+    Serial.println(logic2);
     
   }
   else
@@ -1228,6 +1345,13 @@ void initHardware()
   dp_threshold = (float)readEEPROM(3);
   pm25_threshold = (float)readEEPROM(4);
   logic = readEEPROM(5);
+
+  tmp_threshold2 = (float)readEEPROM(6);
+  rh_threshold2 = (float)readEEPROM(7);
+  hi_threshold2 = (float)readEEPROM(8);
+  dp_threshold2 = (float)readEEPROM(9);
+  pm25_threshold2 = (float)readEEPROM(10);
+  logic2 = readEEPROM(11);
   
   if (USE_WARNING_LED)
   {
@@ -1238,6 +1362,8 @@ void initHardware()
   }
   pinMode(IOT_CONTROL_PORT, OUTPUT);
   digitalWrite(IOT_CONTROL_PORT, LOW);
+  pinMode(IOT_CONTROL_PORT_2, OUTPUT);
+  digitalWrite(IOT_CONTROL_PORT_2, LOW);
 }
 
 void writeEEPROM(int pos, int val)
