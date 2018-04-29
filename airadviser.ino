@@ -195,14 +195,14 @@ float heat_index_accum = 0.0;  float heat_index_avg = 0.0;
 float dew_point_accum = 0.0; float dew_point_avg = 0.0;
 
 // array of samples taken each 15 minutes, stored for 7 days.
-uint16_t trials_pm10[672];
-uint16_t trials_pm25[672];
-uint16_t trials_pm100[672];
+static uint16_t trials_pm10[672];
+static uint16_t trials_pm25[672];
+static uint16_t trials_pm100[672];
 
-uint16_t trials_temp[672];
-uint16_t trials_humidity[672];
-float trials_heat_index[672];
-float trials_dew_point[672];
+static uint16_t trials_temp[672];
+static uint16_t trials_humidity[672];
+static float trials_heat_index[672];
+static float trials_dew_point[672];
 
 // sample count (take a reading every 15 minutes, and get estimate based on calibration table below
 // samples | delta (to 1 minute)
