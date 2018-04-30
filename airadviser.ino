@@ -37,7 +37,7 @@ const String WIFI_SSID = "AirAdviser-chan ";
 const char WiFiAPPSK[] = "noticemesenpai";
 
 // Enable or disable serial debugging (will cause webserver slowdown)
-const bool USE_SERIAL_DEBUGGING = false;
+const bool USE_SERIAL_DEBUGGING = true;
 
 // Set pins for PMS5003 I/O (Pollution Probe)
 const uint8_t PMS_RX = 2;
@@ -450,17 +450,20 @@ void readAir()
         Serial.print("Particles > 50 um / 0.1L air:"); Serial.println(data.particles_100um);
         Serial.println("---------------------------------------");
     }
+    bool b = false;
     if (logic)
     {
       // AND logic
       if (temp_c >= tmp_threshold && humidity >= rh_threshold && heat_index >= hi_threshold && dew_point >= dp_threshold && pm25 >= pm25_threshold)
       {
-        digitalWrite(WARNING_LED_PIN, HIGH);
+        // digitalWrite(WARNING_LED_PIN, HIGH);
         digitalWrite(IOT_CONTROL_PORT, HIGH);
+        b = true;
+        Serial.println("PORT 1 ON");
       }
       else
       {
-        digitalWrite(WARNING_LED_PIN, LOW);
+        // digitalWrite(WARNING_LED_PIN, LOW);
         digitalWrite(IOT_CONTROL_PORT, LOW);
       }
     }
@@ -469,12 +472,14 @@ void readAir()
       // OR logic
       if (temp_c >= tmp_threshold || humidity >= rh_threshold || heat_index >= hi_threshold || dew_point >= dp_threshold || pm25 >= pm25_threshold)
       {
-        digitalWrite(WARNING_LED_PIN, HIGH);
+        // digitalWrite(WARNING_LED_PIN, HIGH);
         digitalWrite(IOT_CONTROL_PORT, HIGH);
+        b = true;
+        Serial.println("PORT 1 ON");
       }
       else
       {
-        digitalWrite(WARNING_LED_PIN, LOW);
+        //digitalWrite(WARNING_LED_PIN, LOW);
         digitalWrite(IOT_CONTROL_PORT, LOW);
       }
     }
@@ -482,12 +487,14 @@ void readAir()
     {
       if (temp_c >= tmp_threshold2 && humidity >= rh_threshold2 && heat_index >= hi_threshold2 && dew_point >= dp_threshold2 && pm25 >= pm25_threshold2)
       {
-        digitalWrite(WARNING_LED_PIN, HIGH);
+        // digitalWrite(WARNING_LED_PIN, HIGH);
         digitalWrite(IOT_CONTROL_PORT_2, HIGH);
+        b = true;
+        Serial.println("PORT 2 ON");
       }
       else
       {
-        digitalWrite(WARNING_LED_PIN, LOW);
+        // digitalWrite(WARNING_LED_PIN, LOW);
         digitalWrite(IOT_CONTROL_PORT_2, LOW);
       }
     }
@@ -495,14 +502,24 @@ void readAir()
     {
       if (temp_c >= tmp_threshold2 || humidity >= rh_threshold2 || heat_index >= hi_threshold2 || dew_point >= dp_threshold2 || pm25 >= pm25_threshold2)
       {
-        digitalWrite(WARNING_LED_PIN, HIGH);
+        // digitalWrite(WARNING_LED_PIN, HIGH);
         digitalWrite(IOT_CONTROL_PORT_2, HIGH);
+        b = true;
+        Serial.println("PORT 2 ON");
       }
       else
       {
-        digitalWrite(WARNING_LED_PIN, LOW);
+        // digitalWrite(WARNING_LED_PIN, LOW);
         digitalWrite(IOT_CONTROL_PORT_2, LOW);
       }
+    }
+    if (b)
+    {
+      digitalWrite(WARNING_LED_PIN, HIGH);
+    }
+    else
+    {
+      digitalWrite(WARNING_LED_PIN, LOW);
     }
   }
   else
