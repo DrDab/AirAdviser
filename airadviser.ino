@@ -54,7 +54,7 @@ const uint8_t WARNING_LED_PIN = 10; // GPIO10 corresponds to pin SD3 on NodeMCU
 const uint8_t HTTP_SERVER_PORT = 80;
 
 // Set port for appliance control output
-const uint8_t IOT_CONTROL_PORT = 12;  // D6
+const uint8_t IOT_CONTROL_PORT = 15;  // D8
 const uint8_t IOT_CONTROL_PORT_2 = 0; // D3
 
 //////////////////////////////////////
@@ -95,15 +95,13 @@ boolean readPMSdata(Stream *s)
   {
     return false;
   }
-  
-  // Read a byte at a time until we get to the special '0x42' start-byte
+
   if (s->peek() != 0x42)
   {
     s->read();
     return false;
   }
  
-  // Now read all 32 bytes
   if (s->available() < 32) 
   {
     return false;
@@ -113,7 +111,6 @@ boolean readPMSdata(Stream *s)
   uint16_t sum = 0;
   s->readBytes(buffer, 32);
  
-  // get checksum ready
   for (uint8_t i=0; i<30; i++)
   {
     sum += buffer[i];
@@ -126,7 +123,6 @@ boolean readPMSdata(Stream *s)
   Serial.println();
   */
   
-  // The data comes in endian'd, this solves it so it works on all platforms
   uint16_t buffer_u16[15];
   for (uint8_t i=0; i<15; i++)
   {
@@ -134,7 +130,6 @@ boolean readPMSdata(Stream *s)
     buffer_u16[i] += (buffer[2 + i*2] << 8);
   }
  
-  // put it into a nice struct :)
   memcpy((void *)&data, (void *)buffer_u16, 30);
  
   if (sum != data.checksum)
@@ -142,7 +137,6 @@ boolean readPMSdata(Stream *s)
     Serial.println("Checksum failure");
     return false;
   }
-  // success!
   return true;
 }
 
