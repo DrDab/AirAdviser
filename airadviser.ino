@@ -412,7 +412,7 @@ void readAir()
         Serial.print("%RH "); Serial.print(humidity);
         Serial.print("\t\tDelta: "); Serial.print(humidity_delta);
         Serial.print("\t\tAverage: "); Serial.print(humidity_avg);
-        Serial.println("Calculated Info");
+        Serial.println("\nCalculated Info");
         Serial.print("Heat Index: "); Serial.print(heat_index);
          Serial.print("\t\tDew Point (C): "); Serial.print(dew_point);
         Serial.println();
@@ -578,10 +578,6 @@ void runServer()
   {
     val = -2; // read page
   }
-  else if (req.indexOf("/results.csv") != -1)
-  {
-    val = -5;
-  }
   else if (req.indexOf("/manage") != -1)
   {
     val = -8;
@@ -590,14 +586,32 @@ void runServer()
   {
     val = -9;
   }
+  else if (req.indexOf("/results.csv") != -1)
+  {
+    val = -10;
+  }
+  else if (req.indexOf("/results2.csv") != -1)
+  {
+    val = -11;
+  }
+  else if (req.indexOf("/results3.csv") != -1)
+  {
+    val = -12;
+  }
+  
 
   String tmpStr = "";
-  if (val == -5)
+  bool CSVflush = false;
+  if (val == -10)
   {
-    // read the array
     tmpStr += "Sample #, Temperature, %RH, Heat Index, Dew Point, PM1.0, PM2.5, PM10.0\n";
-    for(uint16_t i = 0; i < ptrial; i++)
+    for(uint16_t i = 0; i < 224; i++)
     {
+      if (i >= ptrial)
+      {
+        tmpStr += "\nEND OF LOG";
+        break;
+      }
       tmpStr += i;
       tmpStr += ","; 
       tmpStr += trials_temp[i];
@@ -616,6 +630,71 @@ void runServer()
       tmpStr += "\n";
     }
     tmpStr += "\nEND OF LOG";
+    CSVflush = true;   
+  }
+  else if (val == -11)
+  {
+    tmpStr += "Sample #, Temperature, %RH, Heat Index, Dew Point, PM1.0, PM2.5, PM10.0\n";
+    for(uint16_t i = 224; i < 448; i++)
+    {
+      if (i >= ptrial)
+      {
+        tmpStr += "\nEND OF LOG";
+        break;
+      }
+      tmpStr += i;
+      tmpStr += ","; 
+      tmpStr += trials_temp[i];
+      tmpStr += ",";
+      tmpStr += trials_humidity[i];
+      tmpStr += ",";
+      tmpStr += trials_heat_index[i];
+      tmpStr += ",";
+      tmpStr += trials_dew_point[i];
+      tmpStr += ",";
+      tmpStr += trials_pm10[i];
+      tmpStr += ",";
+      tmpStr += trials_pm25[i];
+      tmpStr += ",";
+      tmpStr += trials_pm100[i];
+      tmpStr += "\n";
+    }
+    tmpStr += "\nEND OF LOG";
+    CSVflush = true;
+  }
+  else if (val == -12)
+  {
+    tmpStr += "Sample #, Temperature, %RH, Heat Index, Dew Point, PM1.0, PM2.5, PM10.0\n";
+    for(uint16_t i = 448; i < 672; i++)
+    {
+      if (i >= ptrial)
+      {
+        tmpStr += "\nEND OF LOG";
+        break;
+      }
+      tmpStr += i;
+      tmpStr += ","; 
+      tmpStr += trials_temp[i];
+      tmpStr += ",";
+      tmpStr += trials_humidity[i];
+      tmpStr += ",";
+      tmpStr += trials_heat_index[i];
+      tmpStr += ",";
+      tmpStr += trials_dew_point[i];
+      tmpStr += ",";
+      tmpStr += trials_pm10[i];
+      tmpStr += ",";
+      tmpStr += trials_pm25[i];
+      tmpStr += ",";
+      tmpStr += trials_pm100[i];
+      tmpStr += "\n";
+    }
+    tmpStr += "\nEND OF LOG";
+    CSVflush = true;
+  }
+
+  if (CSVflush)
+  {
     Serial.println("CSV Log requested.");
     client.print(tmpStr);
     client.flush();
