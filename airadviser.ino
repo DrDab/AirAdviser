@@ -604,6 +604,7 @@ void runServer()
   bool CSVflush = false;
   if (val == -10)
   {
+    tmpStr += "Logs, samples 0-224\n";
     tmpStr += "Sample #, Temperature, %RH, Heat Index, Dew Point, PM1.0, PM2.5, PM10.0\n";
     for(uint16_t i = 0; i < 224; i++)
     {
@@ -634,6 +635,7 @@ void runServer()
   }
   else if (val == -11)
   {
+    tmpStr += "Logs, samples 224-448\n";
     tmpStr += "Sample #, Temperature, %RH, Heat Index, Dew Point, PM1.0, PM2.5, PM10.0\n";
     for(uint16_t i = 224; i < 448; i++)
     {
@@ -664,6 +666,7 @@ void runServer()
   }
   else if (val == -12)
   {
+    tmpStr += "Logs, samples 448-672 (Half a fortnite)\n";
     tmpStr += "Sample #, Temperature, %RH, Heat Index, Dew Point, PM1.0, PM2.5, PM10.0\n";
     for(uint16_t i = 448; i < 672; i++)
     {
