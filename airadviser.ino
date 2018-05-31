@@ -54,8 +54,8 @@ const uint8_t WARNING_LED_PIN = 10; // GPIO10 corresponds to pin SD3 on NodeMCU
 const uint8_t HTTP_SERVER_PORT = 80;
 
 // Set port for appliance control output
-const uint8_t IOT_CONTROL_PORT = 15;  // D8
-const uint8_t IOT_CONTROL_PORT_2 = 0; // D3
+const uint8_t IOT_CONTROL_PORT = 5;  // D1
+const uint8_t IOT_CONTROL_PORT_2 = 4; // D2
 
 //////////////////////////////////////
 // END USER CONFIGURABLE SETTINGS   //
@@ -451,14 +451,16 @@ void readAir()
       if (temp_c >= tmp_threshold && humidity >= rh_threshold && heat_index >= hi_threshold && dew_point >= dp_threshold && pm25 >= pm25_threshold)
       {
         // digitalWrite(WARNING_LED_PIN, HIGH);
-        digitalWrite(IOT_CONTROL_PORT, HIGH);
+        // digitalWrite(IOT_CONTROL_PORT, HIGH);
+        analogWrite(IOT_CONTROL_PORT, 1023);
         b = true;
         Serial.println("PORT 1 ON");
       }
       else
       {
         // digitalWrite(WARNING_LED_PIN, LOW);
-        digitalWrite(IOT_CONTROL_PORT, LOW);
+        // digitalWrite(IOT_CONTROL_PORT, LOW);
+        analogWrite(IOT_CONTROL_PORT, 0);
       }
     }
     else
@@ -467,14 +469,16 @@ void readAir()
       if (temp_c >= tmp_threshold || humidity >= rh_threshold || heat_index >= hi_threshold || dew_point >= dp_threshold || pm25 >= pm25_threshold)
       {
         // digitalWrite(WARNING_LED_PIN, HIGH);
-        digitalWrite(IOT_CONTROL_PORT, HIGH);
+        // digitalWrite(IOT_CONTROL_PORT, HIGH);
+        analogWrite(IOT_CONTROL_PORT, 1023);
         b = true;
         Serial.println("PORT 1 ON");
       }
       else
       {
-        //digitalWrite(WARNING_LED_PIN, LOW);
-        digitalWrite(IOT_CONTROL_PORT, LOW);
+        // digitalWrite(WARNING_LED_PIN, LOW);
+        // digitalWrite(IOT_CONTROL_PORT, LOW);
+        analogWrite(IOT_CONTROL_PORT, 0);
       }
     }
     if (logic2)
@@ -482,14 +486,16 @@ void readAir()
       if (temp_c >= tmp_threshold2 && humidity >= rh_threshold2 && heat_index >= hi_threshold2 && dew_point >= dp_threshold2 && pm25 >= pm25_threshold2)
       {
         // digitalWrite(WARNING_LED_PIN, HIGH);
-        digitalWrite(IOT_CONTROL_PORT_2, HIGH);
+        // digitalWrite(IOT_CONTROL_PORT_2, HIGH);
+        analogWrite(IOT_CONTROL_PORT_2, 1023);
         b = true;
         Serial.println("PORT 2 ON");
       }
       else
       {
         // digitalWrite(WARNING_LED_PIN, LOW);
-        digitalWrite(IOT_CONTROL_PORT_2, LOW);
+        // digitalWrite(IOT_CONTROL_PORT_2, LOW);
+        analogWrite(IOT_CONTROL_PORT_2, 0);
       }
     }
     else
@@ -497,14 +503,16 @@ void readAir()
       if (temp_c >= tmp_threshold2 || humidity >= rh_threshold2 || heat_index >= hi_threshold2 || dew_point >= dp_threshold2 || pm25 >= pm25_threshold2)
       {
         // digitalWrite(WARNING_LED_PIN, HIGH);
-        digitalWrite(IOT_CONTROL_PORT_2, HIGH);
+        // digitalWrite(IOT_CONTROL_PORT_2, HIGH);
+        analogWrite(IOT_CONTROL_PORT_2, 1023);
         b = true;
         Serial.println("PORT 2 ON");
       }
       else
       {
         // digitalWrite(WARNING_LED_PIN, LOW);
-        digitalWrite(IOT_CONTROL_PORT_2, LOW);
+        // digitalWrite(IOT_CONTROL_PORT_2, LOW);
+        analogWrite(IOT_CONTROL_PORT_2, 0);
       }
     }
     if (b)
@@ -1454,9 +1462,11 @@ void initHardware()
     digitalWrite(WARNING_LED_PIN, LOW); 
   }
   pinMode(IOT_CONTROL_PORT, OUTPUT);
-  digitalWrite(IOT_CONTROL_PORT, LOW);
+  // digitalWrite(IOT_CONTROL_PORT, LOW);
+  analogWrite(IOT_CONTROL_PORT, 0);
   pinMode(IOT_CONTROL_PORT_2, OUTPUT);
-  digitalWrite(IOT_CONTROL_PORT_2, LOW);
+  // digitalWrite(IOT_CONTROL_PORT_2, LOW);
+  analogWrite(IOT_CONTROL_PORT_2, 0);
 }
 
 void writeEEPROM(int pos, int val)
