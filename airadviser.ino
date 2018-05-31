@@ -37,7 +37,7 @@ const String WIFI_SSID = "AirAdviser-chan ";
 const char WiFiAPPSK[] = "noticemesenpai";
 
 // Enable or disable serial debugging (will cause webserver slowdown)
-const bool USE_SERIAL_DEBUGGING = true;
+const bool USE_SERIAL_DEBUGGING = false;
 
 // Set pins for PMS5003 I/O (Pollution Probe)
 const uint8_t PMS_RX = 2;
