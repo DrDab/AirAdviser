@@ -8,6 +8,7 @@ AirAdviser
   - A Plantower PMS5003 Optical Dust sensor
   - A DHT11 temperature/humidity probe
   - A red LED
+  - A 330-ohm resistor
   - Solder (60/40 Rosin core preferred)
   - Jumper cables
   - Hot glue + hot glue gun
