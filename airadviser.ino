@@ -1403,7 +1403,7 @@ void runServer()
 
   // Send the response to the client
   client.print(s);
-  delay(3);
+  delay(1);
   Serial.println("Client disconnected");
 
   // The client will actually be disconnected 
