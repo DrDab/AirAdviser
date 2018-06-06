@@ -568,846 +568,839 @@ void runServer()
   {
     return;
   }
-  writeSerial = false;
-  Serial.println("Ready");
-  // Read the first line of the request
-  String req = client.readStringUntil('\r');
-  Serial.println(req);
-  client.flush();
-
-
-  int val = -1; 
-  
-  if (req.indexOf("/about") != -1)
+  else
   {
-    val = 0; // about page
-  }
-  else if (req.indexOf("/read") != -1)
-  {
-    val = -2; // read page
-  }
-  else if (req.indexOf("/manage") != -1)
-  {
-    val = -8;
-  }
-  else if (req.indexOf("/control.red") != -1)
-  {
-    val = -9;
-  }
-  else if (req.indexOf("/results.csv") != -1)
-  {
-    val = -10;
-  }
-  else if (req.indexOf("/results2.csv") != -1)
-  {
-    val = -11;
-  }
-  else if (req.indexOf("/results3.csv") != -1)
-  {
-    val = -12;
-  }
-  
-
-  String tmpStr = "";
-  bool CSVflush = false;
-  if (val == -10)
-  {
-    tmpStr += "Logs, samples 0-224\n";
-    tmpStr += "Sample #, Temperature, %RH, Heat Index, Dew Point, PM1.0, PM2.5, PM10.0\n";
-    for(uint16_t i = 0; i < 224; i++)
-    {
-      if (i >= ptrial)
-      {
-        tmpStr += "\nEND OF LOG";
-        break;
-      }
-      tmpStr += i;
-      tmpStr += ","; 
-      tmpStr += trials_temp[i];
-      tmpStr += ",";
-      tmpStr += trials_humidity[i];
-      tmpStr += ",";
-      tmpStr += trials_heat_index[i];
-      tmpStr += ",";
-      tmpStr += trials_dew_point[i];
-      tmpStr += ",";
-      tmpStr += trials_pm10[i];
-      tmpStr += ",";
-      tmpStr += trials_pm25[i];
-      tmpStr += ",";
-      tmpStr += trials_pm100[i];
-      tmpStr += "\n";
-    }
-    tmpStr += "\nEND OF LOG";
-    CSVflush = true;   
-  }
-  else if (val == -11)
-  {
-    tmpStr += "Logs, samples 224-448\n";
-    tmpStr += "Sample #, Temperature, %RH, Heat Index, Dew Point, PM1.0, PM2.5, PM10.0\n";
-    for(uint16_t i = 224; i < 448; i++)
-    {
-      if (i >= ptrial)
-      {
-        tmpStr += "\nEND OF LOG";
-        break;
-      }
-      tmpStr += i;
-      tmpStr += ","; 
-      tmpStr += trials_temp[i];
-      tmpStr += ",";
-      tmpStr += trials_humidity[i];
-      tmpStr += ",";
-      tmpStr += trials_heat_index[i];
-      tmpStr += ",";
-      tmpStr += trials_dew_point[i];
-      tmpStr += ",";
-      tmpStr += trials_pm10[i];
-      tmpStr += ",";
-      tmpStr += trials_pm25[i];
-      tmpStr += ",";
-      tmpStr += trials_pm100[i];
-      tmpStr += "\n";
-    }
-    tmpStr += "\nEND OF LOG";
-    CSVflush = true;
-  }
-  else if (val == -12)
-  {
-    tmpStr += "Logs, samples 448-672 (Half a fortnite)\n";
-    tmpStr += "Sample #, Temperature, %RH, Heat Index, Dew Point, PM1.0, PM2.5, PM10.0\n";
-    for(uint16_t i = 448; i < 672; i++)
-    {
-      if (i >= ptrial)
-      {
-        tmpStr += "\nEND OF LOG";
-        break;
-      }
-      tmpStr += i;
-      tmpStr += ","; 
-      tmpStr += trials_temp[i];
-      tmpStr += ",";
-      tmpStr += trials_humidity[i];
-      tmpStr += ",";
-      tmpStr += trials_heat_index[i];
-      tmpStr += ",";
-      tmpStr += trials_dew_point[i];
-      tmpStr += ",";
-      tmpStr += trials_pm10[i];
-      tmpStr += ",";
-      tmpStr += trials_pm25[i];
-      tmpStr += ",";
-      tmpStr += trials_pm100[i];
-      tmpStr += "\n";
-    }
-    tmpStr += "\nEND OF LOG";
-    CSVflush = true;
-  }
-
-  if (CSVflush)
-  {
-    Serial.println("CSV Log requested.");
-    client.print(tmpStr);
-    client.flush();
-    delay(1);
-    return;
-  }
-
-
-  // Prepare the response. Start with the common header:
-  String o = "";
-  String s = "HTTP/1.1 200 OK\r\n";
-  s += "Content-Type: text/html\r\n\r\n";
-  s += "<!DOCTYPE HTML>\r\n<html>\r\n";
-  s += "<head>";
-  s += "<style>";
-  s += "body {";
-  s += "  background-color: black;";
-  s += "  color: lime;";
-  s += "  font-family:monospace;";
-  s += "}";
-  s += "</style>";
-  s += "</head>";
-  if (val >= 0)
-  {
-    Serial.println("About page requested by client.");
-    s += "<title>About</title>";
-    s += "<strong>About</strong><br> ";
-    s += "AirAdviser Beta version 0.3-tide-pod by Victor, Leodis and Carter";
-    s += "<br><br>";
-    s += "AirAdviser is open source and freely redistributable under the MIT License.";
-    s += "<br><br>NOTE: AirAdviser uses George Hadjikyriacou's DHT11Lib for interacting with sensors.<br>";
-    s += "DHT11Lib is licensed under version 3 of the GNU General Public License.<br>";
-    s += "<a href=\"192.168.4.1/read\">Read sensor data</a>";
-    s += "<br><p>Cloud Fox</p>";
-    s += "<img src=\"";
-    s += cloud_fox;
-    s += "\">";
-    //client.print(s);
-    //client.print(cloud_fox);
-    //client.print(o);
-    //client.flush();
-    //delay(1);
-    //Serial.println("Client disconnected");
-    //return;
-  }
-  else if (val == -2)
-  { 
-    Serial.println("Reading page requested by client.");
-    s += "<meta http-equiv=\"refresh\" content=\"2\" >";
-    s += "<title>Sensor Reading</title>";
-    s += "<strong>Sensor Data</strong>";
-
-    s += "<br>";
-    s += "========================================";
-    s += "<br>";
-    s += "Weather Information";
-    s += "<br>";
-    s += "Current Temperature: ";
-    s += String(temp_c);
-    s += " &deg;C";
-    s += " (&Delta;(&mu;,c)= ";
-    s += String(temp_delta);
-    s += " &mu;= ";
-    s += String(temp_avg);
-    s += " N= ";
-    s += String(ptrial);
-    s += ")";
-    s += "<br>";
-    s += "% Relative Humidity: ";
-    s += String(humidity);
-    s += "%";
-    s += " (&Delta;(&mu;,c)= ";
-    s += String(humidity_delta);
-    s += " &mu;= ";
-    s += String(humidity_avg);
-    s += " N= ";
-    s += String(ptrial);
-    s += ")";
-    s += "<br>";
-    s += "Heat Index: ";
-    s += String(heat_index);
-    s += " &deg;C";
-    s += " (&Delta;(&mu;,c)= ";
-    s += String(heat_index_delta);
-    s += " &mu;= ";
-    s += String(heat_index_avg);
-    s += " N= ";
-    s += String(ptrial);
-    s += ")";
-    s += "<br>";
-    s += "Dew Point: ";
-    s += String(dew_point);
-    s += " &deg;C (&Delta;(&mu;,c)= ";
-    s += String(dew_point_delta);
-    s += " &mu;= ";
-    s += String(dew_point_avg);
-    s += " N= ";
-    s += String(ptrial);
-    s += ")";
-    s += "<br>";
-    s += "========================================";
-    s += "<br>";
-    s += "Air Quality Information";
-    s += "<br>";
-    if (haveCurrentReading) 
-    {
-      hasReading = true;
-      Serial.println("Data collection successful, sending to client.");
-      s += "PM1.0 Level: ";
-      s += String(pm10);
-      s += " &mu;g/m^3";
-      s += " (&Delta;(&mu;,c)= ";
-      s += String(pm10_delta);
-      s += " &mu;= ";
-      s += String(p10avg);
-      s += " N= ";
-      s += String(ptrial);
-      s += ")";
-      s += "<br>";
-      s += "PM2.5 Level: ";
-      s += String(pm25);
-      s += " &mu;g/m^3";
-      s += " (&Delta;(&mu;,c)= ";
-      s += String(pm25_delta);
-      s += " &mu;= ";
-      s += String(p25avg);
-      s += " N= ";
-      s += String(ptrial);
-      s += ")";
-      s += "<br>";
-      s += "PM10.0 Level: ";
-      s += String(pm100);
-      s += " &mu;g/m^3";
-      s += " (&Delta;(&mu;,c)= ";
-      s += String(pm100_delta);
-      s += " &mu;= ";
-      s += String(p100avg);
-      s += " N= ";
-      s += String(ptrial);
-      s += ")";
-      s += "<br>";
-      s += "========================================";
-      s += "<br>";
-      s += "Particles > 0.3 &mu;m / 0.1L air: ";
-      s += String(p03);
-      s += "<br>";
-      s += "Particles > 0.5 &mu;m / 0.1L air: ";
-      s += String(p05);
-      s += "<br>";
-      s += "Particles > 1.0 &mu;m / 0.1L air: ";
-      s += String(p10);
-      s += "<br>";
-      s += "Particles > 2.5 &mu;m / 0.1L air: ";
-      s += String(p25);
-      s += "<br>";
-      s += "Particles > 5.0 &mu;m / 0.1L air: ";
-      s += String(p50);
-      s += "<br>";
-      s += "Particles > 50 &mu;m / 0.1L air : ";
-      s += String(p100);
-      s += "<br>";
-      // begin warnings
+      writeSerial = false;
+      Serial.println("Ready");
+      // Read the first line of the request
+      String req = client.readStringUntil('\r');
+      Serial.println(req);
+      client.flush();
+    
+    
+      int val = -1; 
       
-      s += "<br><br>";
-      s += "<table style=\"background-color: #000; border: 2px solid #00ff00; padding: 1px;\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">";
-      s += "<tr>";
-      s += "<td style=\"padding:2px\">";
-      s += "<center>";
-      s += "<big>";
-      s += "<b>Pollution Advisory</b>";
-      s += "</big>";
-      s += "</center>";
-      s += "<br //>";
-      s += "<center>";
-      if (pm25 >= 500)
-        {
-          s += "<strong>&#9760;DANGER: POLLUTION LEVELS HAZARDOUS!</strong>";
-          s += "<br>";
-          s += "PM2.5 Levels are over 500.0 &mu;g/m^3";
-          s += "<br>";
-          s += "Do NOT go outdoors. If going outdoors, YOU risk:";
-          s += "<br>";
-          s += "<strong>- Serious aggravation of heart or lung disease and premature mortality in persons with cardiopulmonary disease and the elderly</strong>";
-          s += "<br>";
-          s += "<strong>- Serious risk of respiratory effects in general population. </strong>";
-        } 
-        else if (pm25 < 500 && pm25 >= 250)
-        {
-          s += "<strong>&#9763;CAUTION: POLLUTION LEVELS VERY UNHEALTHY</strong>";
-          s += "<br>";
-          s += "PM2.5 Levels are over 250.0 &mu;g/m^3";
-          s += "<br>";
-          s += "Do NOT go outdoors. If going outdoors, YOU risk:";
-          s += "<br>";
-          s += "<strong>- Significant aggravation of heart or lung disease and premature mortality in persons with cardiopulmonary disease and the elderly</strong>";
-          s += "<br>";
-          s += "<strong>- Significant increase in respiratory effects in general population. </strong>";
-        }
-        else if (pm25 < 250 && pm25 >= 150)
-        {
-          s += "<strong>&#9888;CAUTION: POLLUTION LEVELS UNHEALTHY</strong>";
-          s += "<br>";
-          s += "PM2.5 Levels are over 150.0 &mu;g/m^3";
-          s += "<br>";
-          s += "AVOID prolonged exertion outdoors. YOU risk:";
-          s += "<br>";
-          s += "<strong>- Increased aggravation of heart or lung disease and premature mortality in persons with cardiopulmonary disease and the elderly</strong>";
-          s += "<br>";
-          s += "<strong>- Increased respiratory effects in general population.</strong>";
-        }
-        else if (pm25 < 150 && pm25 >= 55)
-        {
-          s += "<strong>&#9888;CAUTION: POLLUTION LEVELS UNHEALTHY FOR SENSITIVE PEOPLE</strong>";
-          s += "<br>";
-          s += "PM2.5 Levels are over 55.0 &mu;g/m^3";
-          s += "<br>";
-          s += "AVOID prolonged exertion outdoors. YOU risk:";
-          s += "<br>";
-          s += "<strong>- Increased aggravation of heart or lung disease and premature mortality in persons with cardiopulmonary disease and the elderly</strong>";
-          s += "<br>";
-          s += "<strong>- Increased respiratory effects in general population.</strong>";
-        }
-        else
-        {
-          s += "<strong>&#128175;&#128293;POLLUTION LEVELS ARE HEALTHY&#128175;&#128293;</strong>";
-        }
-        s += "</center>";
-        s += "</td></tr></table>";
-
-        // begin heatstroke warnings
-        s += "<br><br>";
-        s += "<table style=\"background-color: #000; border: 2px solid #00ff00; padding: 1px;\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">";
-        s += "<tr>";
-        s += "<td style=\"padding:2px\">";
-        s += "<center>";
-        s += "<big>";
-        s += "<b>Heatstroke Advisory</b>";
-        s += "</big>";
-        s += "</center>";
-        s += "<br //>";
-        s += "<center>";
-        if(heat_index >= 52.2222)
-        {
-          // extreme danger
-          s += "<strong>&#9888;SEVERE DANGER</strong>";
-          s += "<br>";
-          s += "Heatstroke or sunstroke likely.";
-          s += "<br>";
-          s += "Seek shelter <strong>IMMEDIATELY.</strong> Take sips of cold water, and turn on air conditioning. If indoors, <strong>REMAIN INDOORS.</strong>";
-        }
-        else if (heat_index < 52.2222 && heat_index >= 40)
-        {
-          // danger
-          s += "<strong>&#9888;DANGER</strong>";
-          s += "<br>";
-          s += "Heat exhaustion, sunstroke and muscle cramps likely.";
-          s += "<br>";
-          s += "Seek shelter as soon as possible. Take sips of cold water, and turn on air conditioning.";
-        }
-        else if (heat_index < 40.0 && heat_index >= 32.7778)
-        {
-          // extreme caution
-          s += "<strong>&#9888;EXTREME CAUTION</strong>";
-          s += "<br>";
-          s += "Sunstroke, muscle cramps and heat exhaustion possible.";
-          s += "<br>";
-          s += "Seek shelter within 2-3 hours. Take sips of cold water, and turn on air conditioning.";
-        }
-        else if (heat_index < 32.7778 && heat_index >= 26.6667)
-        {
-          // caution
-          s += "<strong>&#9888;CAUTION</strong>";
-          s += "<br>";
-          s += "Fatigue possible.";
-          s += "<br>";
-        }
-        else
-        {
-          s += "<strong>&#128175;&#128293;HEAT LEVELS ARE HEALTHY&#128175;&#128293;</strong>";
-          // no warnings
-        }
-        
-        s += "</center>";
-        s += "</td></tr></table>";
-    }
-    else
-    {
-      if (!hasReading)
+      if (req.indexOf("/about") != -1)
       {
-        s += "No data yet";
+        val = 0; // about page
+      }
+      else if (req.indexOf("/read") != -1)
+      {
+        val = -2; // read page
+      }
+      else if (req.indexOf("/manage") != -1)
+      {
+        val = -8;
+      }
+      else if (req.indexOf("/control.red") != -1)
+      {
+        val = -9;
+      }
+      else if (req.indexOf("/results.csv") != -1)
+      {
+        val = -10;
+      }
+      else if (req.indexOf("/results2.csv") != -1)
+      {
+        val = -11;
+      }
+      else if (req.indexOf("/results3.csv") != -1)
+      {
+        val = -12;
+      }
+      
+    
+      String tmpStr = "";
+      bool CSVflush = false;
+      if (val == -10)
+      {
+        tmpStr += "Logs, samples 0-224\n";
+        tmpStr += "Sample #, Temperature, %RH, Heat Index, Dew Point, PM1.0, PM2.5, PM10.0\n";
+        for(uint16_t i = 0; i < 224; i++)
+        {
+          if (i >= ptrial)
+          {
+            tmpStr += "\nEND OF LOG";
+            break;
+          }
+          tmpStr += i;
+          tmpStr += ","; 
+          tmpStr += trials_temp[i];
+          tmpStr += ",";
+          tmpStr += trials_humidity[i];
+          tmpStr += ",";
+          tmpStr += trials_heat_index[i];
+          tmpStr += ",";
+          tmpStr += trials_dew_point[i];
+          tmpStr += ",";
+          tmpStr += trials_pm10[i];
+          tmpStr += ",";
+          tmpStr += trials_pm25[i];
+          tmpStr += ",";
+          tmpStr += trials_pm100[i];
+          tmpStr += "\n";
+        }
+        tmpStr += "\nEND OF LOG";
+        CSVflush = true;   
+      }
+      else if (val == -11)
+      {
+        tmpStr += "Logs, samples 224-448\n";
+        tmpStr += "Sample #, Temperature, %RH, Heat Index, Dew Point, PM1.0, PM2.5, PM10.0\n";
+        for(uint16_t i = 224; i < 448; i++)
+        {
+          if (i >= ptrial)
+          {
+            tmpStr += "\nEND OF LOG";
+            break;
+          }
+          tmpStr += i;
+          tmpStr += ","; 
+          tmpStr += trials_temp[i];
+          tmpStr += ",";
+          tmpStr += trials_humidity[i];
+          tmpStr += ",";
+          tmpStr += trials_heat_index[i];
+          tmpStr += ",";
+          tmpStr += trials_dew_point[i];
+          tmpStr += ",";
+          tmpStr += trials_pm10[i];
+          tmpStr += ",";
+          tmpStr += trials_pm25[i];
+          tmpStr += ",";
+          tmpStr += trials_pm100[i];
+          tmpStr += "\n";
+        }
+        tmpStr += "\nEND OF LOG";
+        CSVflush = true;
+      }
+      else if (val == -12)
+      {
+        tmpStr += "Logs, samples 448-672 (Half a fortnite)\n";
+        tmpStr += "Sample #, Temperature, %RH, Heat Index, Dew Point, PM1.0, PM2.5, PM10.0\n";
+        for(uint16_t i = 448; i < 672; i++)
+        {
+          if (i >= ptrial)
+          {
+            tmpStr += "\nEND OF LOG";
+            break;
+          }
+          tmpStr += i;
+          tmpStr += ","; 
+          tmpStr += trials_temp[i];
+          tmpStr += ",";
+          tmpStr += trials_humidity[i];
+          tmpStr += ",";
+          tmpStr += trials_heat_index[i];
+          tmpStr += ",";
+          tmpStr += trials_dew_point[i];
+          tmpStr += ",";
+          tmpStr += trials_pm10[i];
+          tmpStr += ",";
+          tmpStr += trials_pm25[i];
+          tmpStr += ",";
+          tmpStr += trials_pm100[i];
+          tmpStr += "\n";
+        }
+        tmpStr += "\nEND OF LOG";
+        CSVflush = true;
+      }
+    
+      if (CSVflush)
+      {
+        Serial.println("CSV Log requested.");
+        client.print(tmpStr);
+        client.flush();
+        delay(1);
+        return;
+      }
+    
+    
+      // Prepare the response. Start with the common header:
+      String o = "";
+      String s = "HTTP/1.1 200 OK\r\n";
+      s += "Content-Type: text/html\r\n\r\n";
+      s += "<!DOCTYPE HTML>\r\n<html>\r\n";
+      s += "<head>";
+      s += "<style>";
+      s += "body {";
+      s += "  background-color: black;";
+      s += "  color: lime;";
+      s += "  font-family:monospace;";
+      s += "}";
+      s += "</style>";
+      s += "</head>";
+      if (val >= 0)
+      {
+        Serial.println("About page requested by client.");
+        s += "<title>About</title>";
+        s += "<strong>About</strong><br> ";
+        s += "AirAdviser Beta version 0.3-tide-pod by Victor, Leodis and Carter";
+        s += "<br><br>";
+        s += "AirAdviser is open source and freely redistributable under the MIT License.";
+        s += "<br><br>NOTE: AirAdviser uses George Hadjikyriacou's DHT11Lib for interacting with sensors.<br>";
+        s += "DHT11Lib is licensed under version 3 of the GNU General Public License.<br>";
+        s += "<a href=\"192.168.4.1/read\">Read sensor data</a>";
+        s += "<br><p>Cloud Fox</p>";
+        s += "<img src=\"";
+        s += cloud_fox;
+        s += "\">";
+      }
+      else if (val == -2)
+      { 
+        Serial.println("Reading page requested by client.");
+        s += "<meta http-equiv=\"refresh\" content=\"2\" >";
+        s += "<title>Sensor Reading</title>";
+        s += "<strong>Sensor Data</strong>";
+    
         s += "<br>";
+        s += "========================================";
+        s += "<br>";
+        s += "Weather Information";
+        s += "<br>";
+        s += "Current Temperature: ";
+        s += String(temp_c);
+        s += " &deg;C";
+        s += " (&Delta;(&mu;,c)= ";
+        s += String(temp_delta);
+        s += " &mu;= ";
+        s += String(temp_avg);
+        s += " N= ";
+        s += String(ptrial);
+        s += ")";
+        s += "<br>";
+        s += "% Relative Humidity: ";
+        s += String(humidity);
+        s += "%";
+        s += " (&Delta;(&mu;,c)= ";
+        s += String(humidity_delta);
+        s += " &mu;= ";
+        s += String(humidity_avg);
+        s += " N= ";
+        s += String(ptrial);
+        s += ")";
+        s += "<br>";
+        s += "Heat Index: ";
+        s += String(heat_index);
+        s += " &deg;C";
+        s += " (&Delta;(&mu;,c)= ";
+        s += String(heat_index_delta);
+        s += " &mu;= ";
+        s += String(heat_index_avg);
+        s += " N= ";
+        s += String(ptrial);
+        s += ")";
+        s += "<br>";
+        s += "Dew Point: ";
+        s += String(dew_point);
+        s += " &deg;C (&Delta;(&mu;,c)= ";
+        s += String(dew_point_delta);
+        s += " &mu;= ";
+        s += String(dew_point_avg);
+        s += " N= ";
+        s += String(ptrial);
+        s += ")";
+        s += "<br>";
+        s += "========================================";
+        s += "<br>";
+        s += "Air Quality Information";
+        s += "<br>";
+        if (haveCurrentReading) 
+        {
+          hasReading = true;
+          Serial.println("Data collection successful, sending to client.");
+          s += "PM1.0 Level: ";
+          s += String(pm10);
+          s += " &mu;g/m^3";
+          s += " (&Delta;(&mu;,c)= ";
+          s += String(pm10_delta);
+          s += " &mu;= ";
+          s += String(p10avg);
+          s += " N= ";
+          s += String(ptrial);
+          s += ")";
+          s += "<br>";
+          s += "PM2.5 Level: ";
+          s += String(pm25);
+          s += " &mu;g/m^3";
+          s += " (&Delta;(&mu;,c)= ";
+          s += String(pm25_delta);
+          s += " &mu;= ";
+          s += String(p25avg);
+          s += " N= ";
+          s += String(ptrial);
+          s += ")";
+          s += "<br>";
+          s += "PM10.0 Level: ";
+          s += String(pm100);
+          s += " &mu;g/m^3";
+          s += " (&Delta;(&mu;,c)= ";
+          s += String(pm100_delta);
+          s += " &mu;= ";
+          s += String(p100avg);
+          s += " N= ";
+          s += String(ptrial);
+          s += ")";
+          s += "<br>";
+          s += "========================================";
+          s += "<br>";
+          s += "Particles > 0.3 &mu;m / 0.1L air: ";
+          s += String(p03);
+          s += "<br>";
+          s += "Particles > 0.5 &mu;m / 0.1L air: ";
+          s += String(p05);
+          s += "<br>";
+          s += "Particles > 1.0 &mu;m / 0.1L air: ";
+          s += String(p10);
+          s += "<br>";
+          s += "Particles > 2.5 &mu;m / 0.1L air: ";
+          s += String(p25);
+          s += "<br>";
+          s += "Particles > 5.0 &mu;m / 0.1L air: ";
+          s += String(p50);
+          s += "<br>";
+          s += "Particles > 50 &mu;m / 0.1L air : ";
+          s += String(p100);
+          s += "<br>";
+          // begin warnings
+          
+          s += "<br><br>";
+          s += "<table style=\"background-color: #000; border: 2px solid #00ff00; padding: 1px;\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">";
+          s += "<tr>";
+          s += "<td style=\"padding:2px\">";
+          s += "<center>";
+          s += "<big>";
+          s += "<b>Pollution Advisory</b>";
+          s += "</big>";
+          s += "</center>";
+          s += "<br //>";
+          s += "<center>";
+          if (pm25 >= 500)
+            {
+              s += "<strong>&#9760;DANGER: POLLUTION LEVELS HAZARDOUS!</strong>";
+              s += "<br>";
+              s += "PM2.5 Levels are over 500.0 &mu;g/m^3";
+              s += "<br>";
+              s += "Do NOT go outdoors. If going outdoors, YOU risk:";
+              s += "<br>";
+              s += "<strong>- Serious aggravation of heart or lung disease and premature mortality in persons with cardiopulmonary disease and the elderly</strong>";
+              s += "<br>";
+              s += "<strong>- Serious risk of respiratory effects in general population. </strong>";
+            } 
+            else if (pm25 < 500 && pm25 >= 250)
+            {
+              s += "<strong>&#9763;CAUTION: POLLUTION LEVELS VERY UNHEALTHY</strong>";
+              s += "<br>";
+              s += "PM2.5 Levels are over 250.0 &mu;g/m^3";
+              s += "<br>";
+              s += "Do NOT go outdoors. If going outdoors, YOU risk:";
+              s += "<br>";
+              s += "<strong>- Significant aggravation of heart or lung disease and premature mortality in persons with cardiopulmonary disease and the elderly</strong>";
+              s += "<br>";
+              s += "<strong>- Significant increase in respiratory effects in general population. </strong>";
+            }
+            else if (pm25 < 250 && pm25 >= 150)
+            {
+              s += "<strong>&#9888;CAUTION: POLLUTION LEVELS UNHEALTHY</strong>";
+              s += "<br>";
+              s += "PM2.5 Levels are over 150.0 &mu;g/m^3";
+              s += "<br>";
+              s += "AVOID prolonged exertion outdoors. YOU risk:";
+              s += "<br>";
+              s += "<strong>- Increased aggravation of heart or lung disease and premature mortality in persons with cardiopulmonary disease and the elderly</strong>";
+              s += "<br>";
+              s += "<strong>- Increased respiratory effects in general population.</strong>";
+            }
+            else if (pm25 < 150 && pm25 >= 55)
+            {
+              s += "<strong>&#9888;CAUTION: POLLUTION LEVELS UNHEALTHY FOR SENSITIVE PEOPLE</strong>";
+              s += "<br>";
+              s += "PM2.5 Levels are over 55.0 &mu;g/m^3";
+              s += "<br>";
+              s += "AVOID prolonged exertion outdoors. YOU risk:";
+              s += "<br>";
+              s += "<strong>- Increased aggravation of heart or lung disease and premature mortality in persons with cardiopulmonary disease and the elderly</strong>";
+              s += "<br>";
+              s += "<strong>- Increased respiratory effects in general population.</strong>";
+            }
+            else
+            {
+              s += "<strong>&#128175;&#128293;POLLUTION LEVELS ARE HEALTHY&#128175;&#128293;</strong>";
+            }
+            s += "</center>";
+            s += "</td></tr></table>";
+    
+            // begin heatstroke warnings
+            s += "<br><br>";
+            s += "<table style=\"background-color: #000; border: 2px solid #00ff00; padding: 1px;\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">";
+            s += "<tr>";
+            s += "<td style=\"padding:2px\">";
+            s += "<center>";
+            s += "<big>";
+            s += "<b>Heatstroke Advisory</b>";
+            s += "</big>";
+            s += "</center>";
+            s += "<br //>";
+            s += "<center>";
+            if(heat_index >= 52.2222)
+            {
+              // extreme danger
+              s += "<strong>&#9888;SEVERE DANGER</strong>";
+              s += "<br>";
+              s += "Heatstroke or sunstroke likely.";
+              s += "<br>";
+              s += "Seek shelter <strong>IMMEDIATELY.</strong> Take sips of cold water, and turn on air conditioning. If indoors, <strong>REMAIN INDOORS.</strong>";
+            }
+            else if (heat_index < 52.2222 && heat_index >= 40)
+            {
+              // danger
+              s += "<strong>&#9888;DANGER</strong>";
+              s += "<br>";
+              s += "Heat exhaustion, sunstroke and muscle cramps likely.";
+              s += "<br>";
+              s += "Seek shelter as soon as possible. Take sips of cold water, and turn on air conditioning.";
+            }
+            else if (heat_index < 40.0 && heat_index >= 32.7778)
+            {
+              // extreme caution
+              s += "<strong>&#9888;EXTREME CAUTION</strong>";
+              s += "<br>";
+              s += "Sunstroke, muscle cramps and heat exhaustion possible.";
+              s += "<br>";
+              s += "Seek shelter within 2-3 hours. Take sips of cold water, and turn on air conditioning.";
+            }
+            else if (heat_index < 32.7778 && heat_index >= 26.6667)
+            {
+              // caution
+              s += "<strong>&#9888;CAUTION</strong>";
+              s += "<br>";
+              s += "Fatigue possible.";
+              s += "<br>";
+            }
+            else
+            {
+              s += "<strong>&#128175;&#128293;HEAT LEVELS ARE HEALTHY&#128175;&#128293;</strong>";
+              // no warnings
+            }
+            
+            s += "</center>";
+            s += "</td></tr></table>";
+        }
+        else
+        {
+          if (!hasReading)
+          {
+            s += "No data yet";
+            s += "<br>";
+          }
+          else
+          {
+            s += "PM1.0 Level: ";
+            s += String(pm10);
+            s += " &mu;g/m^3";
+            s += " (&Delta;(&mu;,c)= ";
+            s += String(pm10_delta);
+            s += " &mu;= ";
+            s += String(p10avg);
+            s += " N= ";
+            s += String(ptrial);
+            s += ")";
+            s += "<br>";
+            s += "PM2.5 Level: ";
+            s += String(pm25);
+            s += " &mu;g/m^3";
+            s += " (&Delta;(&mu;,c)= ";
+            s += String(pm25_delta);
+            s += " &mu;= ";
+            s += String(p25avg);
+            s += " N= ";
+            s += String(ptrial);
+            s += ")";
+            s += "<br>";
+            s += "PM10.0 Level: ";
+            s += String(pm100);
+            s += " &mu;g/m^3";
+            s += " (&Delta;(&mu;,c)= ";
+            s += String(pm100_delta);
+            s += " &mu;= ";
+            s += String(p100avg);
+            s += " N= ";
+            s += String(ptrial);
+            s += ")";
+            s += "<br>";
+            s += "========================================";
+            s += "<br>";
+            s += "Particles > 0.3 &mu;m / 0.1L air: ";
+            s += String(p03);
+            s += "<br>";
+            s += "Particles > 0.5 &mu;m / 0.1L air: ";
+            s += String(p05);
+            s += "<br>";
+            s += "Particles > 1.0 &mu;m / 0.1L air: ";
+            s += String(p10);
+            s += "<br>";
+            s += "Particles > 2.5 &mu;m / 0.1L air: ";
+            s += String(p25);
+            s += "<br>";
+            s += "Particles > 5.0 &mu;m / 0.1L air: ";
+            s += String(p50);
+            s += "<br>";
+            s += "Particles > 50 &mu;m / 0.1L air : ";
+            s += String(p100);
+            s += "<br>";
+    
+            // begin pollution warnings
+            s += "<br><br>";
+            s += "<table style=\"background-color: #000; border: 2px solid #00ff00; padding: 1px;\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">";
+            s += "<tr>";
+            s += "<td style=\"padding:2px\">";
+            s += "<center>";
+            s += "<big>";
+            s += "<b>Pollution Advisory</b>";
+            s += "</big>";
+            s += "</center>";
+            s += "<br //>";
+            s += "<center>";
+            if (pm25 >= 500)
+            {
+              s += "<strong>&#9760;DANGER: POLLUTION LEVELS HAZARDOUS!</strong>";
+              s += "<br>";
+              s += "PM2.5 Levels are over 500.0 &mu;g/m^3";
+              s += "<br>";
+              s += "Do NOT go outdoors. If going outdoors, YOU risk:";
+              s += "<br>";
+              s += "<strong>- Serious aggravation of heart or lung disease and premature mortality in persons with cardiopulmonary disease and the elderly</strong>";
+              s += "<br>";
+              s += "<strong>- Serious risk of respiratory effects in general population. </strong>";
+            } 
+            else if (pm25 < 500 && pm25 >= 250)
+            {
+              s += "<strong>&#9763;CAUTION: POLLUTION LEVELS VERY UNHEALTHY</strong>";
+              s += "<br>";
+              s += "PM2.5 Levels are over 250.0 &mu;g/m^3";
+              s += "<br>";
+              s += "Do NOT go outdoors. If going outdoors, YOU risk:";
+              s += "<br>";
+              s += "<strong>- Significant aggravation of heart or lung disease and premature mortality in persons with cardiopulmonary disease and the elderly</strong>";
+              s += "<br>";
+              s += "<strong>- Significant increase in respiratory effects in general population. </strong>";
+            }
+            else if (pm25 < 250 && pm25 >= 150)
+            {
+              s += "<strong>&#9888;CAUTION: POLLUTION LEVELS UNHEALTHY</strong>";
+              s += "<br>";
+              s += "PM2.5 Levels are over 150.0 &mu;g/m^3";
+              s += "<br>";
+              s += "AVOID prolonged exertion outdoors. YOU risk:";
+              s += "<br>";
+              s += "<strong>- Increased aggravation of heart or lung disease and premature mortality in persons with cardiopulmonary disease and the elderly</strong>";
+              s += "<br>";
+              s += "<strong>- Increased respiratory effects in general population.</strong>";
+            }
+            else if (pm25 < 150 && pm25 >= 55)
+            {
+              s += "<strong>&#9888;CAUTION: POLLUTION LEVELS UNHEALTHY FOR SENSITIVE PEOPLE</strong>";
+              s += "<br>";
+              s += "PM2.5 Levels are over 55.0 &mu;g/m^3";
+              s += "<br>";
+              s += "AVOID prolonged exertion outdoors. YOU risk:";
+              s += "<br>";
+              s += "<strong>- Increased aggravation of heart or lung disease and premature mortality in persons with cardiopulmonary disease and the elderly</strong>";
+              s += "<br>";
+              s += "<strong>- Increased respiratory effects in general population.</strong>";
+            }
+            else
+            {
+              s += "<strong>&#128175;&#128293;POLLUTION LEVELS ARE HEALTHY&#128175;&#128293;</strong>";
+            }
+            s += "</center>";
+            s += "</td></tr></table>";
+    
+            // begin heatstroke warnings
+            s += "<br><br>";
+            s += "<table style=\"background-color: #000; border: 2px solid #00ff00; padding: 1px;\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">";
+            s += "<tr>";
+            s += "<td style=\"padding:2px\">";
+            s += "<center>";
+            s += "<big>";
+            s += "<b>Heatstroke Advisory</b>";
+            s += "</big>";
+            s += "</center>";
+            s += "<br //>";
+            s += "<center>";
+            if(heat_index >= 52.2222)
+            {
+              // extreme danger
+              s += "<strong>&#9888;SEVERE DANGER</strong>";
+              s += "<br>";
+              s += "Heatstroke or sunstroke likely.";
+              s += "<br>";
+              s += "Seek shelter <strong>IMMEDIATELY.</strong> Take sips of cold water, and turn on air conditioning. If indoors, <strong>REMAIN INDOORS.</strong>";
+            }
+            else if (heat_index < 52.2222 && heat_index >= 40)
+            {
+              // danger
+              s += "<strong>&#9888;DANGER</strong>";
+              s += "<br>";
+              s += "Heat exhaustion, sunstroke and muscle cramps likely.";
+              s += "<br>";
+              s += "Seek shelter as soon as possible. Take sips of cold water, and turn on air conditioning.";
+            }
+            else if (heat_index < 40.0 && heat_index >= 32.7778)
+            {
+              // extreme caution
+              s += "<strong>&#9888;EXTREME CAUTION</strong>";
+              s += "<br>";
+              s += "Sunstroke, muscle cramps and heat exhaustion possible.";
+              s += "<br>";
+              s += "Seek shelter within 2-3 hours. Take sips of cold water, and turn on air conditioning.";
+            }
+            else if (heat_index < 32.7778 && heat_index >= 26.6667)
+            {
+              // caution
+              s += "<strong>&#9888;CAUTION</strong>";
+              s += "<br>";
+              s += "Fatigue possible.";
+              s += "<br>";
+            }
+            else
+            {
+              s += "<strong>&#128175;&#128293;HEAT LEVELS ARE HEALTHY&#128175;&#128293;</strong>";
+              // no warnings
+            }
+            
+            s += "</center>";
+            s += "</td></tr></table>";
+            
+          }
+        }
+        s += "<br>";
+        s += "Estimated time to next log entry:<br>";
+        s += String(minutes_left);
+        s += " minutes (";
+        s += numsamples;
+        s += " samples)";
+        s += "<br><br>This page last updated at:";
+        s += "<p id=\"time\"></p>";
+        s += "<script>";
+        s += "document.getElementById(\"time\").innerHTML = Date();";
+        s += "</script>";
+        s += "<a href=\"192.168.4.1/about\">About AirAdvisor</a><br>";
+        s += "<a href=\"192.168.4.1/manage\">Appliance Control Settings</a>";
+      }
+      else if (val == -8)
+      {
+        // offer a management page.
+        Serial.println("Management page requested by client.");
+        s += "<title>Management</title>";
+        s += "<strong>AirAdviser Manager</strong><br>";
+        // D6
+        s += "OUTPUT ";
+        s += String(IOT_CONTROL_PORT);
+        s += "<br>Turn ON if:<br>";
+        s += "<form action=\"/control.red\">";
+        s += "Temp >=:<br>";
+        s += "<input type=\"text\" name=\"tmp\"><br>";
+        s += "RH >=: <br>";
+        s += "<input type=\"text\" name=\"rh\"><br>";
+        s += "HI >=: <br>";
+        s += "<input type=\"text\" name=\"hi\"><br>";
+        s += "DP >=: <br>";
+        s += "<input type=\"text\" name=\"dp\"><br>";
+        s += "PM 2.5 >=: <br>";
+        s += "<input type=\"text\" name=\"pm\"><br>";
+        s += "<select name=\"logic\">";
+        s += "<option value=\"1\">AND</option>";
+        s += "<option value=\"0\">OR</option>";
+        s += "</select>";
+        // D3
+        s += "<br>";
+        s += "OUTPUT ";
+        s += String(IOT_CONTROL_PORT_2);
+        s += "<br>Turn ON if:<br>";
+        s += "Temp >=:<br>";
+        s += "<input type=\"text\" name=\"tmp2\"><br>";
+        s += "RH >=: <br>";
+        s += "<input type=\"text\" name=\"rh2\"><br>";
+        s += "HI >=: <br>";
+        s += "<input type=\"text\" name=\"hi2\"><br>";
+        s += "DP >=: <br>";
+        s += "<input type=\"text\" name=\"dp2\"><br>";
+        s += "PM 2.5 >=: <br>";
+        s += "<input type=\"text\" name=\"pm2\"><br>";
+        s += "<select name=\"logic2\">";
+        s += "<option value=\"1\">AND</option>";
+        s += "<option value=\"0\">OR</option>";
+        s += "</select>";
+        // submit
+        s += "<input type=\"submit\" value=\"Set Triggers\">";
+        s += "</form>";
+        s += "<br><br>CURRENT SETTINGS (";
+        s += String(IOT_CONTROL_PORT);
+        s += ")";
+        s += "<br>==========================<br>Temp Threshold: ";
+        s += String(tmp_threshold);
+        s += "<br>RH Threshold: ";
+        s += String(rh_threshold);
+        s += "<br>HI Threshold: ";
+        s += String(hi_threshold);
+        s += "<br>DP Threshold: ";
+        s += String(dp_threshold);
+        s += "<br>PM 2.5 Threshold: ";
+        s += String(pm25_threshold);
+        s += "<br>Logic: ";
+        if (logic)
+        {
+          s += " AND";
+        }
+        else
+        {
+          s += " OR";
+        }
+        s += "<br><br>CURRENT SETTINGS (";
+        s += String(IOT_CONTROL_PORT_2);
+        s += ")";
+        s += "<br>==========================<br>Temp Threshold: ";
+        s += String(tmp_threshold2);
+        s += "<br>RH Threshold: ";
+        s += String(rh_threshold2);
+        s += "<br>HI Threshold: ";
+        s += String(hi_threshold2);
+        s += "<br>DP Threshold: ";
+        s += String(dp_threshold2);
+        s += "<br>PM 2.5 Threshold: ";
+        s += String(pm25_threshold2);
+        s += "<br>Logic: ";
+        if (logic2)
+        {
+          s += " AND";
+        }
+        else
+        {
+          s += " OR";
+        }
+        s += "<br><br>";
+        s += "====[HEAT INDEX SAFETY GUIDE]====";
+        s += "<br><font color=\"red\"> >= 52.2 &deg;C: EXTREME DANGER (heatstroke/sunstroke likely)</font>";
+        s += "<br><font color=\"orange\"> 40 - 52.2 &deg;C: DANGER (sunstroke, muscle cramps, heat exhaustion likely)</font>";
+        s += "<br><font color=\"yellow\"> 32.7 - 40 &deg;C: EXTREME CAUTION (sunstroke, muscle cramps, heat exhaustion possible)</font>";
+        s += "<br><font color=\"yellow\"> 26.6 - 32.7 &deg;C: CAUTION (fatigue possible)</font>";
+        s += "<br><font color=\"lime\"> < 26.6 &deg;C: SAFE</font>";
+        s += "<br><br>";
+        s += "====[DEW POINT COMFORT/SAFETY GUIDE]====";
+        s += "<br><font color=\"red\"> >26 &deg;C: Severely high. Even deadly for asthma patients.</font>";
+        s += "<br><font color=\"orange\"> 24 - 26 &deg;C: Extremely uncomfortable, fairly oppressive</font>";
+        s += "<br><font color=\"orange\"> 21 - 24 &deg;C: Very humid, quite uncomfortable</font>";
+        s += "<br><font color=\"yellow\"> 18 - 21 &deg;C: Somewhat uncomfortable for most people at upper edge</font>";
+        s += "<br><font color=\"yellow\"> 16 - 18 &deg;C: OK for most, but all perceive the humidity at upper edge</font>";
+        s += "<br><font color=\"lime\"> 13 - 16 &deg;C: Comfortable</font>";
+        s += "<br><font color=\"lime\"> 10 - 12 &deg;C: Very comfortable</font>";
+        s += "<br><font color=\"red\"> <10 &deg;C: Sorta dry</font>";
+        s += "<br><br>";
+      }
+      else if (val == -9)
+      {
+        // parse the management page information.
+        String eq = req;
+        String yiff = getValue(eq, '?', 1);
+        String part1 = getValue(yiff, '&', 0);
+        String part2 = getValue(eq, '&', 1);
+        String part3 = getValue(eq, '&', 2);
+        String part4 = getValue(eq, '&', 3);
+        String part5 = getValue(eq, '&', 4);
+        String part6 = getValue(eq, '&', 5);
+        String part7 = getValue(eq, '&', 6);
+        String part8 = getValue(eq, '&', 7);
+        String part9 = getValue(eq, '&', 8);
+        String part10 = getValue(eq, '&', 9);
+        String part11= getValue(eq, '&', 10);
+        String part12 = getValue(eq, '&', 11);
+    
+    
+        //Serial.println(part6);
+    
+        String part_filtered1 = getValue(part1, '=', 1);
+        String part_filtered2 = getValue(part2, '=', 1);
+        String part_filtered3 = getValue(part3, '=', 1);
+        String part_filtered4 = getValue(part4, '=', 1);
+        String part_filtered5 = getValue(part5, '=', 1);
+        String part_filtered6 = getValue(part6, '=', 1);
+    
+        String part_filtered7 = getValue(part7, '=', 1);
+        String part_filtered8 = getValue(part8, '=', 1);
+        String part_filtered9 = getValue(part9, '=', 1);
+        String part_filtered10 = getValue(part10, '=', 1);
+        String part_filtered11 = getValue(part11, '=', 1);
+        String part_filtered12 = getValue(getValue(part12, '=', 1), 'H', 0);
+    
+        tmp_threshold = (float)stringToDouble(part_filtered1);
+        rh_threshold = (float)stringToDouble(part_filtered2);
+        hi_threshold = (float)stringToDouble(part_filtered3);
+        dp_threshold = (float)stringToDouble(part_filtered4);
+        pm25_threshold = (float)stringToDouble(part_filtered5);
+        logic = (float)part_filtered6.toInt();
+    
+        tmp_threshold2 = (float)stringToDouble(part_filtered7);
+        rh_threshold2 = (float)stringToDouble(part_filtered8);
+        hi_threshold2 = (float)stringToDouble(part_filtered9);
+        dp_threshold2 = (float)stringToDouble(part_filtered10);
+        pm25_threshold2 = (float)stringToDouble(part_filtered11);
+        logic2 = (float)part_filtered12.toInt();
+    
+        writeEEPROM(0, (int)tmp_threshold);
+        writeEEPROM(1, (int)rh_threshold);
+        writeEEPROM(2, (int)hi_threshold);
+        writeEEPROM(3, (int)dp_threshold);
+        writeEEPROM(4, (int)pm25_threshold);
+        writeEEPROM(5, logic);
+    
+        writeEEPROM(6, (int)tmp_threshold2);
+        writeEEPROM(7, (int)rh_threshold2);
+        writeEEPROM(8, (int)hi_threshold2);
+        writeEEPROM(9, (int)dp_threshold2);
+        writeEEPROM(10, (int)pm25_threshold2);
+        writeEEPROM(11, logic2);
+    
+        s += "Settings confirmed. <br><br><br><a href=\"192.168.4.1/read\">Read sensor data</a> ";
+        Serial.println(tmp_threshold);
+        Serial.println(rh_threshold);
+        Serial.println(hi_threshold);
+        Serial.println(dp_threshold);
+        Serial.println(pm25_threshold);
+        Serial.println(logic);
+        Serial.println();
+        Serial.println(tmp_threshold2);
+        Serial.println(rh_threshold2);
+        Serial.println(hi_threshold2);
+        Serial.println(dp_threshold2);
+        Serial.println(pm25_threshold2);
+        Serial.println(logic2);
+        
       }
       else
       {
-        s += "PM1.0 Level: ";
-      	s += String(pm10);
-      	s += " &mu;g/m^3";
-      	s += " (&Delta;(&mu;,c)= ";
-      	s += String(pm10_delta);
-     	  s += " &mu;= ";
-      	s += String(p10avg);
-      	s += " N= ";
-      	s += String(ptrial);
-      	s += ")";
-      	s += "<br>";
-      	s += "PM2.5 Level: ";
-      	s += String(pm25);
-      	s += " &mu;g/m^3";
-      	s += " (&Delta;(&mu;,c)= ";
-      	s += String(pm25_delta);
-      	s += " &mu;= ";
-      	s += String(p25avg);
-      	s += " N= ";
-      	s += String(ptrial);
-      	s += ")";
-      	s += "<br>";
-      	s += "PM10.0 Level: ";
-      	s += String(pm100);
-      	s += " &mu;g/m^3";
-      	s += " (&Delta;(&mu;,c)= ";
-      	s += String(pm100_delta);
-      	s += " &mu;= ";
-      	s += String(p100avg);
-      	s += " N= ";
-      	s += String(ptrial);
-      	s += ")";
-      	s += "<br>";
-        s += "========================================";
+        Serial.println("404 page requested by client.");
+        s += "  Hi!<br>";
+        s += "I'm Cloud, your personal safeguard for<br>";
+        s += "environmental safety. With my instincts,<br>";
+        s += "I can sniff out invisible dangers in the<br>";
+        s += "air, such as heatstroke and keep you safe.<br>";
+        s += "\\<br>&nbsp;\\<br>&nbsp;&nbsp;\\<br>";
+        s += "<img src=\"";
+        s += cloud_fox;
+        s += "\">";
+        s += "ERROR 404 : Page Not Found.";
         s += "<br>";
-        s += "Particles > 0.3 &mu;m / 0.1L air: ";
-        s += String(p03);
         s += "<br>";
-        s += "Particles > 0.5 &mu;m / 0.1L air: ";
-        s += String(p05);
-        s += "<br>";
-        s += "Particles > 1.0 &mu;m / 0.1L air: ";
-        s += String(p10);
-        s += "<br>";
-        s += "Particles > 2.5 &mu;m / 0.1L air: ";
-        s += String(p25);
-        s += "<br>";
-        s += "Particles > 5.0 &mu;m / 0.1L air: ";
-        s += String(p50);
-        s += "<br>";
-        s += "Particles > 50 &mu;m / 0.1L air : ";
-        s += String(p100);
-        s += "<br>";
-
-        // begin pollution warnings
-        s += "<br><br>";
-        s += "<table style=\"background-color: #000; border: 2px solid #00ff00; padding: 1px;\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">";
-        s += "<tr>";
-        s += "<td style=\"padding:2px\">";
-        s += "<center>";
-        s += "<big>";
-        s += "<b>Pollution Advisory</b>";
-        s += "</big>";
-        s += "</center>";
-        s += "<br //>";
-        s += "<center>";
-        if (pm25 >= 500)
-        {
-          s += "<strong>&#9760;DANGER: POLLUTION LEVELS HAZARDOUS!</strong>";
-          s += "<br>";
-          s += "PM2.5 Levels are over 500.0 &mu;g/m^3";
-          s += "<br>";
-          s += "Do NOT go outdoors. If going outdoors, YOU risk:";
-          s += "<br>";
-          s += "<strong>- Serious aggravation of heart or lung disease and premature mortality in persons with cardiopulmonary disease and the elderly</strong>";
-          s += "<br>";
-          s += "<strong>- Serious risk of respiratory effects in general population. </strong>";
-        } 
-        else if (pm25 < 500 && pm25 >= 250)
-        {
-          s += "<strong>&#9763;CAUTION: POLLUTION LEVELS VERY UNHEALTHY</strong>";
-          s += "<br>";
-          s += "PM2.5 Levels are over 250.0 &mu;g/m^3";
-          s += "<br>";
-          s += "Do NOT go outdoors. If going outdoors, YOU risk:";
-          s += "<br>";
-          s += "<strong>- Significant aggravation of heart or lung disease and premature mortality in persons with cardiopulmonary disease and the elderly</strong>";
-          s += "<br>";
-          s += "<strong>- Significant increase in respiratory effects in general population. </strong>";
-        }
-        else if (pm25 < 250 && pm25 >= 150)
-        {
-          s += "<strong>&#9888;CAUTION: POLLUTION LEVELS UNHEALTHY</strong>";
-          s += "<br>";
-          s += "PM2.5 Levels are over 150.0 &mu;g/m^3";
-          s += "<br>";
-          s += "AVOID prolonged exertion outdoors. YOU risk:";
-          s += "<br>";
-          s += "<strong>- Increased aggravation of heart or lung disease and premature mortality in persons with cardiopulmonary disease and the elderly</strong>";
-          s += "<br>";
-          s += "<strong>- Increased respiratory effects in general population.</strong>";
-        }
-        else if (pm25 < 150 && pm25 >= 55)
-        {
-          s += "<strong>&#9888;CAUTION: POLLUTION LEVELS UNHEALTHY FOR SENSITIVE PEOPLE</strong>";
-          s += "<br>";
-          s += "PM2.5 Levels are over 55.0 &mu;g/m^3";
-          s += "<br>";
-          s += "AVOID prolonged exertion outdoors. YOU risk:";
-          s += "<br>";
-          s += "<strong>- Increased aggravation of heart or lung disease and premature mortality in persons with cardiopulmonary disease and the elderly</strong>";
-          s += "<br>";
-          s += "<strong>- Increased respiratory effects in general population.</strong>";
-        }
-        else
-        {
-          s += "<strong>&#128175;&#128293;POLLUTION LEVELS ARE HEALTHY&#128175;&#128293;</strong>";
-        }
-        s += "</center>";
-        s += "</td></tr></table>";
-
-        // begin heatstroke warnings
-        s += "<br><br>";
-        s += "<table style=\"background-color: #000; border: 2px solid #00ff00; padding: 1px;\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">";
-        s += "<tr>";
-        s += "<td style=\"padding:2px\">";
-        s += "<center>";
-        s += "<big>";
-        s += "<b>Heatstroke Advisory</b>";
-        s += "</big>";
-        s += "</center>";
-        s += "<br //>";
-        s += "<center>";
-        if(heat_index >= 52.2222)
-        {
-          // extreme danger
-          s += "<strong>&#9888;SEVERE DANGER</strong>";
-          s += "<br>";
-          s += "Heatstroke or sunstroke likely.";
-          s += "<br>";
-          s += "Seek shelter <strong>IMMEDIATELY.</strong> Take sips of cold water, and turn on air conditioning. If indoors, <strong>REMAIN INDOORS.</strong>";
-        }
-        else if (heat_index < 52.2222 && heat_index >= 40)
-        {
-          // danger
-          s += "<strong>&#9888;DANGER</strong>";
-          s += "<br>";
-          s += "Heat exhaustion, sunstroke and muscle cramps likely.";
-          s += "<br>";
-          s += "Seek shelter as soon as possible. Take sips of cold water, and turn on air conditioning.";
-        }
-        else if (heat_index < 40.0 && heat_index >= 32.7778)
-        {
-          // extreme caution
-          s += "<strong>&#9888;EXTREME CAUTION</strong>";
-          s += "<br>";
-          s += "Sunstroke, muscle cramps and heat exhaustion possible.";
-          s += "<br>";
-          s += "Seek shelter within 2-3 hours. Take sips of cold water, and turn on air conditioning.";
-        }
-        else if (heat_index < 32.7778 && heat_index >= 26.6667)
-        {
-          // caution
-          s += "<strong>&#9888;CAUTION</strong>";
-          s += "<br>";
-          s += "Fatigue possible.";
-          s += "<br>";
-        }
-        else
-        {
-          s += "<strong>&#128175;&#128293;HEAT LEVELS ARE HEALTHY&#128175;&#128293;</strong>";
-          // no warnings
-        }
-        
-        s += "</center>";
-        s += "</td></tr></table>";
-        
+        s += "<a href=\"192.168.4.1/read\">Read sensor data</a>";
       }
-    }
-    s += "<br>";
-    s += "Estimated time to next log entry:<br>";
-    s += String(minutes_left);
-    s += " minutes (";
-    s += numsamples;
-    s += " samples)";
-    s += "<br><br>This page last updated at:";
-    s += "<p id=\"time\"></p>";
-    s += "<script>";
-    s += "document.getElementById(\"time\").innerHTML = Date();";
-    s += "</script>";
-    s += "<a href=\"192.168.4.1/about\">About AirAdvisor</a><br>";
-    s += "<a href=\"192.168.4.1/manage\">Appliance Control Settings</a>";
-  }
-  else if (val == -8)
-  {
-    // offer a management page.
-    Serial.println("Management page requested by client.");
-    s += "<title>Management</title>";
-    s += "<strong>AirAdviser Manager</strong><br>";
-    // D6
-    s += "OUTPUT ";
-    s += String(IOT_CONTROL_PORT);
-    s += "<br>Turn ON if:<br>";
-    s += "<form action=\"/control.red\">";
-    s += "Temp >=:<br>";
-    s += "<input type=\"text\" name=\"tmp\"><br>";
-    s += "RH >=: <br>";
-    s += "<input type=\"text\" name=\"rh\"><br>";
-    s += "HI >=: <br>";
-    s += "<input type=\"text\" name=\"hi\"><br>";
-    s += "DP >=: <br>";
-    s += "<input type=\"text\" name=\"dp\"><br>";
-    s += "PM 2.5 >=: <br>";
-    s += "<input type=\"text\" name=\"pm\"><br>";
-    s += "<select name=\"logic\">";
-    s += "<option value=\"1\">AND</option>";
-    s += "<option value=\"0\">OR</option>";
-    s += "</select>";
-    // D3
-    s += "<br>";
-    s += "OUTPUT ";
-    s += String(IOT_CONTROL_PORT_2);
-    s += "<br>Turn ON if:<br>";
-    s += "Temp >=:<br>";
-    s += "<input type=\"text\" name=\"tmp2\"><br>";
-    s += "RH >=: <br>";
-    s += "<input type=\"text\" name=\"rh2\"><br>";
-    s += "HI >=: <br>";
-    s += "<input type=\"text\" name=\"hi2\"><br>";
-    s += "DP >=: <br>";
-    s += "<input type=\"text\" name=\"dp2\"><br>";
-    s += "PM 2.5 >=: <br>";
-    s += "<input type=\"text\" name=\"pm2\"><br>";
-    s += "<select name=\"logic2\">";
-    s += "<option value=\"1\">AND</option>";
-    s += "<option value=\"0\">OR</option>";
-    s += "</select>";
-    // submit
-    s += "<input type=\"submit\" value=\"Set Triggers\">";
-    s += "</form>";
-    s += "<br><br>CURRENT SETTINGS (";
-    s += String(IOT_CONTROL_PORT);
-    s += ")";
-    s += "<br>==========================<br>Temp Threshold: ";
-    s += String(tmp_threshold);
-    s += "<br>RH Threshold: ";
-    s += String(rh_threshold);
-    s += "<br>HI Threshold: ";
-    s += String(hi_threshold);
-    s += "<br>DP Threshold: ";
-    s += String(dp_threshold);
-    s += "<br>PM 2.5 Threshold: ";
-    s += String(pm25_threshold);
-    s += "<br>Logic: ";
-    if (logic)
-    {
-      s += " AND";
-    }
-    else
-    {
-      s += " OR";
-    }
-    s += "<br><br>CURRENT SETTINGS (";
-    s += String(IOT_CONTROL_PORT_2);
-    s += ")";
-    s += "<br>==========================<br>Temp Threshold: ";
-    s += String(tmp_threshold2);
-    s += "<br>RH Threshold: ";
-    s += String(rh_threshold2);
-    s += "<br>HI Threshold: ";
-    s += String(hi_threshold2);
-    s += "<br>DP Threshold: ";
-    s += String(dp_threshold2);
-    s += "<br>PM 2.5 Threshold: ";
-    s += String(pm25_threshold2);
-    s += "<br>Logic: ";
-    if (logic2)
-    {
-      s += " AND";
-    }
-    else
-    {
-      s += " OR";
-    }
-    s += "<br><br>";
-    s += "====[HEAT INDEX SAFETY GUIDE]====";
-    s += "<br><font color=\"red\"> >= 52.2 &deg;C: EXTREME DANGER (heatstroke/sunstroke likely)</font>";
-    s += "<br><font color=\"orange\"> 40 - 52.2 &deg;C: DANGER (sunstroke, muscle cramps, heat exhaustion likely)</font>";
-    s += "<br><font color=\"yellow\"> 32.7 - 40 &deg;C: EXTREME CAUTION (sunstroke, muscle cramps, heat exhaustion possible)</font>";
-    s += "<br><font color=\"yellow\"> 26.6 - 32.7 &deg;C: CAUTION (fatigue possible)</font>";
-    s += "<br><font color=\"lime\"> < 26.6 &deg;C: SAFE</font>";
-    s += "<br><br>";
-    s += "====[DEW POINT COMFORT/SAFETY GUIDE]====";
-    s += "<br><font color=\"red\"> >26 &deg;C: Severely high. Even deadly for asthma patients.</font>";
-    s += "<br><font color=\"orange\"> 24 - 26 &deg;C: Extremely uncomfortable, fairly oppressive</font>";
-    s += "<br><font color=\"orange\"> 21 - 24 &deg;C: Very humid, quite uncomfortable</font>";
-    s += "<br><font color=\"yellow\"> 18 - 21 &deg;C: Somewhat uncomfortable for most people at upper edge</font>";
-    s += "<br><font color=\"yellow\"> 16 - 18 &deg;C: OK for most, but all perceive the humidity at upper edge</font>";
-    s += "<br><font color=\"lime\"> 13 - 16 &deg;C: Comfortable</font>";
-    s += "<br><font color=\"lime\"> 10 - 12 &deg;C: Very comfortable</font>";
-    s += "<br><font color=\"red\"> <10 &deg;C: Sorta dry</font>";
-    s += "<br><br>";
-  }
-  else if (val == -9)
-  {
-    // parse the management page information.
-    String eq = req;
-    String yiff = getValue(eq, '?', 1);
-    String part1 = getValue(yiff, '&', 0);
-    String part2 = getValue(eq, '&', 1);
-    String part3 = getValue(eq, '&', 2);
-    String part4 = getValue(eq, '&', 3);
-    String part5 = getValue(eq, '&', 4);
-    String part6 = getValue(eq, '&', 5);
-    String part7 = getValue(eq, '&', 6);
-    String part8 = getValue(eq, '&', 7);
-    String part9 = getValue(eq, '&', 8);
-    String part10 = getValue(eq, '&', 9);
-    String part11= getValue(eq, '&', 10);
-    String part12 = getValue(eq, '&', 11);
-
-
-    //Serial.println(part6);
-
-    String part_filtered1 = getValue(part1, '=', 1);
-    String part_filtered2 = getValue(part2, '=', 1);
-    String part_filtered3 = getValue(part3, '=', 1);
-    String part_filtered4 = getValue(part4, '=', 1);
-    String part_filtered5 = getValue(part5, '=', 1);
-    String part_filtered6 = getValue(part6, '=', 1);
-
-    String part_filtered7 = getValue(part7, '=', 1);
-    String part_filtered8 = getValue(part8, '=', 1);
-    String part_filtered9 = getValue(part9, '=', 1);
-    String part_filtered10 = getValue(part10, '=', 1);
-    String part_filtered11 = getValue(part11, '=', 1);
-    String part_filtered12 = getValue(getValue(part12, '=', 1), 'H', 0);
-
-    tmp_threshold = (float)stringToDouble(part_filtered1);
-    rh_threshold = (float)stringToDouble(part_filtered2);
-    hi_threshold = (float)stringToDouble(part_filtered3);
-    dp_threshold = (float)stringToDouble(part_filtered4);
-    pm25_threshold = (float)stringToDouble(part_filtered5);
-    logic = (float)part_filtered6.toInt();
-
-    tmp_threshold2 = (float)stringToDouble(part_filtered7);
-    rh_threshold2 = (float)stringToDouble(part_filtered8);
-    hi_threshold2 = (float)stringToDouble(part_filtered9);
-    dp_threshold2 = (float)stringToDouble(part_filtered10);
-    pm25_threshold2 = (float)stringToDouble(part_filtered11);
-    logic2 = (float)part_filtered12.toInt();
-
-    writeEEPROM(0, (int)tmp_threshold);
-    writeEEPROM(1, (int)rh_threshold);
-    writeEEPROM(2, (int)hi_threshold);
-    writeEEPROM(3, (int)dp_threshold);
-    writeEEPROM(4, (int)pm25_threshold);
-    writeEEPROM(5, logic);
-
-    writeEEPROM(6, (int)tmp_threshold2);
-    writeEEPROM(7, (int)rh_threshold2);
-    writeEEPROM(8, (int)hi_threshold2);
-    writeEEPROM(9, (int)dp_threshold2);
-    writeEEPROM(10, (int)pm25_threshold2);
-    writeEEPROM(11, logic2);
-
-    s += "Settings confirmed. <br><br><br><a href=\"192.168.4.1/read\">Read sensor data</a> ";
-    Serial.println(tmp_threshold);
-    Serial.println(rh_threshold);
-    Serial.println(hi_threshold);
-    Serial.println(dp_threshold);
-    Serial.println(pm25_threshold);
-    Serial.println(logic);
-    Serial.println();
-    Serial.println(tmp_threshold2);
-    Serial.println(rh_threshold2);
-    Serial.println(hi_threshold2);
-    Serial.println(dp_threshold2);
-    Serial.println(pm25_threshold2);
-    Serial.println(logic2);
+      s += "</html>\n";
     
+      // Send the response to the client
+      client.print(s);
+      delay(1);
+      Serial.println("Client disconnected");
   }
-  else
-  {
-    Serial.println("404 page requested by client.");
-    s += "  Hi!<br>";
-    s += "I'm Cloud, your personal safeguard for<br>";
-    s += "environmental safety. With my instincts,<br>";
-    s += "I can sniff out invisible dangers in the<br>";
-    s += "air, such as heatstroke and keep you safe.<br>";
-    s += "\\<br>&nbsp;\\<br>&nbsp;&nbsp;\\<br>";
-    s += "<img src=\"";
-    s += cloud_fox;
-    s += "\">";
-    s += "ERROR 404 : Page Not Found.";
-    s += "<br>";
-    s += "<br>";
-    s += "<a href=\"192.168.4.1/read\">Read sensor data</a>";
-  }
-  s += "</html>\n";
-
-  // Send the response to the client
-  client.print(s);
-  delay(1);
-  Serial.println("Client disconnected");
-
-  // The client will actually be disconnected 
-  // when the function returns and 'client' object is detroyed
 }
 
 void setupWiFi()
