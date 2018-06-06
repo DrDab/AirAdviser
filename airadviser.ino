@@ -564,17 +564,13 @@ void runServer()
 {
   // Check if a client has connected
   WiFiClient client = server.available();
-  if (!client)
-  {
-    return;
-  }
-  else
+  if (client)
   {
       writeSerial = false;
-      Serial.println("Ready");
+      // Serial.println("Ready");
       // Read the first line of the request
       String req = client.readStringUntil('\r');
-      Serial.println(req);
+      // Serial.println(req);
       client.flush();
     
     
@@ -808,7 +804,7 @@ void runServer()
         if (haveCurrentReading) 
         {
           hasReading = true;
-          Serial.println("Data collection successful, sending to client.");
+          // Serial.println("Data collection successful, sending to client.");
           s += "PM1.0 Level: ";
           s += String(pm10);
           s += " &mu;g/m^3";
@@ -1191,7 +1187,7 @@ void runServer()
       else if (val == -8)
       {
         // offer a management page.
-        Serial.println("Management page requested by client.");
+        // Serial.println("Management page requested by client.");
         s += "<title>Management</title>";
         s += "<strong>AirAdviser Manager</strong><br>";
         // D6
@@ -1379,7 +1375,7 @@ void runServer()
       }
       else
       {
-        Serial.println("404 page requested by client.");
+        // Serial.println("404 page requested by client.");
         s += "  Hi!<br>";
         s += "I'm Cloud, your personal safeguard for<br>";
         s += "environmental safety. With my instincts,<br>";
@@ -1399,7 +1395,7 @@ void runServer()
       // Send the response to the client
       client.print(s);
       delay(1);
-      Serial.println("Client disconnected");
+      // Serial.println("Client disconnected");
   }
 }
 
