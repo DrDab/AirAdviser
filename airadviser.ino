@@ -704,7 +704,7 @@ void runServer()
     
       if (CSVflush)
       {
-        Serial.println("CSV Log requested.");
+        // Serial.println("CSV Log requested.");
         client.print(tmpStr);
         client.flush();
         delay(1);
@@ -728,7 +728,7 @@ void runServer()
       s += "</head>";
       if (val >= 0)
       {
-        Serial.println("About page requested by client.");
+        // Serial.println("About page requested by client.");
         s += "<title>About</title>";
         s += "<strong>About</strong><br> ";
         s += "AirAdviser Beta version 0.3-tide-pod by Victor, Leodis and Carter";
@@ -744,7 +744,7 @@ void runServer()
       }
       else if (val == -2)
       { 
-        Serial.println("Reading page requested by client.");
+        // Serial.println("Reading page requested by client.");
         s += "<meta http-equiv=\"refresh\" content=\"2\" >";
         s += "<title>Sensor Reading</title>";
         s += "<strong>Sensor Data</strong>";
