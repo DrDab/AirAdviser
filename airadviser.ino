@@ -216,7 +216,7 @@ uint16_t numremaining = samplesperinterval;
 uint8_t minutes_left = 15;
 
 // number of trials (increase by 1 each time we get 1050 readings. also the position to write to in the array.
-uint16_t ptrial = 0;
+uint16_t ptrial = 0; // 0
 
 boolean writeSerial = true;
 
@@ -254,22 +254,24 @@ void readTemps()
     chk = DHT11.read(DHT11_PIN);
     if (chk == DHTLIB_OK)
     {
-        Serial.println("DHT11: OK"); 
+        //       Serial.println("DHT11: OK"); 
+        temp_c = DHT11.temperature;
+        humidity = DHT11.humidity;
     }
     else if (chk == DHTLIB_ERROR_CHECKSUM)
     {
-    //    Serial.println("DHT11: Checksum error"); 
-        dhtREAD = false;
+        //    Serial.println("DHT11: Checksum error"); 
+        // dhtREAD = false;
     }
     else if (chk == DHTLIB_ERROR_TIMEOUT)
     {
-    //    Serial.println("DHT11: Time out error"); 
-        dhtREAD = false;
+       //     Serial.println("DHT11: Time out error"); 
+       // dhtREAD = false;
     }
     else
     {
-    //    Serial.println("DHT11: Unknown error"); 
-        dhtREAD = false;
+      //    Serial.println("DHT11: Unknown error"); 
+      //  dhtREAD = false;
     }
 }
 
@@ -300,14 +302,8 @@ void readAir()
     
     hasReading = true;
 
-    if (dhtREAD)
-    {
-      // read the value from the DHT11.
-      temp_c = DHT11.temperature;
-      temp_delta = (float) temp_c - temp_avg;
-      humidity = DHT11.humidity;
-      humidity_delta = (float) humidity - humidity_avg;
-    }
+    temp_delta = (float) temp_c - temp_avg; 
+    humidity_delta = (float) humidity - humidity_avg;
     
     // calculate the delta values.
     pm10_delta = (float)data.pm10_standard - p10avg;
@@ -322,9 +318,9 @@ void readAir()
     dew_point = dew_point_get(temp_c, humidity);
     dew_point_delta = dew_point - dew_point_avg;
 
-    if (ptrial == 672)
+    if (ptrial == 671)
     {
-      // reset every 672 trials to prevent integer overflow and array fillup.
+      // reset every 671 trials to prevent array nonexistant access.
       numsamples = 0;
       p10accum = 0;
       p25accum = 0;
@@ -555,9 +551,9 @@ double stringToDouble(String& str)
 
 void loop() 
 {
+  runServer();
   readTemps();
   readAir();
-  runServer();
 }
 
 void runServer()
