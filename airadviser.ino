@@ -170,14 +170,14 @@ float heat_index_delta = 0.0;
 float dew_point_delta = 0.0;
 
 // values for average calculation
-uint32_t p10accum = 0;  float p10avg = 0.0;
-uint32_t p25accum = 0;  float p25avg = 0.0;
-uint32_t p100accum = 0; float p100avg = 0.0;
+static uint32_t p10accum = 0; static float p10avg = 0.0;
+static uint32_t p25accum = 0; static float p25avg = 0.0;
+static uint32_t p100accum = 0; static float p100avg = 0.0;
 
-uint32_t temp_accum = 0;     float temp_avg = 0.0;
-uint32_t humidity_accum = 0; float humidity_avg = 0.0;
-float heat_index_accum = 0.0;  float heat_index_avg = 0.0;
-float dew_point_accum = 0.0; float dew_point_avg = 0.0;
+static uint32_t temp_accum = 0; static float temp_avg = 0.0;
+static uint32_t humidity_accum = 0; static float humidity_avg = 0.0;
+static float heat_index_accum = 0.0; static float heat_index_avg = 0.0;
+static float dew_point_accum = 0.0; static float dew_point_avg = 0.0;
 
 // array of samples taken each 15 minutes, stored for 7 days.
 static uint16_t trials_pm10[672];
@@ -199,15 +199,15 @@ static float trials_dew_point[672];
 //    12
 // 18.75 * 8 = 150 samples added
 // 900 + 150 = 1050 samples total
-uint16_t samplesperinterval = 1050;
-uint16_t numsamples = 0;
-uint16_t numremaining = samplesperinterval;
+static uint16_t samplesperinterval = 1050;
+static uint16_t numsamples = 0;
+static uint16_t numremaining = samplesperinterval;
 
 // number of minutes left to next sample.
-uint8_t minutes_left = 15;
+static uint8_t minutes_left = 15;
 
 // number of trials (increase by 1 each time we get 1050 readings. also the position to write to in the array.
-uint16_t ptrial = 0; // 0
+static uint16_t ptrial = 0; // 0
 
 boolean writeSerial = true;
 
