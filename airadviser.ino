@@ -1386,6 +1386,11 @@ void runServer()
 
 void loop() 
 {
+  // setupWiFi();
+  if (ptrial % 10 == 0)
+  {
+    setupWiFi();
+  }
   runServer();
   readTemps();
   readAir();
