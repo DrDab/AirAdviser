@@ -252,27 +252,27 @@ void readTemps()
 {
     // calculate the temperature.
     chk = DHT11.read(DHT11_PIN);
-    if (chk == DHTLIB_OK)
-    {
+    //if (chk == DHTLIB_OK)
+    //{
         //       Serial.println("DHT11: OK"); 
         temp_c = DHT11.temperature;
         humidity = DHT11.humidity;
-    }
-    else if (chk == DHTLIB_ERROR_CHECKSUM)
-    {
+    //}
+    //else if (chk == DHTLIB_ERROR_CHECKSUM)
+    //{
         //    Serial.println("DHT11: Checksum error"); 
         // dhtREAD = false;
-    }
-    else if (chk == DHTLIB_ERROR_TIMEOUT)
-    {
+    //}
+    //else if (chk == DHTLIB_ERROR_TIMEOUT)
+    //{
        //     Serial.println("DHT11: Time out error"); 
        // dhtREAD = false;
-    }
-    else
-    {
+    //}
+    //else
+    //{
       //    Serial.println("DHT11: Unknown error"); 
       //  dhtREAD = false;
-    }
+    //}
 }
 
 bool haveCurrentReading = true;
@@ -338,13 +338,13 @@ void readAir()
       dew_point_accum = 0.0;
       dew_point_avg = 0.0;
       // clear the array of trials.
-      memset(trials_pm10, 0, sizeof(trials_pm10));
-      memset(trials_pm25, 0, sizeof(trials_pm25));
-      memset(trials_pm100, 0, sizeof(trials_pm100));
-      memset(trials_temp, 0, sizeof(trials_temp));
-      memset(trials_humidity, 0, sizeof(trials_humidity));
-      memset(trials_heat_index, 0, sizeof(trials_heat_index));
-      memset(trials_dew_point, 0, sizeof(trials_dew_point));
+      //memset(trials_pm10, 0, sizeof(trials_pm10));
+      //memset(trials_pm25, 0, sizeof(trials_pm25));
+      //memset(trials_pm100, 0, sizeof(trials_pm100));
+      //memset(trials_temp, 0, sizeof(trials_temp));
+      //memset(trials_humidity, 0, sizeof(trials_humidity));
+      //memset(trials_heat_index, 0, sizeof(trials_heat_index));
+      //memset(trials_dew_point, 0, sizeof(trials_dew_point));
     }
 
     // calculate the time to the next sample.
@@ -547,13 +547,6 @@ String getValue(String data, char separator, int index)
 double stringToDouble(String& str)
 {
   return atof(str.c_str());
-}
-
-void loop() 
-{
-  runServer();
-  readTemps();
-  readAir();
 }
 
 void runServer()
@@ -1393,6 +1386,13 @@ void runServer()
       delay(1);
       // Serial.println("Client disconnected");
   }
+}
+
+void loop() 
+{
+  runServer();
+  readTemps();
+  readAir();
 }
 
 void setupWiFi()
