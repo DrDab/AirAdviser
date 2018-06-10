@@ -221,7 +221,6 @@ void setup()
   initHardware();
   setupWiFi();
   server.begin();
-  pmsSerial.begin(9600);
 }
 
 float tofahrenheit(float temp)
@@ -1420,6 +1419,8 @@ void initHardware()
 {
   Serial.begin(115200);
   Serial.println("Serial monitor is online, running at 115200 baud");
+
+  pmsSerial.begin(9600);
   
   initEEPROM();
   tmp_threshold = (float)readEEPROM(0);
