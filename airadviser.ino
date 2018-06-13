@@ -545,16 +545,21 @@ double stringToDouble(String& str)
   return atof(str.c_str());
 }
 
+WiFiClient client;
+String req;
+String tmpStr;
+bool CSVflush = false;
+
 void runServer()
 {
   // Check if a client has connected
-  WiFiClient client = server.available();
+  client = server.available();
   if (client)
   {
       writeSerial = false;
       // Serial.println("Ready");
       // Read the first line of the request
-      String req = client.readStringUntil('\r');
+      req = client.readStringUntil('\r');
       // Serial.println(req);
       client.flush();
     
@@ -591,8 +596,8 @@ void runServer()
       }
       
     
-      String tmpStr = "";
-      bool CSVflush = false;
+      tmpStr = "";
+      CSVflush = false;
       if (val == -10)
       {
         tmpStr += "Logs, samples 0-224\n";
@@ -1387,6 +1392,7 @@ void runServer()
 void loop() 
 {
   // setupWiFi();
+  Serial.printf("FreeHeap: %u\n", ESP.getFreeHeap());
   if (ptrial % 10 == 0)
   {
     setupWiFi();
