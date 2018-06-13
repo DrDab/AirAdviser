@@ -1381,22 +1381,21 @@ void runServer()
         s += "<a href=\"192.168.4.1/read\">Read sensor data</a>";
       }
       s += "</html>\n";
-    
-      // Send the response to the client
       client.print(s);
       delay(1);
-      // Serial.println("Client disconnected");
   }
 }
 
 void loop() 
 {
-  // setupWiFi();
-  Serial.printf("FreeHeap: %u\n", ESP.getFreeHeap());
-  if (ptrial % 10 == 0)
+  if (USE_SERIAL_DEBUGGING)
   {
-    setupWiFi();
+    Serial.printf("FreeHeap: %u\n", ESP.getFreeHeap());
   }
+  // if (ptrial % 10 == 0)
+  // {
+  //  setupWiFi();
+  // }
   runServer();
   readTemps();
   readAir();
