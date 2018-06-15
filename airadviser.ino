@@ -388,6 +388,7 @@ void readAir()
     
     if (USE_SERIAL_DEBUGGING)
     {
+        Serial.printf("FreeHeap: %u\n", ESP.getFreeHeap());
         Serial.println();
         if (data.pm25_env >= 500)
         {
@@ -1388,10 +1389,6 @@ void runServer()
 
 void loop() 
 {
-  if (USE_SERIAL_DEBUGGING)
-  {
-    Serial.printf("FreeHeap: %u\n", ESP.getFreeHeap());
-  }
   // if (ptrial % 10 == 0)
   // {
   //  setupWiFi();
