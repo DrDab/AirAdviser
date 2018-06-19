@@ -298,22 +298,6 @@ void readAir()
     
     hasReading = true;
 
-    temp_delta = (float) temp_c - temp_avg; 
-    humidity_delta = (float) humidity - humidity_avg;
-    
-    // calculate the delta values.
-    pm10_delta = (float)data.pm10_standard - p10avg;
-    pm25_delta = (float)data.pm25_standard - p25avg;
-    pm100_delta = (float)data.pm100_standard - p100avg;
-
-    // calculate the heat index.
-    heat_index = heatstroke_index(tofahrenheit(temp_c), humidity);
-    heat_index_delta = heat_index - heat_index_avg;
-
-    // calculate the dew point.
-    dew_point = dew_point_get(temp_c, humidity);
-    dew_point_delta = dew_point - dew_point_avg;
-
     if (ptrial == 671)
     {
       // reset every 671 trials to prevent array nonexistant access.
@@ -539,6 +523,25 @@ String getValue(String data, char separator, int index)
         }
     }
     return found > index ? data.substring(strIndex[0], strIndex[1]) : "";
+}
+
+void processData()
+{
+  temp_delta = (float) temp_c - temp_avg; 
+  humidity_delta = (float) humidity - humidity_avg;
+    
+  // calculate the delta values.
+  pm10_delta = (float)data.pm10_standard - p10avg;
+  pm25_delta = (float)data.pm25_standard - p25avg;
+  pm100_delta = (float)data.pm100_standard - p100avg;
+
+  // calculate the heat index.
+  heat_index = heatstroke_index(tofahrenheit(temp_c), humidity);
+  heat_index_delta = heat_index - heat_index_avg;
+
+  // calculate the dew point.
+  dew_point = dew_point_get(temp_c, humidity);
+  dew_point_delta = dew_point - dew_point_avg;
 }
 
 double stringToDouble(String& str)
@@ -1396,6 +1399,7 @@ void loop()
   runServer();
   readTemps();
   readAir();
+  processData();
 }
 
 void setupWiFi()
