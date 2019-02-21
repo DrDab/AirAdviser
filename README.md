@@ -5,6 +5,7 @@
 The firmware binary for the ESP8266 chip is available here:
 
 [Download binary](https://github.com/DrDab/AirAdviser/blob/master/firmware.bin)
+
 The source code for the ESP8266 chip is available here:
 
 [Download sources](https://github.com/DrDab/AirAdviser)
