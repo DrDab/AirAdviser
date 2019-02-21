@@ -1,6 +1,11 @@
 # AirAdviser
+![alt text](https://raw.githubusercontent.com/DrDab/AirAdviser/master/logo1.png)
 
-AirAdviser
+# Downloads
+The firmware binary for the ESP8266 chip is available here:
+[Download binary](https://github.com/DrDab/AirAdviser/blob/master/firmware.bin)
+The source code for the ESP8266 chip is available here:
+[Download sources](https://github.com/DrDab/AirAdviser)
 
 # Building
 1. Get the supplies:
@@ -30,7 +35,7 @@ The mascot for AirAdviser is Cloud Fox. He is a helpful buddy that keeps you saf
 
 Cloud Fox is redistributable under CC-BY-SA 3.0.
 
-This mascot was generated using Character Maker by oob (Source: https://www.furaffinity.net/view/19365300/)
+This mascot was generated using Character Maker by oob
 
 # Usage
 AirAdviser is intended to be deployed in low-cost, low-space applications where there are high risks of heatstroke due to low humidity/high temperature and high risks of respiratory harm from air pollution spread accelerated by temperature (such as car exhaust and smoke from chimneys). For example, in cities like Beijing, China this device may have some use. Due to close proximity to the equator, Beijing is known for high temperatures and low relative humidity levels, which contribute to hundreds of thousands of deaths ech year due to conditions such as heatstroke. Adding to that, in lots of areas close to the equator, particulate matter is known to spread faster due to higher temperatures. Global warming has been shown to increase temperatures in equator-locked areas on the globe, which accelerates both phenomenas above. As a result, devices such as AirAdviser allow for quick safety monitoring and automatic response to environmental conditions. They can detect unsafe environmental conditions, and respond rapidly to them through rapid environmental control by activating an appliance (i.e. a fan, air conditioner, humidifier). 
